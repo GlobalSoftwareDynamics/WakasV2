@@ -25,11 +25,11 @@ include('login.php'); // Includes Login Script
 <body>
 
 <section class="login-block">
-    <div class="container">
+    <div class="container col-xl-8 col-lg-4 col-md-8 col-11">
         <div class="row">
             <div class="col-12 col-xl-4 login-sec">
-                <div class="col-xl-11 offset-xl-1 col-lg-6 offset-lg-4 col-md-6 offset-md-4 offset-1">
-                    <img src="img/WakasNavbar.png" width="200" class="ml-xl-3 ml-lg-4 ml-md-0 ml-2">
+                <div id="logo">
+                    <img src="img/WakasNavbar.png" width="200" class="centered">
                 </div>
                 <h2 class="text-center"></h2>
                 <form class="login-form" method="post" action="#">
