@@ -1,0 +1,29 @@
+/*General*/
+
+@import url('https://fonts.googleapis.com/css?family=Didact+Gothic');
+
+* {
+    font-family: 'Didact Gothic', sans-serif;
+}
+
+/*NavBar*/
+
+.navbar {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #78746f;
+    font-weight: 600;
+}
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+    color: #78746f;
+    font-weight: 600;
+}
