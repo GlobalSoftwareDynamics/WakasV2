@@ -1,16 +1,17 @@
 <?php
-include ('header.php');
-include('navbarAdmin.php');
+include('session.php');
+if(isset($_SESSION['login'])){
+	include('header.php');
+	include('navbarAdmin.php');
+	?>
 
-?>
+    <section class="container">
+        <div class="row">
 
-<section class="container">
-    <div class="row">
+        </div>
+    </section>
 
-    </div>
-</section>
-
-<?php
-
-include ('footer.php');
+	<?php
+	include('footer.php');
+}
 ?>
