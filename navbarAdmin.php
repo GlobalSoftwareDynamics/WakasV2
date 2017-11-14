@@ -13,7 +13,7 @@
                             Productos
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Nueva Hoja de Especificaciones</a>
+                            <a class="dropdown-item" href="nuevaHE.php">Nueva Hoja de Especificaciones</a>
                             <a class="dropdown-item" href="gestionProductos.php">Listado de Productos</a>
                         </div>
                     </li>

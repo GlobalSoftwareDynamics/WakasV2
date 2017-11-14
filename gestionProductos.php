@@ -35,6 +35,7 @@ if(isset($_SESSION['login'])){
                                                     </button>
                                                     <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
                                                         <button name='nuevoProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Agregar Producto Similar</button>
+                                                        <button name='versionProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Nueva Versión de Producto</button>
                                                         <button name='verProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Ver</button>
                                                         <button name='editarProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Editar</button>
                                                         <button name='eliminarProducto' class=\"dropdown-item\" type=\"submit\" formaction='#'>Eliminar</button>
