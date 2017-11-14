@@ -30,7 +30,7 @@
     <?php
 
     if($_SERVER['REQUEST_URI'] == '/WakasV2/nuevaCV_DatosGenerales.php'){
-        $arrayClientes = autocompletarEstadoActivo("Cliente","nombre",$link);
+        $arrayClientes = autocompletarEstadoActivo("Cliente","nombre",$link)
 
         ?>
         <script>

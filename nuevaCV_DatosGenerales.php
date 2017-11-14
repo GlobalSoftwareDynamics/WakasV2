@@ -26,6 +26,7 @@ if(isset($_SESSION['login'])){
 
     include('header.php');
     include('navbarAdmin.php');
+
     ?>
 
     <section class="container">

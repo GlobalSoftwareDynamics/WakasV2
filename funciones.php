@@ -4,7 +4,6 @@ function autocompletarEstadoActivo($table,$campo,$link){
     $array = '[';
     $query = mysqli_query($link,"SELECT * FROM {$table} WHERE idEstado = 1");
     $aux = 0;
-    $color = 0;
     $numrows = mysqli_num_rows($query);
     while ($row = mysqli_fetch_array($query)){
         $aux++;

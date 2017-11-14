@@ -10,7 +10,15 @@ if (!empty($_POST['nombreCliente'])) {
                 <div class='form-group row'>
                     <label for='contactoCliente' class='col-2 col-form-label'>Nombre de Contacto:</label>
                     <div class='col-10'>
-                        <input type='text' id='contactoCliente' name='contactoCliente' class='form-control'>
+                        <select id='nombreContacto' name='nombreContacto' class='form-control'>
+                            <option disabled selected>Seleccionar</option>";
+            while ($fila1=mysqli_fetch_array($query1)){
+                echo "
+                                    <option value='{$fila1['idContacto']}'>{$fila1['nombreCompleto']}</option>
+                                ";
+            }
+            echo "
+                        </select>
                     </div>
                 </div>
             ";
@@ -21,10 +29,8 @@ if (!empty($_POST['nombreCliente'])) {
                     <div class='col-10'>
                         <label for='dni' class='sr-only'>Documento de Identidad</label>
                         <input type='text' id='dni' name='dni' class='form-control col-4 mb-2 mr-2' placeholder='Documento de Identidad'>
-                        <label for='nombres' class='sr-only'>Nombres</label>
-                        <input type='text' id='nombres' name='nombres' class='form-control col-7 mb-2' placeholder='Nombres'>
-                        <label for='apellidos' class='sr-only'>Apellidos</label>
-                        <input type='text' id='apellidos' name='apellidos' class='form-control col-7 mb-2' placeholder='Apellidos'>
+                        <label for='nombres' class='sr-only'>Nombre Completo</label>
+                        <input type='text' id='nombres' name='nombres' class='form-control col-7 mb-2' placeholder='Nombre Completo'>
                         <label for='mail' class='sr-only'>Email</label>
                         <input type='email' id='mail' name='email' class='form-control col-5 mb-2 mt-2' placeholder='Email'>
                         <label for='telf' class='sr-only'>Teléfono</label>
