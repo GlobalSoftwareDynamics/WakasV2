@@ -10,7 +10,7 @@ if (!empty($_POST['nombreCliente'])) {
                 <div class='form-group row'>
                     <label for='contactoCliente' class='col-2 col-form-label'>Nombre de Contacto:</label>
                     <div class='col-10'>
-                        <select id='nombreContacto' name='nombreContacto' class='form-control'>
+                        <select type='text' id='nombreContacto' name='nombreContacto' class='form-control'>
                             <option disabled selected>Seleccionar</option>";
             while ($fila1=mysqli_fetch_array($query1)){
                 echo "

@@ -10,7 +10,7 @@ function autocompletarEstadoActivo($table,$campo,$link){
         if($aux == $numrows){
             $array .= "'".$row[$campo]."']";
         }else{
-            $array .= "'".$row[$campo]."']";
+            $array .= "'".$row[$campo]."',";
         }
     }
     return $array;
