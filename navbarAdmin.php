@@ -14,7 +14,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#">Nueva Hoja de Especificaciones</a>
-                            <a class="dropdown-item" href="#">Listado de Productos</a>
+                            <a class="dropdown-item" href="gestionProductos.php">Listado de Productos</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
