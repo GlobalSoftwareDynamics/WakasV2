@@ -48,12 +48,41 @@ label,p,th,td {
     border-color: #EF4A43;
 }
 
-.btn-outline-primary:active, .btn-outline-primary.active,
+.btn-outline-primary:not([disabled]):not(.disabled):active, .btn-outline-primary:not([disabled]):not(.disabled).active,
 .show > .btn-outline-primary.dropdown-toggle {
     color: #fff;
     background-color: #EF4A43;
-    border-color: #EF4A43;
-    background-image: none;
+    border-color: #ea4a43;
+    box-shadow: 0 0 0 0.2rem #EF4A43;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #EF4A43;
+    border-color: #ea4a43;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #cc3f39;
+    border-color: #c13b35;
+}
+
+.btn-primary:focus, .btn-primary.focus {
+    box-shadow: 0 0 0 0.2rem #EF4A43;
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+    background-color: #EF4A43;
+    border-color: #ea4a43;
+}
+
+.btn-primary:not([disabled]):not(.disabled):active, .btn-primary:not([disabled]):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #EF4A43;
+    border-color: #ea4a43;
+    box-shadow: 0 0 0 0.2rem #EF4A43;
 }
 
 a{
