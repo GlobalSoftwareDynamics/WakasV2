@@ -14,7 +14,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#">Nueva Hoja de Especificaciones</a>
-                            <a class="dropdown-item" href="#">Listado de Productos</a>
+                            <a class="dropdown-item" href="gestionProductos.php">Listado de Productos</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -57,6 +57,9 @@
                         </div>
                     </li>
                 </ul>
+                <form class="form-inline my-2 my-lg-0 ml-1" action="index.php" method="post">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Cerrar Sesión</button>
+                </form>
             </div>
         </nav>
     </section>

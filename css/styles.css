@@ -11,6 +11,7 @@
 .navbar {
     padding-top: 0;
     padding-bottom: 0;
+    margin-bottom:30px;
 }
 
 .navbar-brand {
@@ -60,3 +61,4 @@
 .bg-wakas {
     background-color: #E8554E;
 }
+

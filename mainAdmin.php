@@ -1,8 +1,9 @@
 <?php
-include ('header.php');
-include('navbarAdmin.php');
-
-?>
+include('session.php');
+if(isset($_SESSION['login'])){
+	include('header.php');
+	include('navbarAdmin.php');
+	?>
 
 <section class="container" style="padding-top: 15px; padding-bottom: 15px;">
     <div class="row">
@@ -130,6 +131,6 @@ include('navbarAdmin.php');
 </section>
 
 <?php
-
-include ('footer.php');
+    include('footer.php');
+}
 ?>
