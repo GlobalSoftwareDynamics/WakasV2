@@ -1,7 +1,7 @@
 <header class="container-fluid bg-light">
     <section class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#"><img src="img/WakasNavbar.png" height="60" width="auto"></a>
+            <a class="navbar-brand" href="mainAdmin.php"><img src="img/WakasNavbar.png" height="60" width="auto"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -22,8 +22,8 @@
                             Ventas
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Nueva Confirmación de Venta</a>
-                            <a class="dropdown-item" href="#">Listado de Confirmaciones de Venta</a>
+                            <a class="dropdown-item" href="nuevaCV_DatosGenerales.php">Nueva Confirmación de Venta</a>
+                            <a class="dropdown-item" href="gestionCV.php">Listado de Confirmaciones de Venta</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
