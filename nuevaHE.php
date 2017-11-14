@@ -4,6 +4,7 @@ if(isset($_SESSION['login'])){
 	include('header.php');
 	include('navbarAdmin.php');
 	include('funciones.php');
+	include('declaracionFechas.php');
 
 	$idProd = idgen('P');
 
