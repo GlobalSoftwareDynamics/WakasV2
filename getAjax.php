@@ -10,7 +10,7 @@ if (!empty($_POST['nombreCliente'])) {
                 <div class='form-group row'>
                     <label for='contactoCliente' class='col-2 col-form-label'>Nombre de Contacto:</label>
                     <div class='col-10'>
-                        <select type='text' id='nombreContacto' name='nombreContacto' class='form-control'>
+                        <select class='form-control' id='nombreContacto' name='nombreContacto' >
                             <option disabled selected>Seleccionar</option>";
             while ($fila1=mysqli_fetch_array($query1)){
                 echo "
@@ -38,7 +38,7 @@ if (!empty($_POST['nombreCliente'])) {
                         <label for='direccion' class='sr-only'>Direccion</label>
                         <input type='text' id='direccion' name='direccion' class='form-control col-8 mt-2' placeholder='Dirección'>
                         <label for='ciudad' class='sr-only'>Ciudad</label>
-                        <select type='text' id='ciudad' name='ciudad' class='form-control col-5 mt-2'>
+                        <select class='form-control col-5 mt-2' id='ciudad' name='ciudad' >
                             <option>Ciudad</option>";
             $ciudad=mysqli_query($link,"SELECT * FROM Ciudad");
             while ($fila=mysqli_fetch_array($ciudad)){
