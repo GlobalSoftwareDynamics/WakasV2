@@ -54,3 +54,28 @@ if (!empty($_POST['nombreCliente'])) {
         }
     }
 }
+
+if(!empty($_POST['idCodificacionTalla'])){
+echo "
+							<table class='table'>
+                                <thead>
+                                <tr>
+                                    <th class='text-center' style='width: 50%'>Codificación</th>
+                                    <th class='text-center' style='width: 50%'>Talla</th>
+                                </tr>
+                                </thead>
+                                <tbody>";
+                                $search = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['idCodificacionTalla']}'");
+                                while($index = mysqli_fetch_array($search)){
+                                	$search2 = mysqli_query($link, "SELECT * FROM codificacionTalla WHERE idcodificacionTalla = '{$_POST['idCodificacionTalla']}'");
+                                	while($index2 = mysqli_fetch_array($search2)){
+	                                    echo "<tr>
+												<td class='text-center'>{$index2['descripcion']}</td>
+												<td class='text-center'>{$index['descripcion']}</td>
+											  </tr>";
+	                                }
+                                }
+	echo "
+                                </tbody>
+                            </table>";
+}
