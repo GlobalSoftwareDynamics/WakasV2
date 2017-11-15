@@ -22,8 +22,6 @@ if(isset($_SESSION['login'])){
         }else{
         }
 
-        //ESTA ES UNA PRUEBA
-
     }
 
     include('header.php');
@@ -36,14 +34,13 @@ if(isset($_SESSION['login'])){
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-inverse card-info">
-
                         <div class="float-left">
                             <i class="fa fa-shopping-cart"></i>
                             Nueva Confirmación de Venta
                         </div>
                         <div class="float-right">
                             <div class="dropdown">
-                                <button form="formCV" name="addCV" class="btn btn-secondary btn-sm">Siguiente</button>
+                                <button form="formCV" name="addCV" class="btn btn-light btn-sm">Siguiente</button>
                             </div>
                         </div>
                     </div>
@@ -65,7 +62,7 @@ if(isset($_SESSION['login'])){
                                         <div class="form-group row">
                                             <label for="idConfirmacionVenta" class="col-2 col-form-label">Código de Contrato:</label>
                                             <div class="col-10">
-                                                <input class="form-control" type="text" id="idConfirmacionVenta" name="idConfirmacionVenta">
+                                                <input class="form-control" type="text" id="idConfirmacionVenta" name="idConfirmacionVenta" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -86,7 +83,7 @@ if(isset($_SESSION['login'])){
                                         <div class="form-group row">
                                             <label for="fechaContrato" class="col-2 col-form-label">Fecha:</label>
                                             <div class="col-10">
-                                                <input class="form-control" type="date" id="fechaContrato" name="fechaContrato" placeholder="<?php echo $date = date("Y-m-d")?>">
+                                                <input class="form-control" type="date" id="fechaContrato" name="fechaContrato" placeholder="<?php echo $date = date("Y-m-d")?>" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -111,7 +108,7 @@ if(isset($_SESSION['login'])){
                                                     <?php
                                                     $restult = mysqli_query($link, "SELECT * FROM codificacionTalla");
                                                     while ($fila = mysqli_fetch_array($restult)){
-                                                        echo "<option value='{$fila['idCodificacionTalla']}'>{$fila['descripcion']}</option>";
+                                                        echo "<option value='{$fila['idcodificacionTalla']}'>{$fila['descripcion']}</option>";
                                                     }
                                                     ?>
                                                 </select>
@@ -122,9 +119,9 @@ if(isset($_SESSION['login'])){
                                         <div class="spacer30"></div>
                                         <div id="datosCliente"></div>
                                         <div class="form-group row">
-                                            <label for="idConfirmacionVenta" class="col-2 col-form-label">Incoterm:</label>
+                                            <label for="incoterm" class="col-2 col-form-label">Incoterm:</label>
                                             <div class="col-10">
-                                                <select class="form-control" id="codifTalla" name="codifTalla">
+                                                <select class="form-control" id="incoterm" name="incoterm">
                                                     <option disabled selected>Seleccionar</option>
                                                     <?php
                                                     $restult = mysqli_query($link, "SELECT * FROM Incoterms");
@@ -136,9 +133,9 @@ if(isset($_SESSION['login'])){
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="idReferencia" class="col-2 col-form-label">Vía:</label>
+                                            <label for="via" class="col-2 col-form-label">Vía:</label>
                                             <div class="col-10">
-                                                <select class="form-control" id="codifTalla" name="codifTalla">
+                                                <select class="form-control" id="via" name="via">
                                                     <option disabled selected>Seleccionar</option>
                                                     <?php
                                                     $restult = mysqli_query($link, "SELECT * FROM Via");
@@ -152,7 +149,7 @@ if(isset($_SESSION['login'])){
                                         <div class="form-group row">
                                             <label for="fechaEnvio" class="col-2 col-form-label">Fecha de Envío:</label>
                                             <div class="col-10">
-                                                <input class="form-control" type="date" id="fechaEnvio" name="fechaEnvio" placeholder="<?php echo $date = date("Y-m-d")?>">
+                                                <input class="form-control" type="date" id="fechaEnvio" name="fechaEnvio" placeholder="<?php echo $date = date("Y-m-d")?>" required>
                                             </div>
                                         </div>
                                         <!--<div class="form-group row">

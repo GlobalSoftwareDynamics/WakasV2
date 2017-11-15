@@ -19,3 +19,14 @@ function getTablaTallas(val) {
         }
     });
 }
+
+function getTallas(producto,codificacion) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'productoCV':producto, 'idcodificacionTallaCV':codificacion},
+        success: function(data){
+            $("#row").html(data);
+        }
+    });
+}

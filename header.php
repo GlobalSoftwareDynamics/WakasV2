@@ -43,6 +43,20 @@
         <?php
     }
 
+    if($_SERVER['REQUEST_URI'] == '/WakasV2/nuevaCV_Productos.php'){
+        $arrayProductos = autocompletarEstadoActivo("Producto","idProducto",$link)
+
+        ?>
+        <script>
+            $( function() {
+                $( "#idProducto" ).autocomplete({
+                    source: <?php echo $arrayProductos?>
+                });
+            } );
+        </script>
+        <?php
+    }
+
     ?>
 </head>
 
