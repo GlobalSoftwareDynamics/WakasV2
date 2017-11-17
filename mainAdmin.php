@@ -7,7 +7,7 @@ if(isset($_SESSION['login'])){
 
 <section class="container" style="padding-top: 15px; padding-bottom: 15px;">
     <div class="row">
-        <div class="col-xl-3 col-sm-6 mb-3 pl-0">
+        <div class="col-xl-3 col-sm-6 mb-3">
             <div class="card text-white bg-wakas o-hidden h-100">
                 <div class="card-body">
                     <div class="card-body-icon">
@@ -55,7 +55,7 @@ if(isset($_SESSION['login'])){
                 </a>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-3 pr-0">
+        <div class="col-xl-3 col-sm-6 mb-3">
             <div class="card text-white bg-wakas o-hidden h-100">
                 <div class="card-body">
                     <div class="card-body-icon">
@@ -73,17 +73,19 @@ if(isset($_SESSION['login'])){
         </div>
     </div>
     <div class="row">
-        <div class="card mb-3 col-12 pl-0 pr-0">
-            <div class="card-header">
-                <i class="fa fa-area-chart"></i> Ingresos Anuales</div>
-            <div class="card-body">
-                <canvas id="myAreaChart" width="100%" height="30"></canvas>
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-area-chart"></i> Ingresos Anuales</div>
+                <div class="card-body">
+                    <canvas id="myAreaChart" width="100%" height="30"></canvas>
+                </div>
+                <div class="card-footer small text-muted">Actualizado el: <?php echo $date=date("Y-m-d")?></div>
             </div>
-            <div class="card-footer small text-muted">Actualizado el: <?php echo $date=date("Y-m-d")?></div>
         </div>
     </div>
     <div class="row">
-        <div class="col-6 pl-0">
+        <div class="col-xl-6 col-sm-12 col-xs-12">
             <div class="card mb-3">
                 <div class="card-header">
                     <i class="fa fa-table"></i> Colaboradores del Mes</div>
@@ -104,7 +106,7 @@ if(isset($_SESSION['login'])){
                 </div>
             </div>
         </div>
-        <div class="col-6 pr-0">
+        <div class="col-xl-6 col-sm-12 col-xs-12">
             <div class="card mb-3">
                 <div class="card-header">
                     <i class="fa fa-table"></i> Productos en Proceso Tercerizado</div>

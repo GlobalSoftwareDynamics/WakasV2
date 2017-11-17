@@ -40,7 +40,7 @@ if (!empty($_POST['nombreCliente'])) {
                         <label for='ciudad' class='sr-only'>Ciudad</label>
                         <select class='form-control col-5 mt-2' id='ciudad' name='ciudad' required>
                             <option>Ciudad</option>";
-            $ciudad=mysqli_query($link,"SELECT * FROM Ciudad");
+            $ciudad=mysqli_query($link,"SELECT * FROM Ciudad ORDER BY nombre ASC");
             while ($fila=mysqli_fetch_array($ciudad)){
                 echo "
                                     <option value='{$fila['idCiudad']}'>{$fila['nombre']}</option>
@@ -90,11 +90,11 @@ if(!empty($_POST["productoCV"])) {
         foreach ($tallas2 as $value2) {
             if ($value1 == $value2){
                 $encontrado=true;
-                echo "<td><input type='text' class='form-control' name='{$value2}'></td>";
+                echo "<td><input type='number' class='form-control' name='{$value2}' min='0'></td>";
             }
         }
         if ($encontrado == false){
-            echo "<td><input type='text' class='form-control' readonly></td>";
+            echo "<td><input type='number' class='form-control' min='0' readonly></td>";
         }
     }
     echo "

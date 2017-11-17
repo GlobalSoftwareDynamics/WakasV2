@@ -56,6 +56,15 @@
                             <a class="dropdown-item" href="#">Reportes de Personal</a>
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Directorio
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="gestionClientes.php">Clientes</a>
+                            <a class="dropdown-item" href="gestionProveedores.php">Proveedores</a>
+                        </div>
+                    </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0 ml-1" action="index.php" method="post">
                     <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Cerrar Sesión</button>

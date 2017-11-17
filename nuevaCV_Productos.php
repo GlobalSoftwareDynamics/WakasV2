@@ -138,7 +138,7 @@ if(isset($_SESSION['login'])){
                                                 $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}'");
                                                 while ($fila = mysqli_fetch_array($result)){
                                                     echo "
-                                                        <td><input type='text' class='form-control'></td>
+                                                        <td><input type='number' class='form-control' min='0'></td>
                                                     ";
                                                 }
                                                 ?>
