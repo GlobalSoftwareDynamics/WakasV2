@@ -6,24 +6,66 @@ if(isset($_SESSION['login'])){
     include('header.php');
     include('navbarAdmin.php');
 
+    if (isset($_POST['editar'])){
+
+        $query = mysqli_query($link,"UPDATE Proveedor SET nombre = '{$_POST['nombreProveedor']}' WHERE idProveedor = '{$_POST['idProveedor']}'");
+        $query = mysqli_query($link,"UPDATE Direccion SET direccion = '{$_POST['direccion']}', idCiudad = '{$_POST['ciudad']}' WHERE idDireccion = '{$_POST['idDireccion']}'");
+
+        $queryPerformed1 = "UPDATE Proveedor SET nombre = {$_POST['nombreProveedor']} WHERE idProveedor = {$_POST['idProveedor']}";
+        $queryPerformed2 = "UPDATE Direccion SET direccion = {$_POST['direccion']}, idCiudad = {$_POST['ciudad']} WHERE idDireccion = {$_POST['idDireccion']}";
+
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Proveedor','{$queryPerformed1}')");
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Direccion','{$queryPerformed2}')");
+
+
+    }
+
+    if (isset($_POST['addProveedor'])){
+
+        $idProveedor = idgen("P");
+
+        /*Creacion de Direccion*/
+        $query = mysqli_query($link, "INSERT INTO Direccion(idCiudad, direccion) VALUES ('{$_POST['ciudad']}','{$_POST['direccion']}')");
+
+        $queryPerformed = "INSERT INTO Direccion(idCiudad, direccion) VALUES ({$_POST['ciudad']},{$_POST['direccion']})";
+
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Direccion','{$queryPerformed}')");
+
+        $direccion = mysqli_query($link, "SELECT * FROM Direccion WHERE direccion = '{$_POST['direccion']}'");
+        while ($fila = mysqli_fetch_array($direccion)) {
+            $idDireccion = $fila['idDireccion'];
+        }
+
+        /*Creacion de Proveedor*/
+        $query = mysqli_query($link, "INSERT INTO Proveedor(idProveedor, idDireccion, idEstado, nombre)
+                VALUES ('{$idProveedor}','{$idDireccion}',1,'{$_POST['nombreProveedor']}')");
+
+        $queryPerformed = "INSERT INTO Proveedor(idProveedor, idDireccion, idEstado, nombre)
+                VALUES ({$idProveedor},{$idDireccion},1,{$_POST['nombreProveedor']})";
+
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Proveedor','{$queryPerformed}')");
+
+
+    }
+
     if (isset($_POST['desactivar'])){
 
         if ($_POST['estado']==1){
 
-            $query = mysqli_query($link, "UPDATE Proveedor SET idEstado = 2 WHERE idCliente = '{$_POST['idCliente']}'");
+            $query = mysqli_query($link, "UPDATE Proveedor SET idEstado = 2 WHERE idProveedor = '{$_POST['idProveedor']}'");
 
-            $queryPerformed = "UPDATE Cliente SET idEstado = 2 WHERE idCliente = '{$_POST['idCliente']}'";
+            $queryPerformed = "UPDATE Cliente SET idEstado = 2 WHERE idProveedor = '{$_POST['idProveedor']}'";
 
-            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Desactivar Cliente','{$queryPerformed}')");
+            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Desactivar Proveedor','{$queryPerformed}')");
 
 
         }else{
 
-            $query = mysqli_query($link, "UPDATE Cliente SET idEstado = 1 WHERE idCliente = '{$_POST['idCliente']}'");
+            $query = mysqli_query($link, "UPDATE Proveedor SET idEstado = 1 WHERE idProveedor = '{$_POST['idProveedor']}'");
 
-            $queryPerformed = "UPDATE Cliente SET idEstado = 1 WHERE idCliente = '{$_POST['idCliente']}'";
+            $queryPerformed = "UPDATE Proveedor SET idEstado = 1 WHERE idProveedor = '{$_POST['idProveedor']}'";
 
-            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Activar Cliente','{$queryPerformed}')");
+            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Activar Proveedor','{$queryPerformed}')");
 
         }
 
@@ -158,14 +200,14 @@ if(isset($_SESSION['login'])){
                                 echo "
                                     <td>
                                         <form method='post'>
-                                        <input type='hidden' name='idContacto' value=".$fila['idContacto'].">
+                                        <input type='hidden' name='idProveedor' value=".$fila['idProveedor'].">
                                         <input type='hidden' name='estado' value=".$fila['idEstado'].">
                                             <div class='dropdown'>
                                                 <button class='btn btn-outline-primary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                                 Acciones
                                                 </button>
                                                 <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                                    <button name='verProveedor' class='dropdown-item' type='submit' formaction='detalleProveedor.php'>Ver Ficha de Contacto</button>
+                                                    <button name='verProveedor' class='dropdown-item' type='submit' formaction='detalleProveedor.php'>Ver Ficha de Proveedor</button>
                                                     <button name='editar' class='dropdown-item' type='submit' formaction='editarProveedor.php'>Editar</button>
                                                     <button name='desactivar' class='dropdown-item' type='submit' formaction='#'>Desactivar/Activar</button>
                                                 </div>
