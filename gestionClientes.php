@@ -32,15 +32,14 @@ if(isset($_SESSION['login'])){
     if(isset($_POST['addCliente'])){
 
         if ($_POST['nombreNuevoCliente']!=""){
-            $idCliente=idgen("C");
 
-            $insert = mysqli_query($link,"INSERT INTO Cliente (idCliente, idEstado, nombre) VALUES ('{$idCliente}',1,'{$_POST['nombreNuevoCliente']}')");
+            $insert = mysqli_query($link,"INSERT INTO Cliente (idCliente, idEstado, nombre) VALUES ('{$_POST['ruc']}',1,'{$_POST['nombreNuevoCliente']}')");
             if($insert){
             }else{
                 echo 'Error ingresando datos a la base de datos';
             }
 
-            $queryPerformed = "INSERT INTO Cliente (idCliente, idEstado, nombre) VALUES ({$idCliente},1,{$_POST['nombreNuevoCliente']})";
+            $queryPerformed = "INSERT INTO Cliente (idCliente, idEstado, nombre) VALUES ({{$_POST['ruc']}},1,{$_POST['nombreNuevoCliente']})";
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','NuevaCV-ConfirmacionVenta','{$queryPerformed}')");
 
@@ -196,6 +195,10 @@ if(isset($_SESSION['login'])){
                 <div class="modal-body">
                     <div class="container-fluid">
                         <form id="formCliente" method="post" action="#">
+                            <div class="form-group row">
+                                <label class="col-form-label" for="ruc">DNI/RUC:</label>
+                                <input type="text" name="ruc" id="ruc" class="form-control">
+                            </div>
                             <div class="form-group row">
                                 <label class="col-form-label" for="nombreNuevoCliente">Nombre de Cliente:</label>
                                 <input type="text" name="nombreNuevoCliente" id="nombreNuevoCliente" class="form-control">
