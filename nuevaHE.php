@@ -202,15 +202,15 @@ if(isset($_SESSION['login'])){
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="observaciones" class="col-2 col-form-label">Observaciones Generales:</label>
-                                <div class="col-10">
-                                    <textarea class="form-control" name="observaciones" id="observaciones"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label for="descripcionGeneral" class="col-2 col-form-label">Descripción General:</label>
                                 <div class="col-10">
                                     <textarea class="form-control" name="descripcionGeneral" id="descripcionGeneral"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="observaciones" class="col-2 col-form-label">Observaciones Generales:</label>
+                                <div class="col-10">
+                                    <textarea class="form-control" name="observaciones" id="observaciones"></textarea>
                                 </div>
                             </div>
                         </div>
