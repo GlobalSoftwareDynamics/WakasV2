@@ -6,6 +6,10 @@ if(isset($_SESSION['login'])){
     include('funciones.php');
     include('declaracionFechas.php');
 
+    $result = mysqli_query($link, "SELECT * FROM Cliente WHERE idCliente = '{$_POST['idCliente']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $nombreCliente = $fila['nombre'];
+    }
     ?>
     <form method="post" id="formContacto">
         <section class="container">
@@ -15,7 +19,7 @@ if(isset($_SESSION['login'])){
                         <div class="card-header card-inverse card-info">
                             <div class="float-left mt-1">
                                 <i class="fa fa-users"></i>
-                                &nbsp;&nbsp;Datos de Contacto
+                                &nbsp;&nbsp;Nuevo Contacto para <?php echo $nombreCliente;?>
                             </div>
                             <div class="float-right">
                                 <div class="dropdown">
