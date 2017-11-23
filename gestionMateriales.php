@@ -8,42 +8,24 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['editar'])){
 
-        $query = mysqli_query($link,"UPDATE Proveedor SET nombre = '{$_POST['nombreProveedor']}' WHERE idProveedor = '{$_POST['idProveedor']}'");
-        $query = mysqli_query($link,"UPDATE Direccion SET direccion = '{$_POST['direccion']}', idCiudad = '{$_POST['ciudad']}' WHERE idDireccion = '{$_POST['idDireccion']}'");
+        $query = mysqli_query($link,"UPDATE Material SET material = '{$_POST['nombreMaterial']}', siglas = '{$_POST['siglas']}', idUnidadMedida = '{$_POST['unidadMedida']}' WHERE idMaterial = '{$_POST['idMaterial']}'");
 
-        $queryPerformed1 = "UPDATE Proveedor SET nombre = {$_POST['nombreProveedor']} WHERE idProveedor = {$_POST['idProveedor']}";
-        $queryPerformed2 = "UPDATE Direccion SET direccion = {$_POST['direccion']}, idCiudad = {$_POST['ciudad']} WHERE idDireccion = {$_POST['idDireccion']}";
+        $queryPerformed1 = "UPDATE Material SET material = {$_POST['nombreMaterial']}, siglas = {$_POST['siglas']}, idUnidadMedida = {$_POST['unidadMedida']} WHERE idMaterial = {$_POST['idMaterial']}";
 
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Proveedor','{$queryPerformed1}')");
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Direccion','{$queryPerformed2}')");
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Material','{$queryPerformed1}')");
 
 
     }
 
-    if (isset($_POST['addProveedor'])){
+    if (isset($_POST['addMaterial'])){
 
-        $idProveedor = idgen("P");
+        $query = mysqli_query($link, "INSERT INTO Material(idUnidadMedida, idEstado, material, siglas)
+                VALUES ('{$_POST['unidadMedida']}',1,'{$_POST['nombreMaterial']}','{$_POST['siglas']}')");
 
-        /*Creacion de Direccion*/
-        $query = mysqli_query($link, "INSERT INTO Direccion(idCiudad, direccion) VALUES ('{$_POST['ciudad']}','{$_POST['direccion']}')");
+        $queryPerformed = "INSERT INTO Material(idUnidadMedida, idEstado, material, siglas)
+                VALUES ({$_POST['unidadMedida']},1,{$_POST['nombreMaterial']},{$_POST['siglas']})";
 
-        $queryPerformed = "INSERT INTO Direccion(idCiudad, direccion) VALUES ({$_POST['ciudad']},{$_POST['direccion']})";
-
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Direccion','{$queryPerformed}')");
-
-        $direccion = mysqli_query($link, "SELECT * FROM Direccion WHERE direccion = '{$_POST['direccion']}'");
-        while ($fila = mysqli_fetch_array($direccion)) {
-            $idDireccion = $fila['idDireccion'];
-        }
-
-        /*Creacion de Proveedor*/
-        $query = mysqli_query($link, "INSERT INTO Proveedor(idProveedor, idDireccion, idEstado, nombre)
-                VALUES ('{$idProveedor}','{$idDireccion}',1,'{$_POST['nombreProveedor']}')");
-
-        $queryPerformed = "INSERT INTO Proveedor(idProveedor, idDireccion, idEstado, nombre)
-                VALUES ({$idProveedor},{$idDireccion},1,{$_POST['nombreProveedor']})";
-
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Proveedor','{$queryPerformed}')");
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Material','{$queryPerformed}')");
 
 
     }
@@ -52,20 +34,20 @@ if(isset($_SESSION['login'])){
 
         if ($_POST['estado']==1){
 
-            $query = mysqli_query($link, "UPDATE Proveedor SET idEstado = 2 WHERE idProveedor = '{$_POST['idProveedor']}'");
+            $query = mysqli_query($link, "UPDATE Material SET idEstado = 2 WHERE idMaterial = '{$_POST['idMaterial']}'");
 
-            $queryPerformed = "UPDATE Proveedor SET idEstado = 2 WHERE idProveedor = '{$_POST['idProveedor']}'";
+            $queryPerformed = "UPDATE Material SET idEstado = 2 WHERE idMaterial = '{$_POST['idMaterial']}'";
 
-            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Desactivar Proveedor','{$queryPerformed}')");
+            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Desactivar Material','{$queryPerformed}')");
 
 
         }else{
 
-            $query = mysqli_query($link, "UPDATE Proveedor SET idEstado = 1 WHERE idProveedor = '{$_POST['idProveedor']}'");
+            $query = mysqli_query($link, "UPDATE Material SET idEstado = 1 WHERE idMaterial = '{$_POST['idMaterial']}'");
 
-            $queryPerformed = "UPDATE Proveedor SET idEstado = 1 WHERE idProveedor = '{$_POST['idProveedor']}'";
+            $queryPerformed = "UPDATE Material SET idEstado = 1 WHERE idMaterial = '{$_POST['idMaterial']}'";
 
-            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Activar Proveedor','{$queryPerformed}')");
+            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Activar Material','{$queryPerformed}')");
 
         }
 
@@ -77,8 +59,8 @@ if(isset($_SESSION['login'])){
         function myFunction() {
             // Declare variables
             var input, input2, input3, filter, filter2, filter3, table, tr, td, td2, td3, i;
-            input = document.getElementById("nombre");
-            input2 = document.getElementById("ciudad");
+            input = document.getElementById("material");
+            input2 = document.getElementById("unidad");
             input3 = document.getElementById("estado");
             filter = input.value.toUpperCase();
             filter2 = input2.value.toUpperCase();
@@ -89,7 +71,7 @@ if(isset($_SESSION['login'])){
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];
-                td2 = tr[i].getElementsByTagName("td")[2];
+                td2 = tr[i].getElementsByTagName("td")[1];
                 td3 = tr[i].getElementsByTagName("td")[3];
                 if ((td)&&(td2)) {
                     if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
@@ -114,7 +96,7 @@ if(isset($_SESSION['login'])){
         <div class="card">
             <div class="card-header card-inverse card-info">
                 <i class="fa fa-list"></i>
-                Listado de Proveedores
+                Listado de Materiales
                 <div class="float-right">
                     <div class="dropdown">
                         <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -122,7 +104,7 @@ if(isset($_SESSION['login'])){
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <form method="post">
-                                <input class="dropdown-item" type="submit" name="nuevoProveedor" formaction="nuevoProveedor.php" value="Registrar Nuevo Proveedor">
+                                <input class="dropdown-item" type="submit" name="nuevoMaterial" formaction="nuevoMaterial.php" value="Registrar Nuevo Material">
                             </form>
                         </div>
                     </div>
@@ -137,16 +119,15 @@ if(isset($_SESSION['login'])){
                     <div class="col-12">
                         <div id="collapsed" class="collapse">
                             <form class="form-inline justify-content-center" method="post" action="#">
-                                <input type="hidden" name="idCliente" value="<?php echo $_POST['idCliente'];?>">
-                                <label class="sr-only" for="nombre">Nombre</label>
-                                <input type="text" class="form-control mt-2 mb-2 mr-2" id="nombre" placeholder="Nombre" onkeyup="myFunction()">
-                                <label class="sr-only" for="ciudad">Ciudad</label>
-                                <select class="form-control mt-2 mb-2 mr-2" id="ciudad" onchange="myFunction()">
-                                    <option disabled selected value="a">Ciudad</option>
+                                <label class="sr-only" for="material">Material</label>
+                                <input type="text" class="form-control mt-2 mb-2 mr-2" id="material" placeholder="Material" onkeyup="myFunction()">
+                                <label class="sr-only" for="unidad">Unidad</label>
+                                <select class="form-control mt-2 mb-2 mr-2" id="unidad" onchange="myFunction()">
+                                    <option disabled selected value="a">Unidad</option>
                                     <?php
-                                    $query = mysqli_query($link, "SELECT * FROM Ciudad ORDER BY nombre ASC");
+                                    $query = mysqli_query($link, "SELECT * FROM UnidadMedida ORDER BY idUnidadMedida ASC");
                                     while($row = mysqli_fetch_array($query)){
-                                        echo "<option value='{$row['nombre']}'>{$row['nombre']}</option>";
+                                        echo "<option value='{$row['idUnidadMedida']}'>{$row['idUnidadMedida']}</option>";
                                     }
                                     ?>
                                 </select>
@@ -171,27 +152,21 @@ if(isset($_SESSION['login'])){
                         <table class="table table-bordered text-center" id="myTable">
                             <thead class="thead-default">
                             <tr>
-                                <th class="text-center">Nombre</th>
-                                <th class="text-center">Dirección</th>
-                                <th class="text-center">Ciudad</th>
+                                <th class="text-center">Material</th>
+                                <th class="text-center">Unidad</th>
+                                <th class="text-center">Siglas</th>
                                 <th class="text-center">Estado</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            $restult = mysqli_query($link, "SELECT * FROM Proveedor ORDER BY idEstado ASC");
+                            $restult = mysqli_query($link, "SELECT * FROM Material ORDER BY idEstado ASC");
                             while ($fila = mysqli_fetch_array($restult)){
                                 echo "<tr>";
-                                echo "<td>{$fila['nombre']}</td>";
-                                $restult1 = mysqli_query($link, "SELECT * FROM Direccion WHERE idDireccion = '{$fila['idDireccion']}'");
-                                while ($fila1 = mysqli_fetch_array($restult1)){
-                                    echo "<td>{$fila1['direccion']}</td>";
-                                    $restult2 = mysqli_query($link, "SELECT * FROM Ciudad WHERE idCiudad = '{$fila1['idCiudad']}'");
-                                    while ($fila2 = mysqli_fetch_array($restult2)){
-                                        echo "<td>{$fila2['nombre']}</td>";
-                                    }
-                                }
+                                echo "<td>{$fila['material']}</td>";
+                                echo "<td>{$fila['idUnidadMedida']}</td>";
+                                echo "<td>{$fila['siglas']}</td>";
                                 $restult1 = mysqli_query($link, "SELECT * FROM Estado WHERE idEstado = '{$fila['idEstado']}'");
                                 while ($fila1 = mysqli_fetch_array($restult1)){
                                     $descripcion = $fila1['descripcion'];
@@ -200,15 +175,15 @@ if(isset($_SESSION['login'])){
                                 echo "
                                     <td>
                                         <form method='post'>
-                                        <input type='hidden' name='idProveedor' value=".$fila['idProveedor'].">
+                                        <input type='hidden' name='idMaterial' value=".$fila['idMaterial'].">
                                         <input type='hidden' name='estado' value=".$fila['idEstado'].">
                                             <div class='dropdown'>
                                                 <button class='btn btn-outline-primary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                                 Acciones
                                                 </button>
                                                 <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                                    <button name='verProveedor' class='dropdown-item' type='submit' formaction='detalleProveedor.php'>Ver Ficha de Proveedor</button>
-                                                    <button name='editar' class='dropdown-item' type='submit' formaction='editarProveedor.php'>Editar</button>
+                                                    <button name='verProveedor' class='dropdown-item' type='submit' formaction='detalleMaterial.php'>Ver Proveedores</button>
+                                                    <button name='editar' class='dropdown-item' type='submit' formaction='editarMaterial.php'>Editar</button>
                                                     <button name='desactivar' class='dropdown-item' type='submit' formaction='#'>Desactivar/Activar</button>
                                                 </div>
                                             </div>

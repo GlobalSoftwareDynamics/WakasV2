@@ -40,10 +40,10 @@
                             Información Interna
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Materiales</a>
+                            <a class="dropdown-item" href="gestionMateriales.php">Materiales</a>
                             <a class="dropdown-item" href="#">Insumos</a>
                             <a class="dropdown-item" href="#">Máquinas</a>
-                            <a class="dropdown-item" href="#">Colaboradores</a>
+                            <a class="dropdown-item" href="gestionColaboradores.php">Colaboradores</a>
                             <a class="dropdown-item" href="#">Procesos</a>
                         </div>
                     </li>

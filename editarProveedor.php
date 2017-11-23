@@ -38,9 +38,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['deleteMaterial'])){
 
-        $query = mysqli_query($link, "DELETE * FROM MaterialProveedor WHERE idProveedor = '{$_POST['idProveedor']}' AND idMaterial = '{$_POST['idMaterial']}'");
+        $query = mysqli_query($link, "DELETE FROM MaterialProveedor WHERE idProveedor = '{$_POST['idProveedor']}' AND idMaterial = '{$_POST['idMaterial']}'");
 
-        $queryPerformed = "DELETE * FROM MaterialProveedor WHERE idProveedor = {$_POST['idProveedor']} AND idMaterial = {$_POST['idMaterial']}";
+        $queryPerformed = "DELETE FROM MaterialProveedor WHERE idProveedor = {$_POST['idProveedor']} AND idMaterial = {$_POST['idMaterial']}";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE','MaterialProveedor','{$queryPerformed}')");
 
@@ -48,9 +48,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['deleteInsumo'])){
 
-        $query = mysqli_query($link, "DELETE * FROM ProveedorInsumos WHERE idProveedor = '{$_POST['idProveedor']}' AND idInsumo = '{$_POST['idInsumo']}'");
+        $query = mysqli_query($link, "DELETE FROM ProveedorInsumos WHERE idProveedor = '{$_POST['idProveedor']}' AND idInsumo = '{$_POST['idInsumo']}'");
 
-        $queryPerformed = "DELETE * FROM ProveedorInsumos WHERE idProveedor = {$_POST['idProveedor']} AND idInsumo = {$_POST['idInsumo']}";
+        $queryPerformed = "DELETE FROM ProveedorInsumos WHERE idProveedor = {$_POST['idProveedor']} AND idInsumo = {$_POST['idInsumo']}";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE','ProveedorInsumos','{$queryPerformed}')");
 
@@ -58,9 +58,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['deleteProcedimiento'])){
 
-        $query = mysqli_query($link, "DELETE * FROM ProveedorSubProceso WHERE idProveedor = '{$_POST['idProveedor']}' AND idProcedimiento = '{$_POST['idProcedimiento']}'");
+        $query = mysqli_query($link, "DELETE FROM ProveedorSubProceso WHERE idProveedor = '{$_POST['idProveedor']}' AND idProcedimiento = '{$_POST['idProcedimiento']}'");
 
-        $queryPerformed = "DELETE * FROM ProveedorSubProceso WHERE idProveedor = {$_POST['idProveedor']} AND idProcedimiento = {$_POST['idProcedimiento']}";
+        $queryPerformed = "DELETE FROM ProveedorSubProceso WHERE idProveedor = {$_POST['idProveedor']} AND idProcedimiento = {$_POST['idProcedimiento']}";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE','ProveedorSubProceso','{$queryPerformed}')");
 
@@ -173,7 +173,7 @@ if(isset($_SESSION['login'])){
                                         echo "<td>{$fila['costo']}</td>";
                                         echo "
                                               <td>
-                                                  <form method='post'>
+                                                  <form method='post' action='#'>
                                                         <div class='dropdown'>
                                                             <input type='hidden' name='idProveedor' value='{$_POST['idProveedor']}'>
                                                             <input type='hidden' name='idMaterial' value='{$fila['idMaterial']}'>
@@ -230,7 +230,7 @@ if(isset($_SESSION['login'])){
                                         echo "<td>{$fila['costo']}</td>";
                                         echo "
                                               <td>
-                                                  <form method='post'>
+                                                  <form method='post' action='#'>
                                                         <div class='dropdown'>
                                                             <input type='hidden' name='idProveedor' value='{$_POST['idProveedor']}'>
                                                             <input type='hidden' name='idInsumo' value='{$fila['idInsumo']}'>
@@ -287,7 +287,7 @@ if(isset($_SESSION['login'])){
                                         echo "<td>{$fila['costo']}</td>";
                                         echo "
                                               <td>
-                                                  <form method='post'>
+                                                  <form method='post' action='#'>
                                                         <div class='dropdown'>
                                                             <input type='hidden' name='idProveedor' value='{$_POST['idProveedor']}'>
                                                             <input type='hidden' name='idProcedimiento' value='{$fila['idProcedimiento']}'>
