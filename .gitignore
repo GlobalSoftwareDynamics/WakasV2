@@ -33,3 +33,5 @@ Thumbs.db
 # Directory #
 ######################
 /.idea/
+/db/
+db
