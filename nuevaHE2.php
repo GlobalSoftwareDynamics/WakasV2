@@ -12,7 +12,7 @@ if(isset($_SESSION['login'])){
 			$flag = false;
 		}
 
-		$search = mysqli_query($link,"SELECT * FROM Producto WHERE idCorto = '{$_POST['idCorto']}'");
+		$search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idCorto']}'");
 		while($index = mysqli_fetch_array($search)){
 			$flag = false;
 		}
@@ -58,19 +58,129 @@ if(isset($_SESSION['login'])){
 					$descripcionGeneral = null;
 				}
 
-				$insert = mysqli_query($link, "INSERT INTO Producto VALUES ('{$_POST['idProductoCrear']}','{$_POST['idCorto']}','{$_POST['tipoProducto']}','{$_POST['idCliente']}',
-												'{$_SESSION['user']}','{$_POST['genero']}','{$_POST['codificacionTalla']}','{$idProvisional}','{$date}',
-												'{$observaciones}','{$descripcionGeneral}',1)");
+				$insert = mysqli_query($link, "INSERT INTO Producto VALUES ('{$_POST['idProductoCrear']}','{$_POST['tipoProducto']}','{$_POST['idCliente']}',
+												'{$_SESSION['user']}','{$_POST['genero']}','{$_POST['codificacionTalla']}',1,'{$idProvisional}','{$date}',
+												'{$observaciones}','{$descripcionGeneral}')");
 
-				$queryPerformed = "INSERT INTO Producto VALUES ({$_POST['idProductoCrear']},{$_POST['idCorto']},{$_POST['tipoProducto']},{$_POST['idCliente']},
-							   {$_SESSION['user']},{$_POST['genero']},{$_POST['codificacionTalla']},{$idProvisional},{$date},
-							   {$observaciones},{$descripcionGeneral},1)";
+				$queryPerformed = "INSERT INTO Producto VALUES ({$_POST['idProductoCrear']},{$_POST['tipoProducto']},{$_POST['idCliente']},
+												{$_SESSION['user']},{$_POST['genero']},{$_POST['codificacionTalla']},1,{$idProvisional},{$date},
+												{$observaciones},{$descripcionGeneral})";
 
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PRODUCTO','INSERT','{$queryPerformed}')");
 			}
+
+			if(isset($_POST['addMedida'])){
+			    $aux = 0;
+
+				$query2 = mysqli_query($link,"SELECT DISTINCT idMedida FROM TallaMedida WHERE idProducto = '{$_POST['idProductoCrear']}'");
+				while($row2 = mysqli_fetch_row($query2)){
+					$aux++;
+				}
+
+			    $insert = mysqli_query($link,"INSERT INTO ProductoMedida VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectMedida']}','{$_POST['tolerancia']}','{$_POST['observacion']}','{$aux}')");
+
+			    $queryPerformed = "INSERT INTO ProductoMedida VALUES ({$_POST['idProductoCrear']},{$_POST['selectMedida']},{$_POST['tolerancia']},{$_POST['observacion']},{$aux})";
+
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PRODUCTOMEDIDA','INSERT','{$queryPerformed}')");
+
+				$query = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['idCodificacionTalla']}'");
+				while($row = mysqli_fetch_array($query)){
+				    $addVar = "add".$row['idTalla'];
+				    if(isset($_POST[$addVar])){
+				        $insert = mysqli_query($link, "INSERT INTO TallaMedida VALUES ('{$_POST['idProductoCrear']}','{$row['idTalla']}','{$_POST['selectMedida']}','{$_POST[$addVar]}')");
+
+				        $queryPerformed = "INSERT INTO TallaMedida VALUES ({$_POST['idProductoCrear']},{$row['idTalla']},{$_POST['selectMedida']},{$_POST[$addVar]})";
+
+					    $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT TALLAMEDIDA','INSERT','{$queryPerformed}')");
+                    }
+                }
+            }
+
+            if(isset($_POST['bajar'])){
+			    $flag = false;
+
+	            $query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND idMedida = '{$_POST['medidaSelect']}'");
+			    while ($row = mysqli_fetch_array($query)){
+			        $indice = $row['indice'];
+                }
+
+                $indiceSup = $indice+1;
+
+			    $query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$indiceSup}'");
+			    while ($row = mysqli_fetch_array($query)){
+			        $flag = true;
+                }
+
+                if($flag){
+	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = 'PROV' WHERE indice = '{$indice}'");
+	                $queryPerformed = "UPDATE ProductoMedida SET indice = PROV WHERE indice = {$indice}";
+	                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+
+	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indice}' WHERE indice = '{$indiceSup}'");
+	                $queryPerformed = "UPDATE ProductoMedida SET indice = {$indice} WHERE indice = {$indiceSup}";
+	                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+
+	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE indice = 'PROV'");
+	                $queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE indice = PROV";
+	                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+                }
+            }
+
+			if(isset($_POST['subir'])){
+				$flag = false;
+
+				$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND idMedida = '{$_POST['medidaSelect']}'");
+				while ($row = mysqli_fetch_array($query)){
+					$indice = $row['indice'];
+				}
+
+				$indiceSup = $indice-1;
+
+				$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$indiceSup}'");
+				while ($row = mysqli_fetch_array($query)){
+					$flag = true;
+				}
+
+				if($flag){
+					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = 'PROV' WHERE indice = '{$indice}'");
+					$queryPerformed = "UPDATE ProductoMedida SET indice = PROV WHERE indice = {$indice}";
+					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+
+					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indice}' WHERE indice = '{$indiceSup}'");
+					$queryPerformed = "UPDATE ProductoMedida SET indice = {$indice} WHERE indice = {$indiceSup}";
+					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+
+					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE indice = 'PROV'");
+					$queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE indice = PROV";
+					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+				}
+			}
+
+			if(isset($_POST['eliminar'])){
+				$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND idMedida = '{$_POST['medidaSelect']}'");
+				while($row = mysqli_fetch_array($query)){
+				    $indice = $row['indice'];
+                }
+
+                $delete = mysqli_query($link,"DELETE FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND idMedida = '{$_POST['medidaSelect']}'");
+				$queryPerformed = "DELETE FROM ProductoMedida WHERE idProducto = {$_POST['idProductoCrear']} AND idMedida = {$_POST['medidaSelect']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE PRODUCTOMEDIDA','DELETE','{$queryPerformed}')");
+
+				$delete = mysqli_query($link,"DELETE FROM TallaMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND idMedida = '{$_POST['medidaSelect']}'");
+				$queryPerformed = "DELETE FROM TallaMedida WHERE idProducto = {$_POST['idProductoCrear']} AND idMedida = {$_POST['medidaSelect']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE TALLAMEDIDA','DELETE','{$queryPerformed}')");
+
+				$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$indice}'");
+				while($row = mysqli_fetch_array($query)){
+				    $indiceSup = $row['indice'] - 1;
+				    $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+					$queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER DELETE PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+                }
+			}
 			?>
 
-			<form method="post" action="nuevaHE2.php">
+
 				<section class="container">
 					<div class="row">
 						<div class="col-12">
@@ -100,10 +210,10 @@ if(isset($_SESSION['login'])){
 										<div class="tab-content">
 											<div class="tab-pane active" id="medidas" role="tabpanel">
 												<div class="spacer20"></div>
-                                                <table class="table">
+                                                <table class="table table-bordered">
                                                     <thead>
                                                     <tr>
-                                                        <th class="text-center">Medida</th>
+                                                        <th class="text-center" colspan="2">Medida</th>
                                                         <?php
                                                         $search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoCrear']}'");
                                                         while($index = mysqli_fetch_array($search)){
@@ -111,7 +221,7 @@ if(isset($_SESSION['login'])){
 	                                                        //$search2 = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$index['idcodificacionTalla']}' ORDER BY indice ASC");
 	                                                        $search2 = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$index['idcodificacionTalla']}'");
 	                                                        while($index2 = mysqli_fetch_array($search2)){
-	                                                            echo "<th class=\"text-center\" style='width:6%;'>{$index2['descripcion']}</th>";
+	                                                            echo "<th class=\"text-center\" style='width:8%;'>{$index2['descripcion']}</th>";
                                                             }
                                                         }
                                                         ?>
@@ -122,121 +232,66 @@ if(isset($_SESSION['login'])){
                                                     </thead>
                                                     <tbody>
                                                     <tr>
+                                                        <form method="post" action="#">
                                                         <?php
-                                                        echo "<td><select name='selectMedida' class='form-control' autofocus>";
-                                                        $result2 = mysqli_query($link,"SELECT * FROM Medida");
+                                                        echo "<td colspan='2'><select name='selectMedida' class='form-control' autofocus>";
+                                                        $result2 = mysqli_query($link,"SELECT * FROM Medida ORDER BY descripcion ASC");
                                                         while ($fila2 = mysqli_fetch_array($result2)){
 	                                                        echo "<option value='".$fila2['idMedida']."'>".$fila2['descripcion']."</option>";
                                                         }
                                                         echo "</select></td>";
                                                         $search = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$idCodificacionTalla}'");
                                                         while($index = mysqli_fetch_array($search)){
-	                                                        echo "<td class='text-center'><input type='text' class='form-control' name='{$index['idTalla']}'></td>";
+	                                                        echo "<td class='text-center'><input type='number' class='form-control' name='add{$index['idTalla']}'></td>";
                                                         }
                                                         ?>
                                                         <td class="text-center"><input type="text" class="form-control" name="tolerancia"></td>
                                                         <td class="text-center"><input type="text" class="form-control" name="observacion"></td>
-                                                        <td class="text-center"><input type="submit" name="Agregar" value="Agregar" class="btn btn-outline-primary"></td>
+                                                        <td class="text-center"><input type="submit" name="addMedida" value="Agregar" class="btn btn-outline-primary"></td>
+                                                        <input type="hidden" name="idCodificacionTalla" value="<?php echo $idCodificacionTalla;?>">
                                                         <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                        </form>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="13"></td>
                                                     </tr>
                                                     <?php
-                                                    //Llenar tabla
-                                                    ?>
-                                                    <tr>
-                                                        <td>&nbsp;</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">Profundidad de Escote Delantero</td>
-                                                        <td class="text-center">7</td>
-                                                        <td class="text-center">10</td>
-                                                        <td class="text-center">13</td>
-                                                        <td class="text-center">16</td>
-                                                        <td class="text-center">19</td>
-                                                        <td class="text-center">22</td>
-                                                        <td class="text-center">25</td>
-                                                        <td class="text-center">-</td>
-                                                        <td class="text-center">1</td>
-                                                        <td class="text-center">Esta es una observación de prueba</td>
-                                                        <td>
-                                                                <div class=\"dropdown\">
-                                                                    <input type='hidden' name='idProducto' value='".$row['idProducto']."'>
-                                                                    <input type='hidden' name='volver' value='gestionProductos.php'>
-                                                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    Acciones
-                                                                    </button>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                        <button name='nuevoProducto' class="dropdown-item" type="submit" formaction='nuevoProductoPlantilla.php'>Subir</button>
-                                                                        <button name='verProducto' class="dropdown-item" type="submit" formaction='detalleProducto.php'>Bajar</button>
-                                                                        <button name='verProducto' class="dropdown-item" type="submit" formaction='detalleProducto.php'>Eliminar</button>
+                                                    $result = mysqli_query($link , "SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' ORDER BY indice ASC");
+                                                    while($row = mysqli_fetch_array($result)){
+                                                        echo "<tr>";
+	                                                    echo "<td class='text-center'>{$row['idMedida']}</td>";
+	                                                    $result2 = mysqli_query($link,"SELECT * FROM Medida WHERE idMedida = '{$row['idMedida']}'");
+	                                                    while($row2 = mysqli_fetch_array($result2)){
+	                                                        echo "<td class='text-center'>{$row2['descripcion']}</td>";
+                                                        }
+	                                                    $search = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$idCodificacionTalla}' ORDER BY indice ASC");
+	                                                    while($index = mysqli_fetch_array($search)){
+		                                                    $search2 = mysqli_query($link,"SELECT * FROM TallaMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND idTalla = '{$index['idTalla']}' AND idMedida = '{$row['idMedida']}'");
+		                                                    while($index2 = mysqli_fetch_array($search2)){
+		                                                        echo "<td class='text-center'>{$index2['valor']}</td>";
+		                                                    }
+	                                                    }
+	                                                    echo "<td class='text-center'>{$row['tolerancia']}</td>";
+	                                                    echo "<td class='text-center'>{$row['observacion']}</td>";
+	                                                    echo "<td class='text-center'>
+                                                                <form method='post' action='#'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}'>
+                                                                    <input type='hidden' name='medidaSelect' value='{$row['idMedida']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir'>
+                                                                        <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar'>
+                                                                        <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
                                                                     </div>
                                                                 </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">Profundidad de Escote Delantero</td>
-                                                        <td class="text-center">7</td>
-                                                        <td class="text-center">10</td>
-                                                        <td class="text-center">13</td>
-                                                        <td class="text-center">16</td>
-                                                        <td class="text-center">19</td>
-                                                        <td class="text-center">22</td>
-                                                        <td class="text-center">25</td>
-                                                        <td class="text-center">-</td>
-                                                        <td class="text-center">1</td>
-                                                        <td class="text-center">Esta es una observación de prueba</td>
-                                                        <td>
-                                                            <div class=\"dropdown\">
-                                                                <input type='hidden' name='idProducto' value='".$row['idProducto']."'>
-                                                                <input type='hidden' name='volver' value='gestionProductos.php'>
-                                                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    Acciones
-                                                                </button>
-                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                    <button name='nuevoProducto' class="dropdown-item" type="submit" formaction='nuevoProductoPlantilla.php'>Subir</button>
-                                                                    <button name='verProducto' class="dropdown-item" type="submit" formaction='detalleProducto.php'>Bajar</button>
-                                                                    <button name='verProducto' class="dropdown-item" type="submit" formaction='detalleProducto.php'>Eliminar</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">Profundidad de Escote Delantero</td>
-                                                        <td class="text-center">7</td>
-                                                        <td class="text-center">10</td>
-                                                        <td class="text-center">13</td>
-                                                        <td class="text-center">16</td>
-                                                        <td class="text-center">19</td>
-                                                        <td class="text-center">22</td>
-                                                        <td class="text-center">25</td>
-                                                        <td class="text-center">-</td>
-                                                        <td class="text-center">1</td>
-                                                        <td class="text-center">Esta es una observación de prueba</td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <input type='hidden' name='idProducto' value='<?php echo $row['idProducto'];?>'>
-                                                                <input type='hidden' name='volver' value='gestionProductos.php'>
-                                                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    Acciones
-                                                                </button>
-                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                    <button name='nuevoProducto' class="dropdown-item" type="submit" formaction='nuevoProductoPlantilla.php'>Subir</button>
-                                                                    <button name='verProducto' class="dropdown-item" type="submit" formaction='detalleProducto.php'>Bajar</button>
-                                                                    <button name='verProducto' class="dropdown-item" type="submit" formaction='detalleProducto.php'>Eliminar</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                                </form>
+                                                              </td>";
+	                                                    echo "</tr>";
+                                                    }
+                                                    ?>
                                                     </tbody>
                                                 </table>
                                                 <div class="spacer20"></div>
@@ -257,7 +312,6 @@ if(isset($_SESSION['login'])){
 						</div>
 					</div>
 				</section>
-			</form>
 
 			<?php
 		}else{
