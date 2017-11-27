@@ -329,7 +329,7 @@ if(isset($_SESSION['login'])){
                                     <select name="material" id="material" class="form-control">
                                         <option disabled selected>Seleccionar</option>
                                         <?php
-                                        $query = mysqli_query($link, "SELECT * FROM Material");
+                                        $query = mysqli_query($link, "SELECT * FROM Material WHERE idEstado = 1 ORDER BY material ASC");
                                         while($row = mysqli_fetch_array($query)){
                                             echo "<option value='{$row['idMaterial']}'>{$row['material']}</option>";
                                         }
@@ -369,7 +369,7 @@ if(isset($_SESSION['login'])){
                                     <select name="insumo" id="insumo" class="form-control">
                                         <option disabled selected>Seleccionar</option>
                                         <?php
-                                        $query = mysqli_query($link, "SELECT * FROM Insumos");
+                                        $query = mysqli_query($link, "SELECT * FROM Insumos WHERE idEstado = 1 ORDER BY descripcion ASC");
                                         while($row = mysqli_fetch_array($query)){
                                             echo "<option value='{$row['idInsumo']}'>{$row['descripcion']}</option>";
                                         }
@@ -409,7 +409,7 @@ if(isset($_SESSION['login'])){
                                     <select name="subproceso" id="subproceso" class="form-control">
                                         <option disabled selected>Seleccionar</option>
                                         <?php
-                                        $query = mysqli_query($link, "SELECT * FROM SubProceso");
+                                        $query = mysqli_query($link, "SELECT * FROM SubProceso WHERE idEstado = 1 ORDER BY descripcion ASC");
                                         while($row = mysqli_fetch_array($query)){
                                             echo "<option value='{$row['idProcedimiento']}'>{$row['descripcion']}</option>";
                                         }
