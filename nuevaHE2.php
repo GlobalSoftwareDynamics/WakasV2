@@ -138,16 +138,16 @@ if(isset($_SESSION['login'])){
                 }
 
                 if($flag){
-	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = 'PROV' WHERE indice = '{$indice}'");
-	                $queryPerformed = "UPDATE ProductoMedida SET indice = PROV WHERE indice = {$indice}";
+	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = -1 WHERE indice = '{$indice}'");
+	                $queryPerformed = "UPDATE ProductoMedida SET indice = -1 WHERE indice = {$indice}";
 	                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
 
 	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indice}' WHERE indice = '{$indiceSup}'");
 	                $queryPerformed = "UPDATE ProductoMedida SET indice = {$indice} WHERE indice = {$indiceSup}";
 	                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
 
-	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE indice = 'PROV'");
-	                $queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE indice = PROV";
+	                $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE indice = -1");
+	                $queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE indice = -1";
 	                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
                 }
             }
@@ -168,16 +168,16 @@ if(isset($_SESSION['login'])){
 				}
 
 				if($flag){
-					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = 'PROV' WHERE indice = '{$indice}'");
-					$queryPerformed = "UPDATE ProductoMedida SET indice = PROV WHERE indice = {$indice}";
+					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = -1 WHERE indice = '{$indice}'");
+					$queryPerformed = "UPDATE ProductoMedida SET indice = -1 WHERE indice = {$indice}";
 					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
 
 					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indice}' WHERE indice = '{$indiceSup}'");
 					$queryPerformed = "UPDATE ProductoMedida SET indice = {$indice} WHERE indice = {$indiceSup}";
 					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
 
-					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE indice = 'PROV'");
-					$queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE indice = PROV";
+					$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE indice = -1");
+					$queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE indice = -1";
 					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
 				}
 			}
