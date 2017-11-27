@@ -54,7 +54,7 @@ if(isset($_SESSION['login'])){
 
             $query = mysqli_query($link, "UPDATE Proveedor SET idEstado = 2 WHERE idProveedor = '{$_POST['idProveedor']}'");
 
-            $queryPerformed = "UPDATE Cliente SET idEstado = 2 WHERE idProveedor = '{$_POST['idProveedor']}'";
+            $queryPerformed = "UPDATE Proveedor SET idEstado = 2 WHERE idProveedor = '{$_POST['idProveedor']}'";
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Desactivar Proveedor','{$queryPerformed}')");
 
