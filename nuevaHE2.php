@@ -69,6 +69,18 @@ if(isset($_SESSION['login'])){
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PRODUCTO','INSERT','{$queryPerformed}')");
 			}
 
+			if(isset($_POST['insertar'])){
+				$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND idMedida = '{$_POST['medidaSelect']}'");
+				while($row = mysqli_fetch_array($query)){
+				    $indiceInsertar = $row['indice'];
+				}
+				echo "<section class='container'>
+                        <div class='alert alert-info' role='alert'>
+                            Insertar en la fila ".($indiceInsertar+1)." activado.
+                        </div>
+                    </section>";
+			}
+
 			if(isset($_POST['addMedida'])){
 			    $aux = 0;
 
@@ -76,6 +88,20 @@ if(isset($_SESSION['login'])){
 				while($row2 = mysqli_fetch_row($query2)){
 					$aux++;
 				}
+
+				if(isset($_POST['insertFila']) && $_POST['insertFila'] != 'NA'){
+				    $aux = $_POST['insertFila'];
+
+					$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$aux}' ORDER BY indice DESC");
+					while($row = mysqli_fetch_array($query)){
+						$indiceSup = $row['indice'] + 1;
+						$update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+						$queryPerformed = "UPDATE ProductoMedida SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+						$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER INSERT PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
+					}
+
+					$aux++;
+                }
 
 			    $insert = mysqli_query($link,"INSERT INTO ProductoMedida VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectMedida']}','{$_POST['tolerancia']}','{$_POST['observacion']}','{$aux}')");
 
@@ -170,7 +196,7 @@ if(isset($_SESSION['login'])){
 				$queryPerformed = "DELETE FROM TallaMedida WHERE idProducto = {$_POST['idProductoCrear']} AND idMedida = {$_POST['medidaSelect']}";
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE TALLAMEDIDA','DELETE','{$queryPerformed}')");
 
-				$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$indice}'");
+				$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$indice}' ORDER BY indice ASC");
 				while($row = mysqli_fetch_array($query)){
 				    $indiceSup = $row['indice'] - 1;
 				    $update = mysqli_query($link, "UPDATE ProductoMedida SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
@@ -221,7 +247,7 @@ if(isset($_SESSION['login'])){
 	                                                        //$search2 = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$index['idcodificacionTalla']}' ORDER BY indice ASC");
 	                                                        $search2 = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$index['idcodificacionTalla']}'");
 	                                                        while($index2 = mysqli_fetch_array($search2)){
-	                                                            echo "<th class=\"text-center\" style='width:8%;'>{$index2['descripcion']}</th>";
+	                                                            echo "<th class=\"text-center\" style='width:6.5%;'>{$index2['descripcion']}</th>";
                                                             }
                                                         }
                                                         ?>
@@ -242,13 +268,14 @@ if(isset($_SESSION['login'])){
                                                         echo "</select></td>";
                                                         $search = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$idCodificacionTalla}'");
                                                         while($index = mysqli_fetch_array($search)){
-	                                                        echo "<td class='text-center'><input type='number' class='form-control' name='add{$index['idTalla']}'></td>";
+	                                                        echo "<td class='text-center'><input type='number' min='0' class='form-control' name='add{$index['idTalla']}'></td>";
                                                         }
                                                         ?>
-                                                        <td class="text-center"><input type="text" class="form-control" name="tolerancia"></td>
+                                                        <td class="text-center"><input type="number" min="0" class="form-control" name="tolerancia"></td>
                                                         <td class="text-center"><input type="text" class="form-control" name="observacion"></td>
                                                         <td class="text-center"><input type="submit" name="addMedida" value="Agregar" class="btn btn-outline-primary"></td>
                                                         <input type="hidden" name="idCodificacionTalla" value="<?php echo $idCodificacionTalla;?>">
+                                                        <input type="hidden" name="insertFila" value="<?php if(isset($indiceInsertar)){echo $indiceInsertar;}else{echo 'NA';}?>">
                                                         <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                                         </form>
                                                     </tr>
@@ -258,7 +285,7 @@ if(isset($_SESSION['login'])){
                                                     <?php
                                                     $result = mysqli_query($link , "SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoCrear']}' ORDER BY indice ASC");
                                                     while($row = mysqli_fetch_array($result)){
-                                                        echo "<tr>";
+                                                        echo "<tr class='textoRed'>";
 	                                                    echo "<td class='text-center'>{$row['idMedida']}</td>";
 	                                                    $result2 = mysqli_query($link,"SELECT * FROM Medida WHERE idMedida = '{$row['idMedida']}'");
 	                                                    while($row2 = mysqli_fetch_array($result2)){

@@ -15,7 +15,18 @@ label,p,th,td {
     font-size: 14px;
 }
 
+/* Remover los controles de inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
 /* Clases */
+tr.textoRed>td{
+    font-size: 13px;
+}
 
 .card-header{
     background-color: #EF4A43;
