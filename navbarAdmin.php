@@ -41,10 +41,10 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="gestionMateriales.php">Materiales</a>
-                            <a class="dropdown-item" href="#">Insumos</a>
-                            <a class="dropdown-item" href="#">Máquinas</a>
+                            <a class="dropdown-item" href="gestionInsumos.php">Insumos</a>
+                            <a class="dropdown-item" href="gestionMaquinas.php">Máquinas</a>
                             <a class="dropdown-item" href="gestionColaboradores.php">Colaboradores</a>
-                            <a class="dropdown-item" href="#">Procesos</a>
+                            <a class="dropdown-item" href="gestionProcesos.php">Procesos</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
