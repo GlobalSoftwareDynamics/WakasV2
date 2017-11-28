@@ -30,3 +30,25 @@ function getTallas(producto,codificacion) {
         }
     });
 }
+
+function getNumMetrico(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idMaterialNM':val},
+        success: function(data){
+            $("#numMetrico").html(data);
+        }
+    });
+}
+
+function getUnidadMedida(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idMaterialUM':val},
+        success: function(data){
+            $("#unidadMedida").html(data);
+        }
+    });
+}

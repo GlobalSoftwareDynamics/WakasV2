@@ -7,29 +7,61 @@ if(isset($_SESSION['login'])){
 	include('declaracionFechas.php');
 	$flag = true;
 
+	if(isset($_POST['addTipoProducto'])){
+		$insert = mysqli_query($link, "INSERT INTO TipoProducto(descripcion,tamanoLote,cantidadMaterial) VALUES ('{$_POST['descripcionTipoProducto']}','{$_POST['tamanoLote']}','{$_POST['cantidadMaterial']}')");
+
+		$queryPerformed = "INSERT INTO TipoProducto VALUES ({$_POST['descripcionTipoProducto']},{$_POST['tamanoLote']},{$_POST['cantidadMaterial']})";
+
+		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT TIPO PRODUCTO','INSERT','{$queryPerformed}')");
+	}
+
+	if(isset($_POST['addCodificacion'])){
+		$insert = mysqli_query($link, "INSERT INTO codificacionTalla(descripcion) VALUES ('{$_POST['codificacion']}')");
+
+		$queryPerformed = "INSERT INTO codificacionTalla(descripcion) VALUES ({$_POST['codificacion']})";
+
+		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT CODIF. TALLA','INSERT','{$queryPerformed}')");
+	}
+
+	if(isset($_POST['addTalla'])){
+		$insert = mysqli_query($link, "INSERT INTO Talla(descripcion,idcodificacionTalla) VALUES ('{$_POST['talla']}','{$_POST['codificacionTallaSelect']}')");
+
+		$queryPerformed = "INSERT INTO Talla(descripcion,idcodificacionTalla) VALUES ({$_POST['talla']},{$_POST['codificacionTallaSelect']})";
+
+		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT TALLA','INSERT','{$queryPerformed}')");
+	}
+
+	if(isset($_POST['addCliente'])){
+		$insert = mysqli_query($link, "INSERT INTO Cliente (idCliente,idEstado,nombre) VALUES ('{$_POST['ruc']}',1,'{$_POST['razonSocial']}')");
+
+		$queryPerformed = "INSERT INTO Cliente (idCliente,idEstado,nombre) VALUES ({$_POST['ruc']},1,{$_POST['razonSocial']})";
+
+		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT CLIENTE','INSERT','{$queryPerformed}')");
+	}
+
 	if(isset($_POST['addProducto'])){
-		if($_POST['idCorto'] == ''){
+		if($_POST['idProductoCrear'] == ''){
 			$flag = false;
 		}
 
-		$search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idCorto']}'");
+		$search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoCrear']}'");
 		while($index = mysqli_fetch_array($search)){
 			$flag = false;
 		}
 
-		if(!isset($_POST['genero'])){
+		if(!isset($_POST['genero']) || $_POST['genero'] == ''){
 			$flag = false;
 		}
 
-		if(!isset($_POST['tipoProducto'])){
+		if(!isset($_POST['tipoProducto']) || $_POST['tipoProducto'] == ''){
 			$flag = false;
 		}
 
-		if(!isset($_POST['codificacionTalla'])){
+		if(!isset($_POST['codificacionTalla']) || $_POST['codificacionTalla'] == ''){
 			$flag = false;
 		}
 
-		if(!isset($_POST['idCliente'])){
+		if(!isset($_POST['idCliente']) || $_POST['idCliente'] == ''){
 			$flag = false;
 		}
 	}
@@ -58,15 +90,35 @@ if(isset($_SESSION['login'])){
 					$descripcionGeneral = null;
 				}
 
+				if (isset($_POST['codificacionMaterial'])) {
+					$codificacionMaterial = $_POST['codificacionMaterial'];
+				} else {
+					$codificacionMaterial = null;
+				}
+
 				$insert = mysqli_query($link, "INSERT INTO Producto VALUES ('{$_POST['idProductoCrear']}','{$_POST['tipoProducto']}','{$_POST['idCliente']}',
 												'{$_SESSION['user']}','{$_POST['genero']}','{$_POST['codificacionTalla']}',1,'{$idProvisional}','{$date}',
-												'{$observaciones}','{$descripcionGeneral}')");
+												'{$observaciones}','{$descripcionGeneral}','{$codificacionMaterial}')");
 
 				$queryPerformed = "INSERT INTO Producto VALUES ({$_POST['idProductoCrear']},{$_POST['tipoProducto']},{$_POST['idCliente']},
 												{$_SESSION['user']},{$_POST['genero']},{$_POST['codificacionTalla']},1,{$idProvisional},{$date},
-												{$observaciones},{$descripcionGeneral})";
+												{$observaciones},{$descripcionGeneral},{$codificacionMaterial})";
 
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PRODUCTO','INSERT','{$queryPerformed}')");
+
+				$cantidadMaterial = 0;
+				$query = mysqli_query($link,"SELECT * FROM TipoProducto WHERE idTipoProducto = '{$_POST['tipoProducto']}'");
+				while($row = mysqli_fetch_array($query)){
+				    $cantidadMaterial = $row['cantidadMaterial'];
+                }
+
+				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,idEstado,codigoColor) VALUES 
+                          ('{$_POST['idProductoCrear']}',1,NULL,$cantidadMaterial,1,NULL)");
+
+				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,idEstado,codigoColor) VALUES 
+                          ({$_POST['idProductoCrear']},1,NULL,$cantidadMaterial,1,NULL)";
+
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTE PRENDA','INSERT','{$queryPerformed}')");
 			}
 
 			if(isset($_POST['insertar'])){
@@ -218,23 +270,180 @@ if(isset($_SESSION['login'])){
 									</div>
 									<div class="float-right">
 										<div class="dropdown">
-											<input name="addProductoMedidasComp" type="submit" class="btn btn-light btn-sm" formaction="nuevaHE3.php" value="Guardar">
+                                            <button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Guardar</button>
 										</div>
 									</div>
 								</div>
 								<div class="card-block">
 									<div class="col-12">
+										<?php
+										$activoGeneral = '';
+										$activoMedidas = '';
+										$activoComponentes = '';
+										if(isset($_POST['addTipoProducto']) || isset($_POST['addCodificacion']) || isset($_POST['addCliente']) || isset($_POST['addTalla'])){
+											$activoGeneral = 'active';
+										}
+										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect'])){
+										    $activoMedidas = 'active';
+                                        }
+										if(isset($_POST['addComponente']) || isset($_POST['addParte'])){
+											$activoComponentes = 'active';
+										}
+										?>
 										<div class="spacer20"></div>
 										<ul class="nav nav-tabs" role="tablist">
-											<li class="nav-item">
-												<a class="nav-link active" data-toggle="tab" href="#medidas" role="tab">Medidas y Tallas</a>
+                                            <li class="nav-item">
+                                                <a class="nav-link <?php echo $activoGeneral;?>" data-toggle="tab" href="#general" role="tab">Datos Generales</a>
+                                            </li>
+                                            <li class="nav-item">
+												<a class="nav-link <?php echo $activoMedidas;?>" data-toggle="tab" href="#medidas" role="tab">Medidas y Tallas</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link" data-toggle="tab" href="#componentes" role="tab">Componentes y Partes</a>
+												<a class="nav-link <?php echo $activoComponentes;?>" data-toggle="tab" href="#componentes" role="tab">Componentes y Partes</a>
 											</li>
 										</ul>
 										<div class="tab-content">
-											<div class="tab-pane active" id="medidas" role="tabpanel">
+                                            <div class="tab-pane <?php echo $activoGeneral;?>" id="general" role="tabpanel">
+                                                <div class="spacer20"></div>
+	                                            <?php
+                                                $query = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoCrear']}'");
+                                                while($row = mysqli_fetch_array($query)){
+	                                                $tipoProducto = $row['idTipoProducto'];
+	                                                $cliente = $row['idCliente'];
+                                                    $genero = $row['idgenero'];
+                                                    $idCodificacionTalla = $row['idcodificacionTalla'];
+	                                                $idProvisional = $row['idProvisional'];
+	                                                $observaciones = $row['observaciones'];
+	                                                $descripcionGeneral = $row['descripcionGeneral'];
+	                                                $codificacionMaterial = $row['codificacionMaterial'];
+                                                }
+	                                            ?>
+                                                <form action="nuevaHE3.php" method="post" id="formSiguiente">
+                                                <div class="form-group row">
+                                                    <label for="idProd" class="col-2 col-form-label">ID Producto:</label>
+                                                    <div class="col-10">
+                                                        <input class="form-control" type="text" id="idProd" name="idProd" value="<?php echo $_POST['idProductoCrear']?>" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="idProvisional" class="col-2 col-form-label">ID Provisional Cliente:</label>
+                                                    <div class="col-10">
+                                                        <input class="form-control" type="text" id="idProvisional" name="idProvisional" value="<?php echo $idProvisional;?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="genero" class="col-2 col-form-label">Género:</label>
+                                                    <div class="col-6">
+                                                        <select class="form-control" name="genero" id="genero">
+				                                            <?php
+				                                            $query = mysqli_query($link,"SELECT * FROM Genero WHERE idGenero = {$genero}");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            echo "<option selected value='{$row['idgenero']}'>{$row['descripcion']}</option>";
+				                                            }
+				                                            $query = mysqli_query($link,"SELECT * FROM Genero");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            if($row['idgenero'] == $genero){
+					                                            }else{
+						                                            echo "<option value='{$row['idgenero']}'>{$row['descripcion']}</option>";
+					                                            }
+				                                            }
+				                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="tipoProducto" class="col-2 col-form-label">Tipo de Producto:</label>
+                                                    <div class="col-6">
+                                                        <select class="form-control" name="tipoProducto" id="tipoProducto">
+				                                            <?php
+				                                            $query = mysqli_query($link,"SELECT * FROM TipoProducto WHERE idTipoProducto = {$tipoProducto}");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            echo "<option selected value='{$row['idTipoProducto']}'>{$row['descripcion']}</option>";
+				                                            }
+				                                            $query = mysqli_query($link,"SELECT * FROM TipoProducto");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            if($row['idTipoProducto'] == $tipoProducto){
+					                                            }else{
+						                                            echo "<option value='{$row['idTipoProducto']}'>{$row['descripcion']}</option>";
+					                                            }
+				                                            }
+				                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalTipoProducto">Agregar Tipo de Producto</button>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="codificacionTalla" class="col-2 col-form-label">Codificación de Talla:</label>
+                                                    <div class="col-6">
+                                                        <select class="form-control" name="codificacionTalla" id="codificacionTalla">
+				                                            <?php
+				                                            $query = mysqli_query($link,"SELECT * FROM codificacionTalla WHERE idcodificacionTalla = {$idCodificacionTalla}");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            echo "<option selected value='{$row['idcodificacionTalla']}'>{$row['descripcion']}</option>";
+				                                            }
+				                                            $query = mysqli_query($link,"SELECT * FROM codificacionTalla");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            if($row['idcodificacionTalla'] == $idCodificacionTalla){
+					                                            } else {
+						                                            echo "<option value='{$row['idcodificacionTalla']}'>{$row['descripcion']}</option>";
+					                                            }
+				                                            }
+				                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalCodificacion">Agregar Codificación</button>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalTalla">Agregar Tallas</button>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="idCliente" class="col-2 col-form-label">Cliente:</label>
+                                                    <div class="col-6">
+                                                        <select class="form-control" name="idCliente" id="idCliente">
+				                                            <?php
+				                                            $query = mysqli_query($link,"SELECT * FROM Cliente WHERE idCliente = {$cliente}");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            echo "<option selected value='{$row['idCliente']}'>{$row['nombre']}</option>";
+				                                            }
+				                                            $query = mysqli_query($link,"SELECT * FROM Cliente WHERE idEstado = 1");
+				                                            while($row = mysqli_fetch_array($query)){
+					                                            if($row['idCliente'] == $cliente){
+					                                            } else {
+						                                            echo "<option value='{$row['idCliente']}'>{$row['nombre']}</option>";
+					                                            }
+				                                            }
+				                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalCliente">Agregar Cliente</button>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="descripcionGeneral" class="col-2 col-form-label">Descripción General:</label>
+                                                    <div class="col-10">
+                                                        <textarea class="form-control" name="descripcionGeneral" id="descripcionGeneral"><?php echo $descripcionGeneral;?></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="observaciones" class="col-2 col-form-label">Observaciones Generales:</label>
+                                                    <div class="col-10">
+                                                        <textarea class="form-control" name="observaciones" id="observaciones"><?php echo $observaciones;?></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="codificacionMaterial" class="col-2 col-form-label">Codificación de Material para CV:</label>
+                                                    <div class="col-10">
+                                                        <textarea class="form-control" name="codificacionMaterial" id="codificacionMaterial"><?php echo $codificacionMaterial;?></textarea>
+                                                    </div>
+                                                </div>
+                                                </form>
+                                            </div>
+											<div class="tab-pane <?php if(isset($_POST['addMedida']) || isset($_POST['medidaSelect'])){echo "active";}?>" id="medidas" role="tabpanel">
 												<div class="spacer20"></div>
                                                 <table class="table table-bordered">
                                                     <thead>
@@ -253,7 +462,7 @@ if(isset($_SESSION['login'])){
                                                         ?>
                                                         <th class="text-center" style="width: 6%">T(+/-)</th>
                                                         <th class="text-center">Observación</th>
-                                                        <th class="text-center"></th>
+                                                        <th class="text-center">Acciones</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -325,13 +534,118 @@ if(isset($_SESSION['login'])){
 											</div>
 											<div class="tab-pane" id="componentes" role="tabpanel">
 												<div class="spacer20"></div>
-												<div class="form-group row">
-													<label for="stockReposicion" class="col-2 col-form-label">Stock de Reposición:</label>
-													<div class="col-10">
-														<input class="form-control" type="text" id="stockReposicion" name="stockReposicion">
-													</div>
-												</div>
+												<table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Componente</th>
+                                                            <th class="text-center">Material</th>
+                                                            <th class="text-center">Nro. Métrico</th>
+                                                            <th class="text-center">U.Medida</th>
+                                                            <th class="text-center">Color</th>
+                                                            <th class="text-center">Cantidad</th>
+                                                            <th class="text-center">Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <form method="post" action="#">
+		                                                        <?php
+		                                                        echo "<td><select name='selectComponente' class='form-control' autofocus>
+                                                                          <option selected disabled>Seleccionar</option>";
+		                                                        $result2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 1 ORDER BY descripcion ASC");
+		                                                        while ($fila2 = mysqli_fetch_array($result2)){
+			                                                        echo "<option value='".$fila2['idComponente']."'>".$fila2['descripcion']."</option>";
+		                                                        }
+		                                                        echo "</select></td>";
+		                                                        echo "<td><select name='selectMaterial' class='form-control' onchange='getNumMetrico(this.value);getUnidadMedida(this.value)'>
+                                                                          <option selected disabled>Seleccionar</option>";
+		                                                        $result2 = mysqli_query($link,"SELECT * FROM Material ORDER BY material ASC");
+		                                                        while ($fila2 = mysqli_fetch_array($result2)){
+			                                                        echo "<option value='".$fila2['idMaterial']."'>".$fila2['material']."</option>";
+		                                                        }
+		                                                        echo "</select></td>";
+		                                                        ?>
+                                                                <td class="text-center" id="numMetrico"></td>
+                                                                <td class="text-center" id="unidadMedida"></td>
+                                                                <?php
+	                                                            echo "<td><input type='text' class='form-control' name='color' placeholder='Código de Patrón'></td>";
+	                                                            ?>
+	                                                            <?php
+	                                                            echo "<td><input type='number' class='form-control' name='cantidad' placeholder='Cantidad de Material'></td>";
+	                                                            ?>
+                                                                <td class="text-center"><input type="submit" name="addComponente" value="Agregar" class="btn btn-outline-primary"></td>
+                                                                <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                            </form>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7"></td>
+                                                        </tr>
+                                                        <?php
+                                                        $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' ORDER BY idComponenteEspecifico ASC");
+                                                        while($row = mysqli_fetch_array($query)){
+                                                            echo "<tr>";
+                                                            $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
+                                                            while($row2 = mysqli_fetch_array($query2)){
+                                                                echo "<td class='text-center'>{$row2['descripcion']}</td>";
+                                                            }
+                                                            if($row['idMaterial'] == ''){
+                                                                echo "<td class='text-center'>-</td>";
+	                                                            echo "<td class='text-center'>-</td>";
+	                                                            echo "<td class='text-center'>-</td>";
+                                                            }else{
+	                                                            $query2 = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$row['idMaterial']}'");
+	                                                            while($row2 = mysqli_fetch_array($query2)){
+		                                                            echo "<td class='text-center'>{$row2['material']}</td>";
+		                                                            echo "<td class='text-center'>{$row2['numMetrico']}</td>";
+		                                                            echo "<td class='text-center'>{$row2['idUnidadMedida']}</td>";
+	                                                            }
+                                                            }
+	                                                        echo "<td class='text-center'>{$row['codigoColor']}</td>";
+	                                                        echo "<td class='text-center'>{$row['cantidadMaterial']}</td>";
+	                                                        echo "<td class='text-center'>
+                                                                <form method='post' action='#'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}'>
+                                                                    <input type='hidden' name='componenteSelect' value='{$row['idComponente']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                              </td>";
+                                                            echo "</tr>";
+                                                        }
+                                                        ?>
+                                                    </tbody>
+                                                </table>
 											</div>
+                                            <div class="tab-pane" id="partes" role="tabpanel">
+                                                <div class="spacer20"></div>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-center">Parte</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <form method="post" action="#">
+															<?php
+															echo "<td colspan='2'><select name='selectParte' class='form-control' autofocus>";
+															$result2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 2 ORDER BY descripcion ASC");
+															while ($fila2 = mysqli_fetch_array($result2)){
+																echo "<option value='".$fila2['idComponente']."'>".$fila2['descripcion']."</option>";
+															}
+															echo "</select></td>";
+															?>
+                                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                        </form>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
 										</div>
 									</div>
 								</div>
@@ -339,6 +653,134 @@ if(isset($_SESSION['login'])){
 						</div>
 					</div>
 				</section>
+
+            <form method="post" action="#" id="formProducto">
+                <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear'];?>">
+            <div class="modal fade" id="modalTipoProducto" tabindex="-1" role="dialog" aria-labelledby="modalTipoProducto" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Agregar Tipo de Producto</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="descripcionTipoProducto">Nombre de Tipo de Producto:</label>
+                                    <input type="text" name="descripcionTipoProducto" id="descripcionTipoProducto" class="form-control">
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="tamanoLote">Tamaño de Lote:</label>
+                                    <input type="text" name="tamanoLote" id="tamanoLote" class="form-control">
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="cantidadMaterial">Cantidad de Material (Kg):</label>
+                                    <input type="text" name="cantidadMaterial" id="cantidadMaterial" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" form="formProducto" value="Submit" name="addTipoProducto">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalCodificacion" tabindex="-1" role="dialog" aria-labelledby="modalCodificacion" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Agregar Codificación de Talla</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="codificacion">Nombre de Codificación:</label>
+                                    <input type="text" name="codificacion" id="codificacion" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" form="formProducto" value="Submit" name="addCodificacion">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalTalla" tabindex="-1" role="dialog" aria-labelledby="modalTalla" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Agregar Tallas</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="codificacionTallaSelect">Seleccionar Codificación:</label>
+                                    <select name="codificacionTallaSelect" id="codificacionTallaSelect" class="form-control" onchange="getTablaTallas(this.value)">
+                                        <option selected disabled>Seleccionar</option>
+										<?php
+										$search = mysqli_query($link, "SELECT * FROM codificacionTalla");
+										while($index = mysqli_fetch_array($search)){
+											echo "<option value='{$index['idcodificacionTalla']}'>{$index['descripcion']}</option>";
+										}
+										?>
+                                    </select>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="talla">Sigla de Talla:</label>
+                                    <input type="text" name="talla" id="talla" class="form-control">
+                                </div>
+                                <div id="tablaTallas"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" form="formProducto" value="Submit" name="addTalla">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalCliente" tabindex="-1" role="dialog" aria-labelledby="modalCliente" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Agregar Cliente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="ruc">RUC/DNI:</label>
+                                    <input type="text" name="ruc" id="ruc" class="form-control">
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label" for="razonSocial">Razón Social:</label>
+                                    <input type="text" name="razonSocial" id="razonSocial" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" form="formProducto" value="Submit" name="addCliente">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
 
 			<?php
 		}else{

@@ -126,3 +126,17 @@ if(!empty($_POST['idCodificacionTalla'])){
                                 </tbody>
                             </table>";
 }
+
+if(!empty($_POST['idMaterialNM'])){
+	$query = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$_POST['idMaterialNM']}'");
+	while($row = mysqli_fetch_array($query)){
+		echo "<input type='text' class='form-control' name='numeroMetrico' value='{$row['numMetrico']}' readonly>";
+	}
+}
+
+if(!empty($_POST['idMaterialUM'])){
+	$query = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$_POST['idMaterialUM']}'");
+	while($row = mysqli_fetch_array($query)){
+		echo "<input type='text' class='form-control' name='idUnidadMedida' value='{$row['idUnidadMedida']}' readonly>";
+	}
+}

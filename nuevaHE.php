@@ -6,12 +6,10 @@ if(isset($_SESSION['login'])){
 	include('funciones.php');
 	include('declaracionFechas.php');
 
-	$idProd = idgen('P');
-
 	if(isset($_POST['addTipoProducto'])){
-		$insert = mysqli_query($link, "INSERT INTO TipoProducto(descripcion,tamanoLote) VALUES ('{$_POST['descripcionTipoProducto']}','{$_POST['tamanoLote']}')");
+		$insert = mysqli_query($link, "INSERT INTO TipoProducto(descripcion,tamanoLote,cantidadMaterial) VALUES ('{$_POST['descripcionTipoProducto']}','{$_POST['tamanoLote']}','{$_POST['cantidadMaterial']}')");
 
-		$queryPerformed = "INSERT INTO TipoProducto VALUES ({$_POST['descripcionTipoProducto']},{$_POST['tamanoLote']})";
+		$queryPerformed = "INSERT INTO TipoProducto VALUES ({$_POST['descripcionTipoProducto']},{$_POST['tamanoLote']},{$_POST['cantidadMaterial']})";
 
 		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT TIPO PRODUCTO','INSERT','{$queryPerformed}')");
 	}
@@ -62,9 +60,9 @@ if(isset($_SESSION['login'])){
                             <div class="spacer20"></div>
                             <input type="hidden" name="idProductoCrear" value="<?php echo $idProd;?>">
                             <div class="form-group row">
-                                <label for="idCorto" class="col-2 col-form-label">ID Producto:</label>
+                                <label for="idProductoCrear" class="col-2 col-form-label">ID Producto:</label>
                                 <div class="col-10">
-                                    <input class="form-control" type="text" id="idCorto" name="idCorto" value="<?php if(isset($_POST['idCorto'])){echo $_POST['idCorto'];}?>">
+                                    <input class="form-control" type="text" id="idProductoCrear" name="idProductoCrear" value="<?php if(isset($_POST['idProductoCrear'])){echo $_POST['idProductoCrear'];}?>">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -213,6 +211,12 @@ if(isset($_SESSION['login'])){
                                     <textarea class="form-control" name="observaciones" id="observaciones"></textarea>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label for="codificacionMaterial" class="col-2 col-form-label">Codificación de Material para CV:</label>
+                                <div class="col-10">
+                                    <textarea class="form-control" name="codificacionMaterial" id="codificacionMaterial"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -231,14 +235,18 @@ if(isset($_SESSION['login'])){
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
-                            <div class="form-group row">
-                                <label class="col-form-label" for="descripcionTipoProducto">Nombre de Tipo de Producto:</label>
-                                <input type="text" name="descripcionTipoProducto" id="descripcionTipoProducto" class="form-control">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-form-label" for="tamanoLote">Tamaño de Lote:</label>
-                                <input type="text" name="tamanoLote" id="tamanoLote" class="form-control">
-                            </div>
+                        <div class="form-group row">
+                            <label class="col-form-label" for="descripcionTipoProducto">Nombre de Tipo de Producto:</label>
+                            <input type="text" name="descripcionTipoProducto" id="descripcionTipoProducto" class="form-control">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label" for="tamanoLote">Tamaño de Lote:</label>
+                            <input type="text" name="tamanoLote" id="tamanoLote" class="form-control">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label" for="cantidadMaterial">Cantidad de Material (Kg):</label>
+                            <input type="text" name="cantidadMaterial" id="cantidadMaterial" class="form-control">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
