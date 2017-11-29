@@ -256,6 +256,25 @@ if(isset($_SESSION['login'])){
 					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER DELETE PRODUCTOMEDIDA','UPDATE','{$queryPerformed}')");
                 }
 			}
+
+			if(isset($_POST['addComponente'])){
+				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','{$_POST['selectMaterial']}','{$_POST['cantidad']}',1,'{$_POST['color']}')");
+				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ({$_POST['idProductoCrear']},{$_POST['selectComponente']},{$_POST['selectMaterial']},{$_POST['cantidad']},1,{$_POST['color']})";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTE','INSERT','{$queryPerformed}')");
+			}
+
+			if(isset($_POST['addParte'])){
+				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectParte']}',null,null,1,null)");
+				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ({$_POST['idProductoCrear']},{$_POST['selectParte']},null,null,1,null)";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PARTE','INSERT','{$queryPerformed}')");
+			}
+
+			if(isset($_POST['eliminarComponente']) || isset($_POST['eliminarParte'])){
+			    $delete = mysqli_query($link,"DELETE FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$_POST['componenteSelect']}'");
+				$queryPerformed = "DELETE FROM ProductoComponentesPrenda WHERE idProducto = {$_POST['idProductoCrear']} AND idComponente = {$_POST['componenteSelect']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE COMPONENTE/PARTE','DELETE','{$queryPerformed}')");
+            }
+
 			?>
 
 
@@ -280,14 +299,18 @@ if(isset($_SESSION['login'])){
 										$activoGeneral = '';
 										$activoMedidas = '';
 										$activoComponentes = '';
+										$activoPartes = '';
 										if(isset($_POST['addTipoProducto']) || isset($_POST['addCodificacion']) || isset($_POST['addCliente']) || isset($_POST['addTalla'])){
 											$activoGeneral = 'active';
 										}
-										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect'])){
+										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect']) || isset($_POST['addProducto'])){
 										    $activoMedidas = 'active';
                                         }
-										if(isset($_POST['addComponente']) || isset($_POST['addParte'])){
+										if(isset($_POST['addComponente']) || isset($_POST['eliminarComponente'])){
 											$activoComponentes = 'active';
+										}
+										if(isset($_POST['addParte']) || isset($_POST['eliminarParte'])){
+											$activoPartes = 'active';
 										}
 										?>
 										<div class="spacer20"></div>
@@ -299,8 +322,11 @@ if(isset($_SESSION['login'])){
 												<a class="nav-link <?php echo $activoMedidas;?>" data-toggle="tab" href="#medidas" role="tab">Medidas y Tallas</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link <?php echo $activoComponentes;?>" data-toggle="tab" href="#componentes" role="tab">Componentes y Partes</a>
+												<a class="nav-link <?php echo $activoComponentes;?>" data-toggle="tab" href="#componentes" role="tab">Componentes</a>
 											</li>
+                                            <li class="nav-item">
+                                                <a class="nav-link <?php echo $activoPartes;?>" data-toggle="tab" href="#partes" role="tab">Partes</a>
+                                            </li>
 										</ul>
 										<div class="tab-content">
                                             <div class="tab-pane <?php echo $activoGeneral;?>" id="general" role="tabpanel">
@@ -477,10 +503,10 @@ if(isset($_SESSION['login'])){
                                                         echo "</select></td>";
                                                         $search = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$idCodificacionTalla}'");
                                                         while($index = mysqli_fetch_array($search)){
-	                                                        echo "<td class='text-center'><input type='number' min='0' class='form-control' name='add{$index['idTalla']}'></td>";
+	                                                        echo "<td class='text-center'><input type='number' min='0' step='0.01' class='form-control' name='add{$index['idTalla']}'></td>";
                                                         }
                                                         ?>
-                                                        <td class="text-center"><input type="number" min="0" class="form-control" name="tolerancia"></td>
+                                                        <td class="text-center"><input type="number" min="0" step="0.01" class="form-control" name="tolerancia"></td>
                                                         <td class="text-center"><input type="text" class="form-control" name="observacion"></td>
                                                         <td class="text-center"><input type="submit" name="addMedida" value="Agregar" class="btn btn-outline-primary"></td>
                                                         <input type="hidden" name="idCodificacionTalla" value="<?php echo $idCodificacionTalla;?>">
@@ -532,7 +558,7 @@ if(isset($_SESSION['login'])){
                                                 </table>
                                                 <div class="spacer20"></div>
 											</div>
-											<div class="tab-pane" id="componentes" role="tabpanel">
+											<div class="tab-pane <?php echo $activoComponentes;?>" id="componentes" role="tabpanel">
 												<div class="spacer20"></div>
 												<table class="table table-bordered">
                                                     <thead>
@@ -571,7 +597,7 @@ if(isset($_SESSION['login'])){
 	                                                            echo "<td><input type='text' class='form-control' name='color' placeholder='Código de Patrón'></td>";
 	                                                            ?>
 	                                                            <?php
-	                                                            echo "<td><input type='number' class='form-control' name='cantidad' placeholder='Cantidad de Material'></td>";
+	                                                            echo "<td><input type='number' class='form-control' name='cantidad' step='0.01' placeholder='Cantidad de Material'></td>";
 	                                                            ?>
                                                                 <td class="text-center"><input type="submit" name="addComponente" value="Agregar" class="btn btn-outline-primary"></td>
                                                                 <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
@@ -583,26 +609,32 @@ if(isset($_SESSION['login'])){
                                                         <?php
                                                         $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' ORDER BY idComponenteEspecifico ASC");
                                                         while($row = mysqli_fetch_array($query)){
-                                                            echo "<tr>";
-                                                            $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
-                                                            while($row2 = mysqli_fetch_array($query2)){
-                                                                echo "<td class='text-center'>{$row2['descripcion']}</td>";
-                                                            }
-                                                            if($row['idMaterial'] == ''){
-                                                                echo "<td class='text-center'>-</td>";
-	                                                            echo "<td class='text-center'>-</td>";
-	                                                            echo "<td class='text-center'>-</td>";
-                                                            }else{
-	                                                            $query2 = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$row['idMaterial']}'");
+                                                            $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}' AND tipo = 1");
+                                                            while($index = mysqli_fetch_array($filter)){
+	                                                            echo "<tr>";
+	                                                            $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
 	                                                            while($row2 = mysqli_fetch_array($query2)){
-		                                                            echo "<td class='text-center'>{$row2['material']}</td>";
-		                                                            echo "<td class='text-center'>{$row2['numMetrico']}</td>";
-		                                                            echo "<td class='text-center'>{$row2['idUnidadMedida']}</td>";
+		                                                            echo "<td class='text-center'>{$row2['descripcion']}</td>";
 	                                                            }
-                                                            }
-	                                                        echo "<td class='text-center'>{$row['codigoColor']}</td>";
-	                                                        echo "<td class='text-center'>{$row['cantidadMaterial']}</td>";
-	                                                        echo "<td class='text-center'>
+	                                                            if($row['idMaterial'] == ''){
+		                                                            echo "<td class='text-center'>-</td>";
+		                                                            echo "<td class='text-center'>-</td>";
+		                                                            echo "<td class='text-center'>-</td>";
+	                                                            }else{
+		                                                            $query2 = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$row['idMaterial']}'");
+		                                                            while($row2 = mysqli_fetch_array($query2)){
+			                                                            echo "<td class='text-center'>{$row2['material']}</td>";
+			                                                            echo "<td class='text-center'>{$row2['numMetrico']}</td>";
+			                                                            echo "<td class='text-center'>{$row2['idUnidadMedida']}</td>";
+		                                                            }
+	                                                            }
+	                                                            if($row['codigoColor'] == ''){
+		                                                            echo "<td class='text-center'>-</td>";
+	                                                            }else{
+		                                                            echo "<td class='text-center'>{$row['codigoColor']}</td>";
+	                                                            }
+	                                                            echo "<td class='text-center'>{$row['cantidadMaterial']}</td>";
+	                                                            echo "<td class='text-center'>
                                                                 <form method='post' action='#'>
                                                                 <div>
                                                                     <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}'>
@@ -610,39 +642,72 @@ if(isset($_SESSION['login'])){
                                                                     <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                                                     Acciones</button>
                                                                     <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
+                                                                        <input name='eliminarComponente' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
                                                                     </div>
                                                                 </div>
                                                                 </form>
-                                                              </td>";
-                                                            echo "</tr>";
+                                                                </td>";
+	                                                            echo "</tr>";
+                                                            }
                                                         }
                                                         ?>
                                                     </tbody>
                                                 </table>
 											</div>
-                                            <div class="tab-pane" id="partes" role="tabpanel">
+                                            <div class="tab-pane <?php echo $activoPartes;?>" id="partes" role="tabpanel">
                                                 <div class="spacer20"></div>
                                                 <table class="table table-bordered">
                                                     <thead>
                                                     <tr>
                                                         <th class="text-center">Parte</th>
+                                                        <th class="text-center">Acciones</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     <tr>
                                                         <form method="post" action="#">
 															<?php
-															echo "<td colspan='2'><select name='selectParte' class='form-control' autofocus>";
+															echo "<td><select name='selectParte' class='form-control' autofocus>";
 															$result2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 2 ORDER BY descripcion ASC");
 															while ($fila2 = mysqli_fetch_array($result2)){
 																echo "<option value='".$fila2['idComponente']."'>".$fila2['descripcion']."</option>";
 															}
 															echo "</select></td>";
 															?>
+                                                            <td class="text-center"><input type="submit" name="addParte" value="Agregar" class="btn btn-outline-primary"></td>
                                                             <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                                         </form>
                                                     </tr>
+                                                    <tr>
+                                                        <td colspan="2"></td>
+                                                    </tr>
+                                                    <?php
+                                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' ORDER BY idComponenteEspecifico ASC");
+                                                    while($row = mysqli_fetch_array($query)){
+	                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}' AND tipo = 2");
+	                                                    while($index = mysqli_fetch_array($filter)){
+		                                                    echo "<tr>";
+		                                                    $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
+		                                                    while($row2 = mysqli_fetch_array($query2)){
+			                                                    echo "<td class='text-center'>{$row2['descripcion']}</td>";
+		                                                    }
+		                                                    echo "<td class='text-center'>
+                                                                <form method='post' action='#'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}'>
+                                                                    <input type='hidden' name='componenteSelect' value='{$row['idComponente']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='eliminarParte' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                                </td>";
+		                                                    echo "</tr>";
+	                                                    }
+                                                    }
+                                                    ?>
                                                     </tbody>
                                                 </table>
                                             </div>
