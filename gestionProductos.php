@@ -16,7 +16,7 @@ if(isset($_SESSION['login'])){
 			</thead>
 			<tbody>
 			<?php
-			$result = mysqli_query($link,"SELECT * FROM Producto WHERE estado = 1");
+			$result = mysqli_query($link,"SELECT * FROM Producto WHERE idEstado = 1");
 			while ($fila = mysqli_fetch_array($result)){
 				echo "
                                 <tr>
@@ -25,25 +25,22 @@ if(isset($_SESSION['login'])){
 				while ($fila2 = mysqli_fetch_array($result2)){
 					echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
 				}
-				echo "<td class='text-center'>".$fila ['idgenero']."</td>
-                                    <td class=\"text-center\">
-                                            <form method='post'>
-                                                <div class=\"dropdown\">
-                                                    <input type='hidden' name='idProducto' value='".$fila['idProducto']."'>
-                                                    <button class=\"btn btn-secondary btn-sm dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
-                                                    Acciones
-                                                    </button>
-                                                    <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
-                                                        <button name='nuevoProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Agregar Producto Similar</button>
-                                                        <button name='versionProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Nueva Versión de Producto</button>
-                                                        <button name='verProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Ver</button>
-                                                        <button name='editarProducto' class=\"dropdown-item\" type=\"submit\" formaction=''>Editar</button>
-                                                        <button name='eliminarProducto' class=\"dropdown-item\" type=\"submit\" formaction='#'>Eliminar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </td>
-                                </tr>";
+				echo "<td class='text-center'>".$fila ['idgenero']."</td>";
+				echo "<td class='text-center'>
+                        <form method='post' action='#'>
+                            <div>
+                                <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                Acciones</button>
+                                <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                    <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Añadir Producto Similar'>
+                                    <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Editar Hoja de Especificaciones'>
+                                    <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Crear Nueva Versión de HE'>
+                                    <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
+                                </div>
+                            </div>
+                        </form>
+                        </td>";
+                echo "</tr>";
 			}
 			?>
 			</tbody>

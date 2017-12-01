@@ -72,6 +72,7 @@ if(isset($_SESSION['login'])){
 			// Éxito en la creación del producto
 
 			if(isset($_POST['addProducto'])) {
+
 				if (isset($_POST['idProvisional'])) {
 					$idProvisional = $_POST['idProvisional'];
 				} else {
@@ -112,11 +113,11 @@ if(isset($_SESSION['login'])){
 				    $cantidadMaterial = $row['cantidadMaterial'];
                 }
 
-				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,idEstado,codigoColor) VALUES 
-                          ('{$_POST['idProductoCrear']}',1,NULL,$cantidadMaterial,1,NULL)");
+				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,codigoColor,numMetrico) VALUES 
+                          ('{$_POST['idProductoCrear']}',1,NULL,$cantidadMaterial,NULL,NULL)");
 
-				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,idEstado,codigoColor) VALUES 
-                          ({$_POST['idProductoCrear']},1,NULL,$cantidadMaterial,1,NULL)";
+				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,codigoColor,numMetrico) VALUES 
+                          ({$_POST['idProductoCrear']},1,NULL,$cantidadMaterial,NULL,NULL)";
 
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTE PRENDA','INSERT','{$queryPerformed}')");
 			}
@@ -258,14 +259,14 @@ if(isset($_SESSION['login'])){
 			}
 
 			if(isset($_POST['addComponente'])){
-				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','{$_POST['selectMaterial']}','{$_POST['cantidad']}',1,'{$_POST['color']}')");
-				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ({$_POST['idProductoCrear']},{$_POST['selectComponente']},{$_POST['selectMaterial']},{$_POST['cantidad']},1,{$_POST['color']})";
+				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor,numMetrico) VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','{$_POST['selectMaterial']}','{$_POST['cantidad']}','{$_POST['color']}','{$_POST['numMetrico']}')");
+				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor) VALUES ({$_POST['idProductoCrear']},{$_POST['selectComponente']},{$_POST['selectMaterial']},{$_POST['cantidad']},{$_POST['color']},{$_POST['numMetrico']})";
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTE','INSERT','{$queryPerformed}')");
 			}
 
 			if(isset($_POST['addParte'])){
-				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectParte']}',null,null,1,null)");
-				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, idEstado, codigoColor) VALUES ({$_POST['idProductoCrear']},{$_POST['selectParte']},null,null,1,null)";
+				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor,numMetrico) VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectParte']}',null,null,null,null)");
+				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor) VALUES ({$_POST['idProductoCrear']},{$_POST['selectParte']},null,null,null)";
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PARTE','INSERT','{$queryPerformed}')");
 			}
 
@@ -274,6 +275,42 @@ if(isset($_SESSION['login'])){
 				$queryPerformed = "DELETE FROM ProductoComponentesPrenda WHERE idProducto = {$_POST['idProductoCrear']} AND idComponente = {$_POST['componenteSelect']}";
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE COMPONENTE/PARTE','DELETE','{$queryPerformed}')");
             }
+
+			if(isset($_POST['actualizarProducto'])){
+				if (isset($_POST['idProvisional'])) {
+					$idProvisional = $_POST['idProvisional'];
+				} else {
+					$idProvisional = null;
+				}
+
+				if (isset($_POST['observaciones'])) {
+					$observaciones = $_POST['observaciones'];
+				} else {
+					$observaciones = null;
+				}
+
+				if (isset($_POST['descripcionGeneral'])) {
+					$descripcionGeneral = $_POST['descripcionGeneral'];
+				} else {
+					$descripcionGeneral = null;
+				}
+
+				if (isset($_POST['codificacionMaterial'])) {
+					$codificacionMaterial = $_POST['codificacionMaterial'];
+				} else {
+					$codificacionMaterial = null;
+				}
+
+				$update = mysqli_query($link,"UPDATE Producto SET idProducto = '{$_POST['idProductoCrear']}' , idTipoProducto = '{$_POST['tipoProducto']}' , idCliente = '{$_POST['idCliente']}' ,
+												creador = '{$_SESSION['user']}' , idgenero = '{$_POST['genero']}' , idcodificacionTalla = '{$_POST['codificacionTalla']}', idEstado = 1 , idProvisional = '{$idProvisional}' ,
+												fechaCreacion = '{$date}' , observaciones = '{$observaciones}' , descripcionGeneral = '{$descripcionGeneral}' , codificacionMaterial = '{$codificacionMaterial}'
+												WHERE idProducto = '{$_POST['idProductoCrear']}'");
+				$queryPerformed = "UPDATE Producto SET idProducto = {$_POST['idProductoCrear']} , idTipoProducto = {$_POST['tipoProducto']} , idCliente = {$_POST['idCliente']} ,
+												creador = {$_SESSION['user']} , idgenero = {$_POST['genero']} , idcodificacionTalla = {$_POST['codificacionTalla']}, idEstado = 1 , idProvisional = {$idProvisional} ,
+												fechaCreacion = {$date} , observaciones = {$observaciones} , descripcionGeneral = {$descripcionGeneral} , codificacionMaterial = {$codificacionMaterial}
+												WHERE idProducto = {$_POST['idProductoCrear']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE PRODUCTO','UPDATE','{$queryPerformed}')");
+			}
 
 			?>
 
@@ -289,7 +326,8 @@ if(isset($_SESSION['login'])){
 									</div>
 									<div class="float-right">
 										<div class="dropdown">
-                                            <button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Guardar</button>
+                                            <button name="actualizarProducto" type="submit" class="btn btn-light btn-sm" form="formSiguiente" formaction="#">Guardar</button>
+                                            <button name="siguienteHE2" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Siguiente</button>
 										</div>
 									</div>
 								</div>
@@ -303,7 +341,7 @@ if(isset($_SESSION['login'])){
 										if(isset($_POST['addTipoProducto']) || isset($_POST['addCodificacion']) || isset($_POST['addCliente']) || isset($_POST['addTalla'])){
 											$activoGeneral = 'active';
 										}
-										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect']) || isset($_POST['addProducto'])){
+										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect']) || isset($_POST['addProducto']) || isset($_POST['actualizarProducto'])){
 										    $activoMedidas = 'active';
                                         }
 										if(isset($_POST['addComponente']) || isset($_POST['eliminarComponente'])){
@@ -345,6 +383,7 @@ if(isset($_SESSION['login'])){
                                                 }
 	                                            ?>
                                                 <form action="nuevaHE3.php" method="post" id="formSiguiente">
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                                 <div class="form-group row">
                                                     <label for="idProd" class="col-2 col-form-label">ID Producto:</label>
                                                     <div class="col-10">
@@ -469,7 +508,7 @@ if(isset($_SESSION['login'])){
                                                 </div>
                                                 </form>
                                             </div>
-											<div class="tab-pane <?php if(isset($_POST['addMedida']) || isset($_POST['medidaSelect'])){echo "active";}?>" id="medidas" role="tabpanel">
+											<div class="tab-pane <?php echo $activoMedidas;?>" id="medidas" role="tabpanel">
 												<div class="spacer20"></div>
                                                 <table class="table table-bordered">
                                                     <thead>
@@ -565,8 +604,8 @@ if(isset($_SESSION['login'])){
                                                         <tr>
                                                             <th class="text-center">Componente</th>
                                                             <th class="text-center">Material</th>
-                                                            <th class="text-center">Nro. Métrico</th>
                                                             <th class="text-center">U.Medida</th>
+                                                            <th class="text-center">Nro. Métrico</th>
                                                             <th class="text-center">Color</th>
                                                             <th class="text-center">Cantidad</th>
                                                             <th class="text-center">Acciones</th>
@@ -583,7 +622,7 @@ if(isset($_SESSION['login'])){
 			                                                        echo "<option value='".$fila2['idComponente']."'>".$fila2['descripcion']."</option>";
 		                                                        }
 		                                                        echo "</select></td>";
-		                                                        echo "<td><select name='selectMaterial' class='form-control' onchange='getNumMetrico(this.value);getUnidadMedida(this.value)'>
+		                                                        echo "<td><select name='selectMaterial' class='form-control' onchange='getUnidadMedida(this.value)'>
                                                                           <option selected disabled>Seleccionar</option>";
 		                                                        $result2 = mysqli_query($link,"SELECT * FROM Material ORDER BY material ASC");
 		                                                        while ($fila2 = mysqli_fetch_array($result2)){
@@ -591,8 +630,8 @@ if(isset($_SESSION['login'])){
 		                                                        }
 		                                                        echo "</select></td>";
 		                                                        ?>
-                                                                <td class="text-center" id="numMetrico"></td>
                                                                 <td class="text-center" id="unidadMedida"></td>
+                                                                <td class="text-center"><input type='text' class='form-control' name='numMetrico' placeholder='Número Métrico'></td>
                                                                 <?php
 	                                                            echo "<td><input type='text' class='form-control' name='color' placeholder='Código de Patrón'></td>";
 	                                                            ?>
@@ -619,14 +658,17 @@ if(isset($_SESSION['login'])){
 	                                                            if($row['idMaterial'] == ''){
 		                                                            echo "<td class='text-center'>-</td>";
 		                                                            echo "<td class='text-center'>-</td>";
-		                                                            echo "<td class='text-center'>-</td>";
 	                                                            }else{
 		                                                            $query2 = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$row['idMaterial']}'");
 		                                                            while($row2 = mysqli_fetch_array($query2)){
 			                                                            echo "<td class='text-center'>{$row2['material']}</td>";
-			                                                            echo "<td class='text-center'>{$row2['numMetrico']}</td>";
 			                                                            echo "<td class='text-center'>{$row2['idUnidadMedida']}</td>";
 		                                                            }
+	                                                            }
+	                                                            if($row['numMetrico'] == ''){
+		                                                            echo "<td class='text-center'>-</td>";
+	                                                            }else{
+		                                                            echo "<td class='text-center'>{$row['numMetrico']}</td>";
 	                                                            }
 	                                                            if($row['codigoColor'] == ''){
 		                                                            echo "<td class='text-center'>-</td>";
