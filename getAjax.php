@@ -58,24 +58,25 @@ if (!empty($_POST['nombreCliente'])) {
 if(!empty($_POST["productoCV"])) {
     echo $_POST["productoCV"];
     echo $_POST["idcodificacionTallaCV"];
+
+    $result = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST["productoCV"]}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $material = $fila['codificacionMaterial'];
+    }
+
     echo "
     <tr>
     <td>
         <label for='code' class='sr-only'>Código del Cliente</label>
         <input id='code' type='text' name='yourcode' class='form-control'>
     </td>
-    <td>
-       
-    </td>
-    <td>
-        
-    </td>
+    <td>{$material}</td>
     ";
     $tallas1=array();
     $tallas2=array();
     $indice1=0;
     $indice2=0;
-    $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['idcodificacionTallaCV']}'");
+    $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['idcodificacionTallaCV']}' ORDER BY indice ASC");
     while ($fila = mysqli_fetch_array($result)) {
         $tallas1[$indice1] = $fila['idTalla'];
         $indice1++;
@@ -100,6 +101,91 @@ if(!empty($_POST["productoCV"])) {
     echo "
     </tr>
     ";
+}
+
+if(!empty($_POST['productoCVColores'])){
+    echo "
+            <label for='idCombinacionColores' class='col-2 col-form-label'>Combinación de Colores:</label>
+            <div class='col-7'>
+                 <select class='form-control' id='idCombinacionColores' name='idCombinacionColores'>
+                     <option disabled selected>Seleccionar</option>";
+    $result = mysqli_query($link,"SELECT * FROM CombinacionesColorProducto WHERE idProducto = '{$_POST['productoCVColores']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            echo "<option value='{$fila['idCombinacionesColor']}'>{$fila1['descripcion']}</option>";
+        }
+    }
+    echo "
+                 </select>
+            </div>
+            <div class='col-2'>
+                 <button type='button' class='btn btn-outline-primary' data-toggle='modal' data-target='#modalNuevaCombinacion'>Agregar Combinación</button>
+            </div>
+    ";
+}
+
+if(!empty($_POST['productoCVModalColores'])){
+    ?>
+    <div class="modal fade" id="modalNuevaCombinacion" tabindex="-1" role="dialog" aria-labelledby="modalNuevaCombinacion" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Combinación de Colores</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form id="formCombinacion" method="post" action="#">
+                            <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
+                            <input type="hidden" name="idProducto" value="<?php echo $_POST['productoCVModalColores']?>">
+                            <input type="hidden" name="codifTalla" value="<?php echo $_POST['codificacionTalla']?>">
+                            <div class="form-group row">
+                                <table class="table text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>Nro. Color</th>
+                                            <th>Color</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    $result = mysqli_query($link,"SELECT DISTINCT codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['productoCVModalColores']}' ORDER BY codigoColor ASC");
+                                    while ($fila = mysqli_fetch_array($result)){
+                                    echo "<tr>";
+                                        echo "<td>{$fila['codigoColor']}</td>";
+                                        echo "
+                                        <td>
+                                            <label for='colorCombinacion{$fila['codigoColor']}' class='sr-only'>Color</label>
+                                            <select id='colorCombinacion{$fila['codigoColor']}' name='colorCombinacion{$fila['codigoColor']}' class='form-control'>
+                                                <option selected disabled>Seleccionar</option>";
+                                                $result1 = mysqli_query($link,"SELECT * FROM Color");
+                                                while ($fila1 = mysqli_fetch_array($result1)){
+                                                echo "<option value='{$fila1['idColor']}'>{$fila1['idColor']}-{$fila1['descripcion']}</option>";
+                                                }
+                                                echo "
+                                            </select>
+                                        </td>
+                                        ";
+                                        echo "</tr>";
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" form="formCombinacion" value="Submit" name="addCombinacion">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
 }
 
 if(!empty($_POST['idCodificacionTalla'])){
