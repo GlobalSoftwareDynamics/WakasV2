@@ -1,0 +1,214 @@
+<?php
+include('session.php');
+if(isset($_SESSION['login'])){
+	include('header.php');
+	include('navbarAdmin.php');
+	include('funciones.php');
+	include('declaracionFechas.php');
+
+		// Éxito en la creación del producto
+
+		?>
+
+
+		<section class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-header card-inverse card-info">
+							<div class="float-left mt-1">
+								<i class="fa fa-pencil"></i>
+								&nbsp;&nbsp;Procesos y Subprocesos
+							</div>
+							<div class="float-right">
+								<div class="dropdown">
+									<button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Guardar</button>
+								</div>
+							</div>
+						</div>
+						<div class="card-block">
+							<div class="col-12">
+								<?php
+								$activoTejido = '';
+								$activoLavado = '';
+								$activoSecado = '';
+								$activoConfeccion = '';
+								$activoAcondicionamiento = '';
+								$activoOtros = '';
+								if(isset($_POST['siguienteHE2']) || isset($_POST['addTejido'])){
+									$activoTejido = 'active';
+								}
+								if(isset($_POST['addLavado'])){
+									$activoLavado = 'active';
+								}
+								if(isset($_POST['addSecado'])){
+									$activoSecado = 'active';
+								}
+								if(isset($_POST['addConfeccion'])){
+									$activoConfeccion = 'active';
+								}
+								if(isset($_POST['addAcondicionamiento'])){
+									$activoAcondicionamiento = 'active';
+								}
+								if(isset($_POST['addOtros'])){
+									$activoOtros = 'active';
+								}
+								?>
+								<div class="spacer20"></div>
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="nav-item">
+										<a class="nav-link <?php echo $activoTejido;?>" data-toggle="tab" href="#tejido" role="tab">Tejido</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link <?php echo $activoLavado;?>" data-toggle="tab" href="#lavado" role="tab">Lavado</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link <?php echo $activoSecado;?>" data-toggle="tab" href="#secado" role="tab">Secado</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link <?php echo $activoConfeccion;?>" data-toggle="tab" href="#confeccion" role="tab">Confección</a>
+									</li>
+                                    <li class="nav-item">
+                                        <a class="nav-link <?php echo $activoAcondicionamiento;?>" data-toggle="tab" href="#acondicionamiento" role="tab">Acondicionamiento</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link <?php echo $activoOtros;?>" data-toggle="tab" href="#otros" role="tab">Otros</a>
+                                    </li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane <?php echo $activoTejido;?>" id="tejido" role="tabpanel">
+										<div class="spacer20"></div>
+                                        <form method="post" action="#">
+                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">Componente</th>
+                                                <th class="text-center">Material</th>
+                                                <th class="text-center">Tipo de Tejido</th>
+                                                <th class="text-center">Galgas</th>
+                                                <th class="text-center">Comprobación de Tejido</th>
+                                                <th class="text-center">Observaciones</th>
+                                                <th class="text-center">Tiempo</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
+                                                        <option selected disabled>Seleccionar</option>
+                                                        <?php
+                                                        $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
+                                                        while($row = mysqli_fetch_array($query)){
+                                                            $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
+                                                            while($row2 = mysqli_fetch_array($query2)){
+	                                                            echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select></td>
+                                                <td id="materialTejido"><input type="text" class="form-control" readonly></td>
+                                                <td><select name="selectTipoTejido" class="form-control">
+                                                        <option selected disabled>Seleccionar</option>
+                                                        <option value="Industrial">Tejido Industrial</option>
+                                                        <option value="Semi-Industrial">Tejido Semi-Industrial</option>
+                                                        <option value="Manual">Tejido Manual</option>
+                                                    </select></td>
+                                                <td style="width: 13%"><select class="js-example-basic-multiple form-control" name="galgas[]" multiple="multiple">
+                                                        <?php
+                                                        $query = mysqli_query($link,"SELECT * FROM Galgas");
+                                                        while($row = mysqli_fetch_array($query)){
+                                                            echo "<option value='{$row['descripcion']}'>{$row['descripcion']}</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" name="comprobacionTejido" class="form-control"></td>
+                                                <td><input type="text" name="observaciones" class="form-control"></td>
+                                                <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
+                                                <td class="text-center"><input type="submit" name="addComponente" value="Agregar" class="btn btn-outline-primary"></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="8"></td>
+                                            </tr>
+                                            <?php
+                                            //Mostrar datos de Tejido
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        </form>
+									</div>
+                                    <div class="tab-pane <?php echo $activoLavado;?>" id="lavado" role="tabpanel">
+                                        <div class="spacer20"></div>
+                                        <form method="post" action="#">
+                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">Componente</th>
+                                                    <th class="text-center">Tipo de Lavado</th>
+                                                    <th class="text-center">Programa</th>
+                                                    <th class="text-center">Observaciones</th>
+                                                    <th class="text-center">Tiempo</th>
+                                                    <th class="text-center">Acciones</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
+                                                            <option selected disabled>Seleccionar</option>
+						                                    <?php
+						                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
+						                                    while($row = mysqli_fetch_array($query)){
+							                                    $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
+							                                    while($row2 = mysqli_fetch_array($query2)){
+								                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
+							                                    }
+						                                    }
+						                                    ?>
+                                                        </select></td>
+                                                    <td><select name="selectTipoLavado" class="form-control">
+                                                            <option selected disabled>Seleccionar</option>
+                                                            <option value="Industrial">Lavado Industrial</option>
+                                                            <option value="Semi-Industrial">Lavado Semi-Industrial</option>
+                                                            <option value="Manual">Lavado Manual</option>
+                                                        </select></td>
+                                                    <td><input type="text" name="programa" class="form-control"></td>
+                                                    <td><input type="text" name="observaciones" class="form-control"></td>
+                                                    <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
+                                                    <td class="text-center"><input type="submit" name="addComponente" value="Agregar" class="btn btn-outline-primary"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6"></td>
+                                                </tr>
+			                                    <?php
+			                                    //Mostrar datos de Lavado
+			                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane <?php echo $activoSecado;?>" id="secado" role="tabpanel">
+                                        <div class="spacer20"></div>
+                                    </div>
+                                    <div class="tab-pane <?php echo $activoConfeccion;?>" id="confeccion" role="tabpanel">
+                                        <div class="spacer20"></div>
+                                    </div>
+                                    <div class="tab-pane <?php echo $activoAcondicionamiento;?>" id="acondicionamiento" role="tabpanel">
+                                        <div class="spacer20"></div>
+                                    </div>
+                                    <div class="tab-pane <?php echo $activoOtros;?>" id="otros" role="tabpanel">
+                                        <div class="spacer20"></div>
+                                    </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	<?php
+	include('footer.php');
+}
+?>

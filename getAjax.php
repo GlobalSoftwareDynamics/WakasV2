@@ -127,16 +127,25 @@ if(!empty($_POST['idCodificacionTalla'])){
                             </table>";
 }
 
-if(!empty($_POST['idMaterialNM'])){
-	$query = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$_POST['idMaterialNM']}'");
-	while($row = mysqli_fetch_array($query)){
-		echo "<input type='text' class='form-control' name='numeroMetrico' value='{$row['numMetrico']}' readonly>";
-	}
-}
-
 if(!empty($_POST['idMaterialUM'])){
 	$query = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$_POST['idMaterialUM']}'");
 	while($row = mysqli_fetch_array($query)){
 		echo "<input type='text' class='form-control' name='idUnidadMedida' value='{$row['idUnidadMedida']}' readonly>";
 	}
+}
+
+if(!empty($_POST['idComponenteEspecifico'])){
+	$flag = true;
+	$query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$_POST['idComponenteEspecifico']}'");
+	while($row = mysqli_fetch_array($query)){
+		$query2 = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$row['idMaterial']}'");
+		while($row2 = mysqli_fetch_array($query2)){
+			echo "<input type='text' class='form-control' name='material' value='{$row2['material']}' readonly>";
+			$flag = false;
+		}
+	}
+	if($flag){
+		echo "<input type='text' class='form-control' readonly>";
+	}
+
 }
