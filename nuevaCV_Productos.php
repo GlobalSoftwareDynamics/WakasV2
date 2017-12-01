@@ -4,8 +4,10 @@ include('declaracionFechas.php');
 include ('funciones.php');
 if(isset($_SESSION['login'])){
 
+    $flag = true;
+
     if(isset($_POST['addCV'])){
-        $flag = true;
+
         /*Verificacion de idContrato*/
         $search = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
         while($index = mysqli_fetch_array($search)){
@@ -92,6 +94,7 @@ if(isset($_SESSION['login'])){
                                 <div class="dropdown">
                                     <form method="post" action="">
                                         <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
+                                        <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla']?>">
                                         <input name="siguiente" type="submit" class="btn btn-light btn-sm" value="Siguiente">
                                     </form>
                                 </div>
@@ -101,11 +104,15 @@ if(isset($_SESSION['login'])){
                             <div class="col-12">
                                 <div class="spacer20"></div>
                                 <form method="post" action="#">
+                                    <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
+                                    <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla']?>">
                                     <div class="form-group row">
                                         <label for="idProducto" class="col-2 col-form-label">Código de Producto:</label>
                                         <div class="col-10">
-                                            <input class="form-control" type="text" id="idProducto" name="idProducto" onkeyup="getTallas(this.value,<?php echo $_POST['codifTalla']?>)" onchange="getTallas(this.value,<?php echo $_POST['codifTalla']?>)" required>
+                                            <input class="form-control" type="text" id="idProducto" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla']?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta']?>,<?php echo $_POST['codifTalla']?>)" required>
                                         </div>
+                                    </div>
+                                    <div class="form-group row" id="rowColor">
                                     </div>
                                     <div class="form-group row">
                                         <table class="table text-center">
@@ -113,7 +120,6 @@ if(isset($_SESSION['login'])){
                                             <tr>
                                                 <th style="width: 15%">Código Cliente</th>
                                                 <th style="width: 20%">Material</th>
-                                                <th style="width: 15%">Color</th>
                                                 <?php
                                                 $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}'");
                                                 while ($fila = mysqli_fetch_array($result)){
@@ -127,9 +133,6 @@ if(isset($_SESSION['login'])){
                                                 <td>
                                                     <label for='code' class='sr-only'>Código del Cliente</label>
                                                     <input id="code" type="text" name="yourcode" class="form-control">
-                                                </td>
-                                                <td>
-
                                                 </td>
                                                 <td>
 
@@ -153,6 +156,8 @@ if(isset($_SESSION['login'])){
                 </div>
             </div>
         </section>
+
+        <div id="modalColores"></div>
 
         <?php
     }else{

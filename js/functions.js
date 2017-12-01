@@ -35,6 +35,28 @@ function getTallas(producto,codificacion) {
     });
 }
 
+function getCombinacionColores(producto) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'productoCVColores':producto},
+        success: function(data){
+            $("#rowColor").html(data);
+        }
+    });
+}
+
+function getModalCombinacionColores(producto, contrato, codificacionTalla) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'productoCVModalColores':producto, 'idConfirmacionVenta': contrato, 'codificacionTalla': codificacionTalla},
+        success: function(data){
+            $("#modalColores").html(data);
+        }
+    });
+}
+
 function getUnidadMedida(val) {
     $.ajax({
         type: "POST",
