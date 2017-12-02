@@ -341,7 +341,7 @@ if(isset($_SESSION['login'])){
 										if(isset($_POST['addTipoProducto']) || isset($_POST['addCodificacion']) || isset($_POST['addCliente']) || isset($_POST['addTalla'])){
 											$activoGeneral = 'active';
 										}
-										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect']) || isset($_POST['addProducto']) || isset($_POST['actualizarProducto'])){
+										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect']) || isset($_POST['addProducto']) || isset($_POST['actualizarProducto']) || isset($_POST['volver'])){
 										    $activoMedidas = 'active';
                                         }
 										if(isset($_POST['addComponente']) || isset($_POST['eliminarComponente'])){

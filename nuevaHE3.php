@@ -8,8 +8,38 @@ if(isset($_SESSION['login'])){
 
 		// Éxito en la creación del producto
 
-		?>
+    if(isset($_POST['addTejido'])){
+        $aux = 1;
+        $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
+        while($row = mysqli_fetch_array($query)){
+            $query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+            while($row2 = mysqli_fetch_array($query2)){
+                $aux++;
+            }
+        }
 
+        $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['selectComponente']}','3','{$_POST['selectTipoTejido']}','{$aux}')");
+
+        $galgas = '';
+	    foreach ($_POST['galgas'] as $galga) {
+		    $galgas .= $galga.",";
+	    }
+	    $galgas = substr($galgas,0,(strlen($galgas)-1));
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['selectComponente']}','4','{$galgas}','{$aux}')");
+
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['selectComponente']}','5','{$_POST['comprobacionTejido']}','{$aux}')");
+
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['selectComponente']}','6','{$_POST['observaciones']}','{$aux}')");
+
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['selectComponente']}','7','{$_POST['tiempo']}','{$aux}')");
+    }
+
+    ?>
 
 		<section class="container">
 			<div class="row">
@@ -22,10 +52,14 @@ if(isset($_SESSION['login'])){
 							</div>
 							<div class="float-right">
 								<div class="dropdown">
+                                    <button name="volver" type="submit" class="btn btn-light btn-sm" form="formSiguiente" formaction="nuevaHE2.php">Volver</button>
 									<button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Guardar</button>
 								</div>
 							</div>
 						</div>
+                        <form id="formSiguiente" method="post" action="nuevaHE4.php">
+                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                        </form>
 						<div class="card-block">
 							<div class="col-12">
 								<?php
@@ -98,12 +132,12 @@ if(isset($_SESSION['login'])){
                                                 <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
                                                         <option selected disabled>Seleccionar</option>
                                                         <?php
-                                                        $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
-                                                        while($row = mysqli_fetch_array($query)){
-                                                            $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
-                                                            while($row2 = mysqli_fetch_array($query2)){
-	                                                            echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
-                                                            }
+                                                        $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 1");
+                                                        while($filterIndex = mysqli_fetch_array($filter)){
+	                                                        $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$filterIndex['idComponente']}'");
+	                                                        while($row = mysqli_fetch_array($query)){
+	                                                            echo "<option value='{$row['idComponenteEspecifico']}'>{$filterIndex['descripcion']}</option>";
+	                                                        }
                                                         }
                                                         ?>
                                                     </select></td>
@@ -132,7 +166,13 @@ if(isset($_SESSION['login'])){
                                                 <td colspan="8"></td>
                                             </tr>
                                             <?php
-                                            //Mostrar datos de Tejido
+                                            $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
+                                            while($row = mysqli_fetch_array($query)){
+                                                $query2 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}' AND idSubProcesoCaracteristica < 8 AND idSubProcesoCaracteristica > 2");
+                                                while($row2 = mysqli_fetch_array($query2)){
+                                                    
+                                                }
+                                            }
                                             ?>
                                             </tbody>
                                         </table>
