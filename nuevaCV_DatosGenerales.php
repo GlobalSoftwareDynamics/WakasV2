@@ -81,7 +81,7 @@ if(isset($_SESSION['login'])){
                                         </div>
                                         <div class="form-group row">
                                             <label for="fechaContrato" class="col-2 col-form-label">Fecha:</label>
-                                            <div class="col-10">
+                                            <div class="col-4">
                                                 <input class="form-control" type="date" id="fechaContrato" name="fechaContrato" placeholder="<?php echo $date = date("Y-m-d")?>" required>
                                             </div>
                                         </div>
@@ -147,7 +147,7 @@ if(isset($_SESSION['login'])){
                                         </div>
                                         <div class="form-group row">
                                             <label for="fechaEnvio" class="col-2 col-form-label">Fecha de Envío:</label>
-                                            <div class="col-10">
+                                            <div class="col-4">
                                                 <input class="form-control" type="date" id="fechaEnvio" name="fechaEnvio" placeholder="<?php echo $date = date("Y-m-d")?>" required>
                                             </div>
                                         </div>

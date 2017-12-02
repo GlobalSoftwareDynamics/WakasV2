@@ -8,9 +8,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['editar'])){
 
-        $query = mysqli_query($link,"UPDATE SubProceso SET descripcion = '{$_POST['subproceso']}', tipo = '{$_POST['tipo']}' WHERE idProcedimiento = '{$_POST['idProcedimiento']}'");
+        $query = mysqli_query($link,"UPDATE SubProceso SET descripcion = '{$_POST['subproceso']}' WHERE idProcedimiento = '{$_POST['idProcedimiento']}'");
 
-        $queryPerformed1 = "UPDATE SubProceso SET descripcion = {$_POST['subproceso']}, tipo = {$_POST['tipo']} WHERE idProcedimiento = {$_POST['idProcedimiento']}";
+        $queryPerformed1 = "UPDATE SubProceso SET descripcion = {$_POST['subproceso']} WHERE idProcedimiento = {$_POST['idProcedimiento']}";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','SubProceso','{$queryPerformed1}')");
 
@@ -18,9 +18,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['addProcedimiento'])){
 
-        $query = mysqli_query($link, "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES ('{$_POST['idProceso']}',1,'{$_POST['subproceso']}','{$_POST['tipo']}')");
+        $query = mysqli_query($link, "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES ('{$_POST['idProceso']}',1,'{$_POST['subproceso']}','1')");
 
-        $queryPerformed = "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES ({$_POST['idProceso']},1,{$_POST['subproceso']},{$_POST['tipo']})";
+        $queryPerformed = "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES ({$_POST['idProceso']},1,{$_POST['subproceso']},1)";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','SubProceso','{$queryPerformed}')");
 
@@ -30,12 +30,6 @@ if(isset($_SESSION['login'])){
             $idProcedimiento = $fila['idProcedimiento'];
 
         }
-
-        $query = mysqli_query($link,"INSERT INTO SubProcesoCaracteristica(idProcedimiento, idCaracteristica) VALUES ('{$idProcedimiento}',1)");
-
-        $queryPerformed = "INSERT INTO SubProcesoCaracteristica(idProcedimiento, idCaracteristica) VALUES ({$idProcedimiento},1)";
-
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','SubProcesoCaracteristica - Componente','{$queryPerformed}')");
 
         $query = mysqli_query($link,"INSERT INTO SubProcesoCaracteristica(idProcedimiento, idCaracteristica) VALUES ('{$idProcedimiento}',7)");
 
@@ -217,14 +211,6 @@ if(isset($_SESSION['login'])){
                             <div class="form-group row">
                                 <label class="col-form-label" for="subproceso">Procedimiento:</label>
                                 <input type="text" name="subproceso" id="subproceso" class="form-control">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-form-label" for="tipo">Tipo de Procedimiento:</label>
-                                <select name="tipo" id="tipo" class="form-control">
-                                    <option selected disabled>Seleccionar</option>
-                                    <option value="1">Primario</option>
-                                    <option value="2">Secundario</option>
-                                </select>
                             </div>
                         </form>
                     </div>

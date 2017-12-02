@@ -8,9 +8,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['editar'])){
 
-        $query = mysqli_query($link,"UPDATE Proceso SET descripcion = '{$_POST['proceso']}', tipo = '{$_POST['tipo']}' WHERE idProceso = '{$_POST['idProceso']}'");
+        $query = mysqli_query($link,"UPDATE Proceso SET descripcion = '{$_POST['proceso']}' WHERE idProceso = '{$_POST['idProceso']}'");
 
-        $queryPerformed1 = "UPDATE Proceso SET descripcion = {$_POST['proceso']}, tipo = {$_POST['tipo']} WHERE idProceso = {$_POST['idProceso']}";
+        $queryPerformed1 = "UPDATE Proceso SET descripcion = {$_POST['proceso']} WHERE idProceso = {$_POST['idProceso']}";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Proceso','{$queryPerformed1}')");
 
@@ -18,9 +18,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['addProceso'])){
 
-        $query = mysqli_query($link, "INSERT INTO Proceso(idEstado, descripcion, tipo) VALUES (1,'{$_POST['proceso']}','{$_POST['tipo']}')");
+        $query = mysqli_query($link, "INSERT INTO Proceso(idEstado, descripcion, tipo) VALUES (1,'{$_POST['proceso']}','1')");
 
-        $queryPerformed = "INSERT INTO Proceso(idEstado, descripcion, tipo) VALUES (1,{$_POST['proceso']},{$_POST['tipo']})";
+        $queryPerformed = "INSERT INTO Proceso(idEstado, descripcion, tipo) VALUES (1,{$_POST['proceso']},1)";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Proceso','{$queryPerformed}')");
 
@@ -202,14 +202,6 @@ if(isset($_SESSION['login'])){
                             <div class="form-group row">
                                 <label class="col-form-label" for="proceso">Proceso:</label>
                                 <input type="text" name="proceso" id="proceso" class="form-control">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-form-label" for="tipo">Tipo de Proceso:</label>
-                                <select name="tipo" id="tipo" class="form-control">
-                                    <option selected disabled>Seleccionar</option>
-                                    <option value="1">Primario</option>
-                                    <option value="2">Secundario</option>
-                                </select>
                             </div>
                         </form>
                     </div>
