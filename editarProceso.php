@@ -47,16 +47,6 @@ if(isset($_SESSION['login'])){
                                             <input class="form-control" type="text" id="proceso" name="proceso" value="<?php echo $row['descripcion'];?>">
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="tipo" class="col-2 col-form-label">Tipo de Usuario:</label>
-                                        <div class="col-6">
-                                            <select class="form-control" name="tipo" id="tipo">
-                                                <option selected value="<?php echo $idTipo;?>"><?php echo $desTipo;?></option>
-                                                <option value="1">Primario</option>
-                                                <option value="2">Secundario</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </form>

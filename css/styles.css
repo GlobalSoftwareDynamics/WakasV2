@@ -170,3 +170,9 @@ a{
 .bg-wakas {
     background-color: #E8554E;
 }
+
+/*Estilos CV*/
+
+.datosCV p {
+    margin-bottom: 0px;
+}

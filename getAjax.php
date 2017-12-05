@@ -65,12 +65,15 @@ if(!empty($_POST["productoCV"])) {
     }
 
     echo "
-    <tr>
     <td>
         <label for='code' class='sr-only'>Código del Cliente</label>
         <input id='code' type='text' name='yourcode' class='form-control'>
     </td>
     <td>{$material}</td>
+    <td>
+        <label for='precio' class='sr-only'>Precio</label>
+        <input id='precio' type='text' name='precio' class='form-control'>
+    </td>
     ";
     $tallas1=array();
     $tallas2=array();
@@ -99,7 +102,7 @@ if(!empty($_POST["productoCV"])) {
         }
     }
     echo "
-    </tr>
+        <td><input type='submit' value='Agregar' name='addProductoCV' class='btn btn-primary'></td>
     ";
 }
 
@@ -152,7 +155,7 @@ if(!empty($_POST['productoCVModalColores'])){
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $result = mysqli_query($link,"SELECT DISTINCT codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['productoCVModalColores']}' ORDER BY codigoColor ASC");
+                                    $result = mysqli_query($link,"SELECT DISTINCT codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['productoCVModalColores']}' AND codigoColor IS NOT NULL ORDER BY codigoColor ASC");
                                     while ($fila = mysqli_fetch_array($result)){
                                     echo "<tr>";
                                         echo "<td>{$fila['codigoColor']}</td>";
