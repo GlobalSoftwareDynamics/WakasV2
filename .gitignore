@@ -35,3 +35,5 @@ Thumbs.db
 /.idea/
 /db/
 db
+/lib/
+lib
