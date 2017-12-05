@@ -7,37 +7,375 @@ if(isset($_SESSION['login'])){
 	include('declaracionFechas.php');
 
 		// Éxito en la creación del producto
+    $selectTab = 0;
+
+	if(isset($_POST['insertar'])){
+        $indiceInsertar = $_POST['indice'];
+		echo "<section class='container'>
+                        <div class='alert alert-info' role='alert'>
+                            Insertar activado.
+                        </div>
+                    </section>";
+	}
 
     if(isset($_POST['addTejido'])){
         $aux = 1;
-        $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
-        while($row = mysqli_fetch_array($query)){
-            $query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
-            while($row2 = mysqli_fetch_array($query2)){
-                $aux++;
-            }
-        }
+	    $query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}'");
+	    while($row2 = mysqli_fetch_array($query2)){
+		    $aux++;
+	    }
 
-        $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
-                                            ('{$_POST['selectComponente']}','3','{$_POST['selectTipoTejido']}','{$aux}')");
+	    if(isset($_POST['insertFila']) && $_POST['insertFila']!='NA'){
+		    $aux = $_POST['insertFila'];
+
+		    $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$aux}' ORDER BY indice DESC");
+		    while($row = mysqli_fetch_array($query)){
+			    $indiceSup = $row['indice'] + 1;
+			    $update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+			    $queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+			    $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER INSERT PCPSPC','UPDATE','{$queryPerformed}')");
+		    }
+
+		    $aux++;
+	    }
+
+        $insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','3','{$_POST['selectTipoTejido']}','{$aux}')");
 
         $galgas = '';
 	    foreach ($_POST['galgas'] as $galga) {
-		    $galgas .= $galga.",";
+		    $galgas .= $galga.", ";
 	    }
-	    $galgas = substr($galgas,0,(strlen($galgas)-1));
-	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
-                                            ('{$_POST['selectComponente']}','4','{$galgas}','{$aux}')");
+	    $galgas = substr($galgas,0,(strlen($galgas)-2));
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','4','{$galgas}','{$aux}')");
 
-	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
-                                            ('{$_POST['selectComponente']}','5','{$_POST['comprobacionTejido']}','{$aux}')");
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','5','{$_POST['comprobacionTejido']}','{$aux}')");
 
-	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
-                                            ('{$_POST['selectComponente']}','6','{$_POST['observaciones']}','{$aux}')");
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','6','{$_POST['observaciones']}','{$aux}')");
 
-	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
-                                            ('{$_POST['selectComponente']}','7','{$_POST['tiempo']}','{$aux}')");
+	    $insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','7','{$_POST['tiempo']}','{$aux}')");
     }
+
+	if(isset($_POST['addLavado'])){
+		$aux = 1;
+		$query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}'");
+		while($row2 = mysqli_fetch_array($query2)){
+			$aux++;
+		}
+
+		if(isset($_POST['insertFila']) && $_POST['insertFila']!='NA'){
+			$aux = $_POST['insertFila'];
+
+			$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$aux}' ORDER BY indice DESC");
+			while($row = mysqli_fetch_array($query)){
+				$indiceSup = $row['indice'] + 1;
+				$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+				$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER INSERT PCPSPC','UPDATE','{$queryPerformed}')");
+			}
+
+			$aux++;
+		}
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','9','{$_POST['selectTipoLavado']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','10','{$_POST['programa']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','11','{$_POST['observaciones']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','12','{$_POST['tiempo']}','{$aux}')");
+	}
+
+	if(isset($_POST['addSecado'])){
+		$aux = 1;
+		$query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}'");
+		while($row2 = mysqli_fetch_array($query2)){
+			$aux++;
+		}
+
+		if(isset($_POST['insertFila']) && $_POST['insertFila']!='NA'){
+			$aux = $_POST['insertFila'];
+
+			$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$aux}' ORDER BY indice DESC");
+			while($row = mysqli_fetch_array($query)){
+				$indiceSup = $row['indice'] + 1;
+				$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+				$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER INSERT PCPSPC','UPDATE','{$queryPerformed}')");
+			}
+
+			$aux++;
+		}
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','14','{$_POST['selectTipoSecado']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','15','{$_POST['programa']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','16','{$_POST['rotacion']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','17','{$_POST['observaciones']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','18','{$_POST['tiempo']}','{$aux}')");
+	}
+
+	if(isset($_POST['addConfeccion'])){
+		$aux = 1;
+		$query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}'");
+		while($row2 = mysqli_fetch_array($query2)){
+			$aux++;
+		}
+
+		if(isset($_POST['insertFila']) && $_POST['insertFila']!='NA'){
+			$aux = $_POST['insertFila'];
+
+			$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$aux}' ORDER BY indice DESC");
+			while($row = mysqli_fetch_array($query)){
+				$indiceSup = $row['indice'] + 1;
+				$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+				$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER INSERT PCPSPC','UPDATE','{$queryPerformed}')");
+			}
+
+			$aux++;
+		}
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','20','{$_POST['selectProcedimiento']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','21','{$_POST['indicaciones']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','22','{$_POST['selectMaquina']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','23','{$_POST['observaciones']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','24','{$_POST['tiempo']}','{$aux}')");
+	}
+
+	if(isset($_POST['addAcondicionamiento'])){
+		$aux = 1;
+		$query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}'");
+		while($row2 = mysqli_fetch_array($query2)){
+			$aux++;
+		}
+
+		if(isset($_POST['insertFila']) && $_POST['insertFila']!='NA'){
+			$aux = $_POST['insertFila'];
+
+			$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$aux}' ORDER BY indice DESC");
+			while($row = mysqli_fetch_array($query)){
+				$indiceSup = $row['indice'] + 1;
+				$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+				$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER INSERT PCPSPC','UPDATE','{$queryPerformed}')");
+			}
+
+			$aux++;
+		}
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','26','{$_POST['selectInsumo']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','27','{$_POST['cantidad']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','28','{$_POST['selectMaquina']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','29','{$_POST['observaciones']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','30','{$_POST['tiempo']}','{$aux}')");
+	}
+
+	if(isset($_POST['addOtros'])){
+		$aux = 1;
+		$query2 = mysqli_query($link,"SELECT DISTINCT indice FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}'");
+		while($row2 = mysqli_fetch_array($query2)){
+			$aux++;
+		}
+
+		if(isset($_POST['insertFila']) && $_POST['insertFila']!='NA'){
+			$aux = $_POST['insertFila'];
+
+			$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$aux}' ORDER BY indice DESC");
+			while($row = mysqli_fetch_array($query)){
+				$indiceSup = $row['indice'] + 1;
+				$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+				$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER INSERT PCPSPC','UPDATE','{$queryPerformed}')");
+			}
+
+			$aux++;
+		}
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','32','{$_POST['selectProcedimiento']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','33','{$_POST['selectMaquina']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','34','{$_POST['observaciones']}','{$aux}')");
+
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES 
+                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','35','{$_POST['tiempo']}','{$aux}')");
+	}
+
+	if(isset($_POST['bajar'])){
+		$flag = false;
+
+		$indiceSup = $_POST['indice']+1;
+
+		$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$_POST['indice']}'");
+		while ($row = mysqli_fetch_array($query)){
+			switch ($row['idSubProcesoCaracteristica']){
+				case (1<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=7):
+					$selectTab = 1;
+					break;
+				case (8<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=12):
+					$selectTab = 2;
+					break;
+				case (13<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=18):
+					$selectTab = 3;
+					break;
+				case (19<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=24):
+					$selectTab = 4;
+					break;
+				case (25<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=30):
+					$selectTab = 5;
+					break;
+				case (31<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=35):
+					$selectTab = 6;
+					break;
+			}
+		}
+
+		$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$indiceSup}'");
+		while ($row = mysqli_fetch_array($query)){
+			$flag = true;
+		}
+		$queryPerformed = "SELECT * FROM PCPSPC WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$indiceSup}";
+		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','BUSCAR INDICE SUPERIOR PCPSPC','SELECT','{$queryPerformed}')");
+
+		if($flag){
+			$update = mysqli_query($link, "UPDATE PCPSPC SET indice = -1 WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$_POST['indice']}'");
+			$queryPerformed = "UPDATE PCPSPC SET indice = -1 WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$_POST['indice']}";
+			$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','BAJAR PCPSPC','UPDATE','{$queryPerformed}')");
+
+			$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$_POST['indice']}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$indiceSup}'");
+			$queryPerformed = "UPDATE PCPSPC SET indice = {$_POST['indice']} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$indiceSup}";
+			$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','BAJAR PCPSPC','UPDATE','{$queryPerformed}')");
+
+			$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = -1");
+			$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = -1";
+			$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','BAJAR PCPSPC','UPDATE','{$queryPerformed}')");
+		}
+	}
+
+	if(isset($_POST['subir'])){
+		$flag = false;
+
+		$indiceSup = $_POST['indice']-1;
+
+		$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$_POST['indice']}'");
+		while ($row = mysqli_fetch_array($query)){
+			switch ($row['idSubProcesoCaracteristica']){
+				case (1<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=7):
+					$selectTab = 1;
+					break;
+				case (8<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=12):
+					$selectTab = 2;
+					break;
+				case (13<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=18):
+					$selectTab = 3;
+					break;
+				case (19<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=24):
+					$selectTab = 4;
+					break;
+				case (25<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=30):
+					$selectTab = 5;
+					break;
+				case (31<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=35):
+					$selectTab = 6;
+					break;
+			}
+		}
+
+		$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$indiceSup}'");
+		while ($row = mysqli_fetch_array($query)){
+			$flag = true;
+		}
+
+		if($flag){
+			$update = mysqli_query($link, "UPDATE PCPSPC SET indice = -1 WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$_POST['indice']}'");
+			$queryPerformed = "UPDATE PCPSPC SET indice = -1 WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$_POST['indice']}";
+			$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PCPSPC','UPDATE','{$queryPerformed}')");
+
+			$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$_POST['indice']}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$indiceSup}'");
+			$queryPerformed = "UPDATE PCPSPC SET indice = {$_POST['indice']} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$indiceSup}";
+			$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PCPSPC','UPDATE','{$queryPerformed}')");
+
+			$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = -1");
+			$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = -1";
+			$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','SUBIR PCPSPC','UPDATE','{$queryPerformed}')");
+		}
+	}
+
+	if(isset($_POST['eliminar'])){
+		$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$_POST['indice']}'");
+		while ($row = mysqli_fetch_array($query)){
+			switch ($row['idSubProcesoCaracteristica']){
+				case (1<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=7):
+					$selectTab = 1;
+					break;
+				case (8<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=12):
+					$selectTab = 2;
+					break;
+				case (13<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=18):
+					$selectTab = 3;
+					break;
+				case (19<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=24):
+					$selectTab = 4;
+					break;
+				case (25<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=30):
+					$selectTab = 5;
+					break;
+				case (31<=$row['idSubProcesoCaracteristica'] && $row['idSubProcesoCaracteristica']<=35):
+					$selectTab = 6;
+					break;
+			}
+		}
+
+		$delete = mysqli_query($link,"DELETE FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$_POST['indice']}'");
+		$queryPerformed = "DELETE FROM PCPSPC WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$_POST['indice']}";
+		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE PCPSPC','DELETE','{$queryPerformed}')");
+
+		$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice > '{$_POST['indice']}' ORDER BY indice ASC");
+		while($row = mysqli_fetch_array($query)){
+			$indiceSup = $row['indice'] - 1;
+			$update = mysqli_query($link, "UPDATE PCPSPC SET indice = '{$indiceSup}' WHERE idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$row['indice']}'");
+			$queryPerformed = "UPDATE PCPSPC SET indice = {$indiceSup} WHERE idProducto = {$_POST['idProductoCrear']} AND indice = {$row['indice']}";
+			$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','FIX INDEX AFTER DELETE PCPSPC','UPDATE','{$queryPerformed}')");
+		}
+	}
 
     ?>
 
@@ -53,7 +391,7 @@ if(isset($_SESSION['login'])){
 							<div class="float-right">
 								<div class="dropdown">
                                     <button name="volver" type="submit" class="btn btn-light btn-sm" form="formSiguiente" formaction="nuevaHE2.php">Volver</button>
-									<button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Guardar</button>
+									<button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Siguiente</button>
 								</div>
 							</div>
 						</div>
@@ -69,22 +407,22 @@ if(isset($_SESSION['login'])){
 								$activoConfeccion = '';
 								$activoAcondicionamiento = '';
 								$activoOtros = '';
-								if(isset($_POST['siguienteHE2']) || isset($_POST['addTejido'])){
+								if(isset($_POST['siguienteHE2']) || isset($_POST['volverHE4']) || isset($_POST['addTejido']) || $selectTab == 1){
 									$activoTejido = 'active';
 								}
-								if(isset($_POST['addLavado'])){
+								if(isset($_POST['addLavado']) || $selectTab == 2){
 									$activoLavado = 'active';
 								}
-								if(isset($_POST['addSecado'])){
+								if(isset($_POST['addSecado']) || $selectTab == 3){
 									$activoSecado = 'active';
 								}
-								if(isset($_POST['addConfeccion'])){
+								if(isset($_POST['addConfeccion']) || $selectTab == 4){
 									$activoConfeccion = 'active';
 								}
-								if(isset($_POST['addAcondicionamiento'])){
+								if(isset($_POST['addAcondicionamiento']) || $selectTab == 5){
 									$activoAcondicionamiento = 'active';
 								}
-								if(isset($_POST['addOtros'])){
+								if(isset($_POST['addOtros']) || $selectTab == 6){
 									$activoOtros = 'active';
 								}
 								?>
@@ -112,8 +450,6 @@ if(isset($_SESSION['login'])){
 								<div class="tab-content">
 									<div class="tab-pane <?php echo $activoTejido;?>" id="tejido" role="tabpanel">
 										<div class="spacer20"></div>
-                                        <form method="post" action="#">
-                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                         <table class="table table-bordered">
                                             <thead>
                                             <tr>
@@ -128,8 +464,11 @@ if(isset($_SESSION['login'])){
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            <form method="post" action="#" id="formTejido">
+                                                <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>" form="formTejido">
+                                                <input type="hidden" name="insertFila" value="<?php if(isset($indiceInsertar)){echo $indiceInsertar;}else{echo 'NA';}?>">
                                             <tr>
-                                                <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
+                                                <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)" form="formTejido">
                                                         <option selected disabled>Seleccionar</option>
                                                         <?php
                                                         $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 1");
@@ -142,13 +481,13 @@ if(isset($_SESSION['login'])){
                                                         ?>
                                                     </select></td>
                                                 <td id="materialTejido"><input type="text" class="form-control" readonly></td>
-                                                <td><select name="selectTipoTejido" class="form-control">
+                                                <td><select name="selectTipoTejido" class="form-control" form="formTejido">
                                                         <option selected disabled>Seleccionar</option>
                                                         <option value="Industrial">Tejido Industrial</option>
                                                         <option value="Semi-Industrial">Tejido Semi-Industrial</option>
                                                         <option value="Manual">Tejido Manual</option>
                                                     </select></td>
-                                                <td style="width: 13%"><select class="js-example-basic-multiple form-control" name="galgas[]" multiple="multiple">
+                                                <td style="width: 13%"><select class="js-example-basic-multiple form-control" name="galgas[]" multiple="multiple" form="formTejido">
                                                         <?php
                                                         $query = mysqli_query($link,"SELECT * FROM Galgas");
                                                         while($row = mysqli_fetch_array($query)){
@@ -157,31 +496,69 @@ if(isset($_SESSION['login'])){
                                                         ?>
                                                     </select>
                                                 </td>
-                                                <td><input type="text" name="comprobacionTejido" class="form-control"></td>
-                                                <td><input type="text" name="observaciones" class="form-control"></td>
-                                                <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
-                                                <td class="text-center"><input type="submit" name="addTejido" value="Agregar" class="btn btn-outline-primary"></td>
+                                                <td><input type="text" name="comprobacionTejido" class="form-control" form="formTejido"></td>
+                                                <td><input type="text" name="observaciones" class="form-control" form="formTejido"></td>
+                                                <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control" form="formTejido"></td>
+                                                <td class="text-center"><input type="submit" name="addTejido" value="Agregar" class="btn btn-outline-primary" form="formTejido"></td>
                                             </tr>
+                                            </form>
                                             <tr>
                                                 <td colspan="8"></td>
                                             </tr>
                                             <?php
-                                            $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
+                                            $flag = true;
+                                            $indice = 0;
+                                            $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 8 AND idSubProcesoCaracteristica > 2 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
                                             while($row = mysqli_fetch_array($query)){
-                                                $query2 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}' AND idSubProcesoCaracteristica < 8 AND idSubProcesoCaracteristica > 2");
-                                                while($row2 = mysqli_fetch_array($query2)){
-                                                    
+                                                if($indice != $row['indice']){$flag = true;}
+                                                if($flag){
+                                                    $flag = false;
+                                                    $indice = $row['indice'];
+	                                                echo "<tr>";
+	                                                $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+	                                                while($row2 = mysqli_fetch_array($query2)){
+		                                                $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+		                                                while($row3 = mysqli_fetch_array($query3)){
+			                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+		                                                }
+		                                                if($row2['idMaterial'] == null){
+		                                                    echo "<td class='text-center'>-</td>";
+                                                        }else{
+			                                                $query3 = mysqli_query($link,"SELECT * FROM Material WHERE idMaterial = '{$row2['idMaterial']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['material']}</td>";
+			                                                }
+                                                        }
+	                                                }
+                                                }
+	                                            echo "<td class='text-center'>{$row['valor']}</td>";
+                                                if($row['idSubProcesoCaracteristica'] == 7){
+	                                                echo "<td class='text-center'>
+                                                                <form method='post' action='#' id='formMenu{$row['indice']}'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
+                                                                    <input type='hidden' name='indice' value='{$row['indice']}' form='formMenu{$row['indice']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir' form='formMenu{$row['indice']}'>
+                                                                        <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar' form='formMenu{$row['indice']}'>
+                                                                        <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar' form='formMenu{$row['indice']}'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar' form='formMenu{$row['indice']}'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                              </td>";
+                                                    echo "</tr>";
                                                 }
                                             }
                                             ?>
                                             </tbody>
                                         </table>
-                                        </form>
+
 									</div>
                                     <div class="tab-pane <?php echo $activoLavado;?>" id="lavado" role="tabpanel">
                                         <div class="spacer20"></div>
-                                        <form method="post" action="#">
-                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                             <table class="table table-bordered">
                                                 <thead>
                                                 <tr>
@@ -194,18 +571,21 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <form method="post" action="#">
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                    <input type="hidden" name="insertFila" value="<?php if(isset($indiceInsertar)){echo $indiceInsertar;}else{echo 'NA';}?>">
                                                 <tr>
                                                     <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
                                                             <option selected disabled>Seleccionar</option>
-						                                    <?php
-						                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
-						                                    while($row = mysqli_fetch_array($query)){
-							                                    $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
-							                                    while($row2 = mysqli_fetch_array($query2)){
-								                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
-							                                    }
-						                                    }
-						                                    ?>
+		                                                    <?php
+		                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 1");
+		                                                    while($filterIndex = mysqli_fetch_array($filter)){
+			                                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$filterIndex['idComponente']}'");
+			                                                    while($row = mysqli_fetch_array($query)){
+				                                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$filterIndex['descripcion']}</option>";
+			                                                    }
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><select name="selectTipoLavado" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
@@ -218,20 +598,55 @@ if(isset($_SESSION['login'])){
                                                     <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
                                                     <td class="text-center"><input type="submit" name="addLavado" value="Agregar" class="btn btn-outline-primary"></td>
                                                 </tr>
+                                                </form>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                 </tr>
-			                                    <?php
-			                                    //Mostrar datos de Lavado
-			                                    ?>
+                                                <?php
+                                                $flag = true;
+                                                $indice = 0;
+                                                $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 13 AND idSubProcesoCaracteristica > 8 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
+                                                while($row = mysqli_fetch_array($query)){
+	                                                if($indice != $row['indice']){$flag = true;}
+	                                                if($flag){
+		                                                $flag = false;
+		                                                $indice = $row['indice'];
+		                                                echo "<tr>";
+		                                                $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+		                                                while($row2 = mysqli_fetch_array($query2)){
+			                                                $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+			                                                }
+		                                                }
+	                                                }
+	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                if($row['idSubProcesoCaracteristica'] == 12){
+		                                                echo "<td class='text-center'>
+                                                                <form method='post' action='#' id='formMenu{$row['indice']}'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
+                                                                    <input type='hidden' name='indice' value='{$row['indice']}' form='formMenu{$row['indice']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir' form='formMenu{$row['indice']}'>
+                                                                        <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar' form='formMenu{$row['indice']}'>
+                                                                        <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar' form='formMenu{$row['indice']}'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar' form='formMenu{$row['indice']}'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                              </td>";
+		                                                echo "</tr>";
+	                                                }
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
-                                        </form>
                                     </div>
                                     <div class="tab-pane <?php echo $activoSecado;?>" id="secado" role="tabpanel">
                                         <div class="spacer20"></div>
-                                        <form method="post" action="#">
-                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                             <table class="table table-bordered">
                                                 <thead>
                                                 <tr>
@@ -245,18 +660,21 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <form method="post" action="#">
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                    <input type="hidden" name="insertFila" value="<?php if(isset($indiceInsertar)){echo $indiceInsertar;}else{echo 'NA';}?>">
                                                 <tr>
                                                     <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
                                                             <option selected disabled>Seleccionar</option>
-						                                    <?php
-						                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
-						                                    while($row = mysqli_fetch_array($query)){
-							                                    $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
-							                                    while($row2 = mysqli_fetch_array($query2)){
-								                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
-							                                    }
-						                                    }
-						                                    ?>
+		                                                    <?php
+		                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 1");
+		                                                    while($filterIndex = mysqli_fetch_array($filter)){
+			                                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$filterIndex['idComponente']}'");
+			                                                    while($row = mysqli_fetch_array($query)){
+				                                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$filterIndex['descripcion']}</option>";
+			                                                    }
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><select name="selectTipoSecado" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
@@ -270,20 +688,55 @@ if(isset($_SESSION['login'])){
                                                     <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
                                                     <td class="text-center"><input type="submit" name="addSecado" value="Agregar" class="btn btn-outline-primary"></td>
                                                 </tr>
+                                                </form>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                 </tr>
-			                                    <?php
-			                                    //Mostrar datos de Secado
-			                                    ?>
+                                                <?php
+                                                $flag = true;
+                                                $indice = 0;
+                                                $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 19 AND idSubProcesoCaracteristica > 13 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
+                                                while($row = mysqli_fetch_array($query)){
+	                                                if($indice != $row['indice']){$flag = true;}
+	                                                if($flag){
+		                                                $flag = false;
+		                                                $indice = $row['indice'];
+		                                                echo "<tr>";
+		                                                $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+		                                                while($row2 = mysqli_fetch_array($query2)){
+			                                                $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+			                                                }
+		                                                }
+	                                                }
+	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                if($row['idSubProcesoCaracteristica'] == 18){
+		                                                echo "<td class='text-center'>
+                                                                <form method='post' action='#' id='formMenu{$row['indice']}'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
+                                                                    <input type='hidden' name='indice' value='{$row['indice']}' form='formMenu{$row['indice']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir' form='formMenu{$row['indice']}'>
+                                                                        <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar' form='formMenu{$row['indice']}'>
+                                                                        <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar' form='formMenu{$row['indice']}'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar' form='formMenu{$row['indice']}'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                              </td>";
+		                                                echo "</tr>";
+	                                                }
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
-                                        </form>
                                     </div>
                                     <div class="tab-pane <?php echo $activoConfeccion;?>" id="confeccion" role="tabpanel">
                                         <div class="spacer20"></div>
-                                        <form method="post" action="#">
-                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                             <table class="table table-bordered">
                                                 <thead>
                                                 <tr>
@@ -297,46 +750,94 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <form method="post" action="#">
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                    <input type="hidden" name="insertFila" value="<?php if(isset($indiceInsertar)){echo $indiceInsertar;}else{echo 'NA';}?>">
                                                 <tr>
                                                     <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
                                                             <option selected disabled>Seleccionar</option>
-						                                    <?php
-						                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
-						                                    while($row = mysqli_fetch_array($query)){
-							                                    $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
-							                                    while($row2 = mysqli_fetch_array($query2)){
-								                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
-							                                    }
-						                                    }
-						                                    ?>
+		                                                    <?php
+		                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 2");
+		                                                    while($filterIndex = mysqli_fetch_array($filter)){
+			                                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$filterIndex['idComponente']}'");
+			                                                    while($row = mysqli_fetch_array($query)){
+				                                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$filterIndex['descripcion']}</option>";
+			                                                    }
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><select name="selectProcedimiento" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
-
+		                                                    <?php
+		                                                    $query = mysqli_query($link,"SELECT * FROM SubProceso WHERE tipo = 0 AND idEstado = 1");
+		                                                    while($row = mysqli_fetch_array($query)){
+			                                                    echo "<option value='{$row['idProcedimiento']}'>{$row['descripcion']}</option>";
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><input type="text" name="indicaciones" class="form-control"></td>
                                                     <td><select name="selectMaquina" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
-
+		                                                    <?php
+		                                                    $query = mysqli_query($link,"SELECT * FROM Maquina WHERE idEstado = 1");
+		                                                    while($row = mysqli_fetch_array($query)){
+			                                                    echo "<option value='{$row['idMaquina']}'>{$row['descripcion']}</option>";
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><input type="text" name="observaciones" class="form-control"></td>
                                                     <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
                                                     <td class="text-center"><input type="submit" name="addConfeccion" value="Agregar" class="btn btn-outline-primary"></td>
                                                 </tr>
+                                                </form>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                 </tr>
-			                                    <?php
-			                                    //Mostrar datos de Confeccion
-			                                    ?>
+                                                <?php
+                                                $flag = true;
+                                                $indice = 0;
+                                                $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 25 AND idSubProcesoCaracteristica > 19 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
+                                                while($row = mysqli_fetch_array($query)){
+	                                                if($indice != $row['indice']){$flag = true;}
+	                                                if($flag){
+		                                                $flag = false;
+		                                                $indice = $row['indice'];
+		                                                echo "<tr>";
+		                                                $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+		                                                while($row2 = mysqli_fetch_array($query2)){
+			                                                $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+			                                                }
+		                                                }
+	                                                }
+	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                if($row['idSubProcesoCaracteristica'] == 24){
+		                                                echo "<td class='text-center'>
+                                                                <form method='post' action='#' id='formMenu{$row['indice']}'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
+                                                                    <input type='hidden' name='indice' value='{$row['indice']}' form='formMenu{$row['indice']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir' form='formMenu{$row['indice']}'>
+                                                                        <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar' form='formMenu{$row['indice']}'>
+                                                                        <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar' form='formMenu{$row['indice']}'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar' form='formMenu{$row['indice']}'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                              </td>";
+		                                                echo "</tr>";
+	                                                }
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
-                                        </form>
                                     </div>
                                     <div class="tab-pane <?php echo $activoAcondicionamiento;?>" id="acondicionamiento" role="tabpanel">
                                         <div class="spacer20"></div>
-                                        <form method="post" action="#">
-                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                             <table class="table table-bordered">
                                                 <thead>
                                                 <tr>
@@ -350,46 +851,94 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <form method="post" action="#">
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                    <input type="hidden" name="insertFila" value="<?php if(isset($indiceInsertar)){echo $indiceInsertar;}else{echo 'NA';}?>">
                                                 <tr>
                                                     <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
                                                             <option selected disabled>Seleccionar</option>
-						                                    <?php
-						                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
-						                                    while($row = mysqli_fetch_array($query)){
-							                                    $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
-							                                    while($row2 = mysqli_fetch_array($query2)){
-								                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
-							                                    }
-						                                    }
-						                                    ?>
+		                                                    <?php
+		                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 1");
+		                                                    while($filterIndex = mysqli_fetch_array($filter)){
+			                                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$filterIndex['idComponente']}'");
+			                                                    while($row = mysqli_fetch_array($query)){
+				                                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$filterIndex['descripcion']}</option>";
+			                                                    }
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><select name="selectInsumo" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
-
+		                                                    <?php
+		                                                    $query = mysqli_query($link,"SELECT * FROM Insumos WHERE idEstado = 1 AND tipoInsumo = 1");
+		                                                    while($row = mysqli_fetch_array($query)){
+			                                                    echo "<option value='{$row['idInsumo']}'>{$row['descripcion']}</option>";
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><input type="text" name="cantidad" class="form-control"></td>
                                                     <td><select name="selectMaquina" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
-
+		                                                    <?php
+		                                                    $query = mysqli_query($link,"SELECT * FROM Maquina WHERE idEstado = 1");
+		                                                    while($row = mysqli_fetch_array($query)){
+			                                                    echo "<option value='{$row['idMaquina']}'>{$row['descripcion']}</option>";
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><input type="text" name="observaciones" class="form-control"></td>
                                                     <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
                                                     <td class="text-center"><input type="submit" name="addAcondicionamiento" value="Agregar" class="btn btn-outline-primary"></td>
                                                 </tr>
+                                                </form>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                 </tr>
-			                                    <?php
-			                                    //Mostrar datos de Acondicionamiento
-			                                    ?>
+                                                <?php
+                                                $flag = true;
+                                                $indice = 0;
+                                                $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 31 AND idSubProcesoCaracteristica > 25 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
+                                                while($row = mysqli_fetch_array($query)){
+	                                                if($indice != $row['indice']){$flag = true;}
+	                                                if($flag){
+		                                                $flag = false;
+		                                                $indice = $row['indice'];
+		                                                echo "<tr>";
+		                                                $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+		                                                while($row2 = mysqli_fetch_array($query2)){
+			                                                $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+			                                                }
+		                                                }
+	                                                }
+	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                if($row['idSubProcesoCaracteristica'] == 30){
+		                                                echo "<td class='text-center'>
+                                                                <form method='post' action='#' id='formMenu{$row['indice']}'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
+                                                                    <input type='hidden' name='indice' value='{$row['indice']}' form='formMenu{$row['indice']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir' form='formMenu{$row['indice']}'>
+                                                                        <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar' form='formMenu{$row['indice']}'>
+                                                                        <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar' form='formMenu{$row['indice']}'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar' form='formMenu{$row['indice']}'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                              </td>";
+		                                                echo "</tr>";
+	                                                }
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
-                                        </form>
                                     </div>
                                     <div class="tab-pane <?php echo $activoOtros;?>" id="otros" role="tabpanel">
                                         <div class="spacer20"></div>
-                                        <form method="post" action="#">
-                                            <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                             <table class="table table-bordered">
                                                 <thead>
                                                 <tr>
@@ -402,40 +951,90 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <form method="post" action="#">
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                    <input type="hidden" name="insertFila" value="<?php if(isset($indiceInsertar)){echo $indiceInsertar;}else{echo 'NA';}?>">
                                                 <tr>
                                                     <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
                                                             <option selected disabled>Seleccionar</option>
-						                                    <?php
-						                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}'");
-						                                    while($row = mysqli_fetch_array($query)){
-							                                    $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
-							                                    while($row2 = mysqli_fetch_array($query2)){
-								                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$row2['descripcion']}</option>";
-							                                    }
-						                                    }
-						                                    ?>
+		                                                    <?php
+		                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 1");
+		                                                    while($filterIndex = mysqli_fetch_array($filter)){
+			                                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$filterIndex['idComponente']}'");
+			                                                    while($row = mysqli_fetch_array($query)){
+				                                                    echo "<option value='{$row['idComponenteEspecifico']}'>{$filterIndex['descripcion']}</option>";
+			                                                    }
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><select name="selectProcedimiento" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
-
+                                                            <?php
+                                                            $query = mysqli_query($link,"SELECT * FROM SubProceso WHERE tipo = 0 AND idEstado = 1");
+                                                            while($row = mysqli_fetch_array($query)){
+	                                                            echo "<option value='{$row['idProcedimiento']}'>{$row['descripcion']}</option>";
+                                                            }
+                                                            ?>
                                                         </select></td>
                                                     <td><select name="selectMaquina" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
-
+		                                                    <?php
+		                                                    $query = mysqli_query($link,"SELECT * FROM Maquina WHERE idEstado = 1");
+		                                                    while($row = mysqli_fetch_array($query)){
+			                                                    echo "<option value='{$row['idMaquina']}'>{$row['descripcion']}</option>";
+		                                                    }
+		                                                    ?>
                                                         </select></td>
                                                     <td><input type="text" name="observaciones" class="form-control"></td>
                                                     <td><input type="number" min="0" step="0.01" name="tiempo" class="form-control"></td>
                                                     <td class="text-center"><input type="submit" name="addOtros" value="Agregar" class="btn btn-outline-primary"></td>
                                                 </tr>
+                                                </form>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                 </tr>
-			                                    <?php
-			                                    //Mostrar datos de Otros
-			                                    ?>
+                                                <?php
+                                                $flag = true;
+                                                $indice = 0;
+                                                $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 36 AND idSubProcesoCaracteristica > 31 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
+                                                while($row = mysqli_fetch_array($query)){
+	                                                if($indice != $row['indice']){$flag = true;}
+	                                                if($flag){
+		                                                $flag = false;
+		                                                $indice = $row['indice'];
+		                                                echo "<tr>";
+		                                                $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+		                                                while($row2 = mysqli_fetch_array($query2)){
+			                                                $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+			                                                }
+		                                                }
+	                                                }
+	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                if($row['idSubProcesoCaracteristica'] == 35){
+		                                                echo "<td class='text-center'>
+                                                                <form method='post' action='#' id='formMenu{$row['indice']}'>
+                                                                <div>
+                                                                    <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
+                                                                    <input type='hidden' name='indice' value='{$row['indice']}' form='formMenu{$row['indice']}'>
+                                                                    <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                                    Acciones</button>
+                                                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir' form='formMenu{$row['indice']}'>
+                                                                        <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar' form='formMenu{$row['indice']}'>
+                                                                        <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar' form='formMenu{$row['indice']}'>
+                                                                        <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar' form='formMenu{$row['indice']}'>
+                                                                    </div>
+                                                                </div>
+                                                                </form>
+                                                              </td>";
+		                                                echo "</tr>";
+	                                                }
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
-                                        </form>
                                     </div>
 								</div>
 							</div>
