@@ -5,29 +5,13 @@ if(isset($_SESSION['login'])){
     include('header.php');
     include('navbarAdmin.php');
 
-    if (isset($_POST['emitir'])){
+    if(isset($_POST['nuevaObs'])){
 
-        $query = mysqli_query($link, "UPDATE ConfirmacionVenta SET idEstado = 4 WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+        $query = mysqli_query($link, "UPDATE OrdenProduccion SET Observacion = '{$_POST['observacion']}' WHERE idOrdenProduccion = '{$_POST['idOrdenProduccion']}'");
 
-        $queryPerformed = "UPDATE ConfirmacionVenta SET idEstado = 4 WHERE idContrato = '{$_POST['idConfirmacionVenta']}'";
+        $queryPerformed = "UPDATE OrdenProduccion SET Observacion = {$_POST['observacion']} WHERE idOrdenProduccion = '{$_POST['idOrdenProduccion']}'";
 
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Emitir CV','{$queryPerformed}')");
-
-    }
-
-    if (isset($_POST['eliminar'])){
-
-        $delete = mysqli_query($link, "DELETE FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
-        $delete = mysqli_query($link, "DELETE FROM Precio WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
-        $delete = mysqli_query($link, "DELETE FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
-
-        $queryPerformed = "DELETE FROM ConfirmacionVentaProducto WHERE idContrato = {$_POST['idConfirmacionVenta']}";
-        $queryPerformed2 = "DELETE FROM Precio WHERE idContrato = {$_POST['idConfirmacionVenta']}";
-        $queryPerformed3 = "DELETE FROM ConfirmacionVenta WHERE idContrato = {$_POST['idConfirmacionVenta']}";
-
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idColaborador,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE','ConfirmacionVentaProducto','{$queryPerformed}')");
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idColaborador,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE','Precio','{$queryPerformed2}')");
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idColaborador,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','DELETE','ConfirmacionVenta','{$queryPerformed3}')");
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Observacion OP','{$queryPerformed}')");
 
     }
 
@@ -81,17 +65,7 @@ if(isset($_SESSION['login'])){
         <div class="card">
             <div class="card-header card-inverse card-info">
                 <i class="fa fa-list"></i>
-                Listado de Confirmaciones de Venta
-                <div class="float-right">
-                    <div class="dropdown">
-                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Acciones
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="nuevaCV_DatosGenerales.php">Registrar Nueva Orden de Venta</a>
-                        </div>
-                    </div>
-                </div>
+                Listado de Órdenes de Producción
                 <span class="float-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="float-right">
                     <button href="#collapsed" class="btn btn-light btn-sm" data-toggle="collapse">Mostrar Filtros</button>
@@ -108,16 +82,8 @@ if(isset($_SESSION['login'])){
                                 <input type="text" class="form-control mt-2 mb-2 mr-2" id="fechaCreacion" placeholder="Fecha de Creación" onkeyup="myFunction()">
                                 <label class="sr-only" for="cliente">Cliente</label>
                                 <input type="text" class="search-key form-control mt-2 mb-2 mr-2" id="cliente" placeholder="Cliente" onkeyup="myFunction()">
-                                <label class="sr-only" for="estado">Estado</label>
-                                <select class="form-control mt-2 mb-2 mr-2" id="estado" onchange="myFunction()">
-                                    <option disabled selected value="a">Estado</option>
-                                    <?php
-                                    $query = mysqli_query($link, "SELECT * FROM Estado");
-                                    while($row = mysqli_fetch_array($query)){
-                                        echo "<option value='{$row['descripcion']}'>{$row['descripcion']}</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <label class="sr-only" for="estado">Contrato</label>
+                                <input type="text" class="search-key form-control mt-2 mb-2 mr-2" id="estado" placeholder="Contrato" onkeyup="myFunction()">
                                 <input type="submit" class="btn btn-primary" value="Limpiar" style="padding-left:28px; padding-right: 28px;">
                             </form>
                         </div>
@@ -132,46 +98,41 @@ if(isset($_SESSION['login'])){
                                 <th class="text-center">Orden #</th>
                                 <th class="text-center">Fecha</th>
                                 <th class="text-center">Cliente</th>
-                                <th class="text-center">Estado</th>
+                                <th class="text-center">Contrato</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            $restult = mysqli_query($link, "SELECT * FROM ConfirmacionVenta ORDER BY fecha DESC");
+                            $restult = mysqli_query($link, "SELECT * FROM OrdenProduccion ORDER BY fechaCreacion DESC");
                             while ($fila = mysqli_fetch_array($restult)){
                                 echo "<tr>";
-                                echo "<td>{$fila['idContrato']}</td>";
-                                echo "<td>{$fila['fecha']}</td>";
-                                $restult1 = mysqli_query($link, "SELECT * FROM Cliente WHERE idCliente IN (SELECT idCliente FROM Contacto WHERE idContacto = '{$fila['idContacto']}')");
+                                echo "<td>{$fila['idOrdenProduccion']}</td>";
+                                echo "<td>{$fila['fechaCreacion']}</td>";
+                                $restult1 = mysqli_query($link, "SELECT * FROM Cliente WHERE idCliente IN (SELECT idCliente FROM Contacto WHERE idContacto IN (SELECT idContacto FROM ConfirmacionVenta WHERE idContrato = '{$fila['idContrato']}'))");
                                 while ($fila1 = mysqli_fetch_array($restult1)){
                                     echo "<td>{$fila1['nombre']}</td>";
                                 }
-                                $restult1 = mysqli_query($link, "SELECT * FROM Estado WHERE idEstado = '{$fila['idEstado']}'");
+                                echo "<td>{$fila['idContrato']}</td>";
+                                $restult1 = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$fila['idContrato']}'");
                                 while ($fila1 = mysqli_fetch_array($restult1)){
-                                    $descripcion = $fila1['descripcion'];
-                                    echo "<td>{$fila1['descripcion']}</td>";
+                                    $codificacionTalla = $fila1['idcodificacionTalla'];
                                 }
                                 echo "
                                     <td>
                                         <form method='post'>
                                         <input type='hidden' name='idConfirmacionVenta' value=".$fila['idContrato'].">
-                                        <input type='hidden' name='codifTalla' value=".$fila['idcodificacionTalla'].">
+                                        <input type='hidden' name='idOrdenProduccion' value=".$fila['idOrdenProduccion'].">
+                                        <input type='hidden' name='codifTalla' value=".$codificacionTalla.">
                                             <div class='dropdown'>
                                                 <button class='btn btn-outline-primary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                                 Acciones
                                                 </button>
                                                 <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                                    <button name='verCV' class='dropdown-item' type='submit' formaction='detalleCV.php'>Ver Detalle</button>
-                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleCVPDF.php'>Descargar PDF</button>
-                                ";
-                                                if($descripcion == "Abierta"){
-                                                    echo "
-                                                    <button name='emitir' class='dropdown-item' type='submit' formaction='#'>Emitir</button>
-                                                    <button name='eliminar' class='dropdown-item' type='submit' formaction='#'>Eliminar</button>
-                                                    ";
-                                                }
-                                echo "
+                                                    <button name='verOP' class='dropdown-item' type='submit' formaction='detalleOP.php'>Ver Detalle</button>
+                                                    <button name='tarjetas' class='dropdown-item' type='submit' formaction='crearTarjetas.php'>Crear Tarjetas</button>
+                                                    <button name='nuevaObs' class='dropdown-item' type='submit' formaction='nuevaObservacionOP.php'>Agregar Observación</button>
+                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleOPPDF.php'>Descargar PDF</button>
                                                 </div>
                                             </div>
                                         </form>
