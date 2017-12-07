@@ -18,9 +18,9 @@ if(isset($_SESSION['login'])){
 
     if (isset($_POST['addProcedimiento'])){
 
-        $query = mysqli_query($link, "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES ('{$_POST['idProceso']}',1,'{$_POST['subproceso']}','1')");
+        $query = mysqli_query($link, "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES (5,1,'{$_POST['subproceso']}','0')");
 
-        $queryPerformed = "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES ({$_POST['idProceso']},1,{$_POST['subproceso']},1)";
+        $queryPerformed = "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo) VALUES (5,1,{$_POST['subproceso']},0)";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','SubProceso','{$queryPerformed}')");
 
@@ -61,13 +61,6 @@ if(isset($_SESSION['login'])){
 
     }
 
-    $result = mysqli_query($link,"SELECT * FROM Proceso WHERE idProceso = '{$_POST['idProceso']}'");
-    while ($fila = mysqli_fetch_array($result)){
-
-        $nombreProceso = $fila['descripcion'];
-
-    }
-
     ?>
 
     <script>
@@ -84,7 +77,7 @@ if(isset($_SESSION['login'])){
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];
-                td2 = tr[i].getElementsByTagName("td")[2];
+                td2 = tr[i].getElementsByTagName("td")[1];
                 if ((td)&&(td2)) {
                     if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         if(td2.innerHTML.toUpperCase().indexOf(filter2) > -1){
@@ -104,7 +97,7 @@ if(isset($_SESSION['login'])){
         <div class="card">
             <div class="card-header card-inverse card-info">
                 <i class="fa fa-list"></i>
-                Listado de Procedimientos de <?php echo $nombreProceso;?>
+                Listado de Procedimientos
                 <div class="float-right">
                     <div class="dropdown">
                         <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -113,7 +106,6 @@ if(isset($_SESSION['login'])){
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <form method="post">
                                 <a class="dropdown-item" data-toggle="modal" data-target="#modalProcedimiento" style="font-size: 14px;">Registrar Nuevo Procedimiento</a>
-                                <a class="dropdown-item" href="gestionProcesos.php" style="font-size: 14px;">Regresar</a>
                             </form>
                         </div>
                     </div>
@@ -131,15 +123,7 @@ if(isset($_SESSION['login'])){
                                 <label class="sr-only" for="material">Procedimiento</label>
                                 <input type="text" class="form-control mt-2 mb-2 mr-2" id="material" placeholder="Proceso" onkeyup="myFunction()">
                                 <label class="sr-only" for="estado">Estado</label>
-                                <select class="form-control mt-2 mb-2 mr-2" id="estado" onchange="myFunction()">
-                                    <option disabled selected value="a">Estado</option>
-                                    <?php
-                                    $query = mysqli_query($link, "SELECT * FROM Estado");
-                                    while($row = mysqli_fetch_array($query)){
-                                        echo "<option value='{$row['descripcion']}'>{$row['descripcion']}</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control mt-2 mb-2 mr-2" id="estado" placeholder="Estado" onkeyup="myFunction()">
                                 <input type="submit" class="btn btn-primary" value="Limpiar" style="padding-left:28px; padding-right: 28px;">
                             </form>
                         </div>
@@ -158,7 +142,7 @@ if(isset($_SESSION['login'])){
                             </thead>
                             <tbody>
                             <?php
-                            $restult = mysqli_query($link, "SELECT * FROM SubProceso WHERE idProceso = '{$_POST['idProceso']}' ORDER BY idEstado ASC");
+                            $restult = mysqli_query($link, "SELECT * FROM SubProceso WHERE tipo = 0 ORDER BY idEstado ASC");
                             while ($fila = mysqli_fetch_array($restult)){
                                 echo "<tr>";
                                 echo "<td>{$fila['descripcion']}</td>";
@@ -171,7 +155,6 @@ if(isset($_SESSION['login'])){
                                     <td>
                                         <form method='post'>
                                         <input type='hidden' name='idProcedimiento' value=".$fila['idProcedimiento'].">
-                                        <input type='hidden' name='idProceso' value=".$_POST['idProceso'].">
                                         <input type='hidden' name='estado' value=".$fila['idEstado'].">
                                             <div class='dropdown'>
                                                 <button class='btn btn-outline-primary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
@@ -207,7 +190,6 @@ if(isset($_SESSION['login'])){
                 <div class="modal-body">
                     <div class="container-fluid">
                         <form id="formProcedimiento" method="post" action="#">
-                            <input type='hidden' name='idProceso' value="<?php echo $_POST['idProceso'];?>">
                             <div class="form-group row">
                                 <label class="col-form-label" for="subproceso">Procedimiento:</label>
                                 <input type="text" name="subproceso" id="subproceso" class="form-control">

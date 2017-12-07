@@ -122,25 +122,9 @@ if(isset($_SESSION['login'])){
                                 <label class="sr-only" for="material">Insumo</label>
                                 <input type="text" class="form-control mt-2 mb-2 mr-2" id="material" placeholder="Insumo" onkeyup="myFunction()">
                                 <label class="sr-only" for="unidad">Unidad</label>
-                                <select class="form-control mt-2 mb-2 mr-2" id="unidad" onchange="myFunction()">
-                                    <option disabled selected value="a">Unidad</option>
-                                    <?php
-                                    $query = mysqli_query($link, "SELECT * FROM UnidadMedida ORDER BY idUnidadMedida ASC");
-                                    while($row = mysqli_fetch_array($query)){
-                                        echo "<option value='{$row['idUnidadMedida']}'>{$row['idUnidadMedida']}</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control mt-2 mb-2 mr-2" id="unidad" placeholder="Unidad" onkeyup="myFunction()">
                                 <label class="sr-only" for="estado">Estado</label>
-                                <select class="form-control mt-2 mb-2 mr-2" id="estado" onchange="myFunction()">
-                                    <option disabled selected value="a">Estado</option>
-                                    <?php
-                                    $query = mysqli_query($link, "SELECT * FROM Estado");
-                                    while($row = mysqli_fetch_array($query)){
-                                        echo "<option value='{$row['descripcion']}'>{$row['descripcion']}</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control mt-2 mb-2 mr-2" id="estado" placeholder="Estado" onkeyup="myFunction()">
                                 <input type="submit" class="btn btn-primary" value="Limpiar" style="padding-left:28px; padding-right: 28px;">
                             </form>
                         </div>
