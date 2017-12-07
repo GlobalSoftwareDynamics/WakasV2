@@ -163,7 +163,7 @@ if(isset($_SESSION['login'])){
                                                 </button>
                                                 <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
                                                     <button name='verCV' class='dropdown-item' type='submit' formaction='detalleCV.php'>Ver Detalle</button>
-                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleCVPDF.php'>Descargar PDF</button>
+                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleCVpdf.php'>Descargar PDF</button>
                                 ";
                                                 if($descripcion == "Abierta"){
                                                     echo "

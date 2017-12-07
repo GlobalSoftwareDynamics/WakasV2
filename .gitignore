@@ -32,8 +32,15 @@ Thumbs.db
 
 # Directory #
 ######################
+
 /.idea/
+
 /db/
+
 db
+
 /lib/
+
 lib
+/barcodes/
+barcodes

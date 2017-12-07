@@ -64,11 +64,11 @@ if(isset($_SESSION['login'])){
 
             }
 
-            $query = mysqli_query($link, "INSERT INTO ConfirmacionVenta(idContrato, idContacto, idIncoterm, idVia, idMetodoPago, idcodificacionTalla, idEstado, fecha, shipdate, reference)
-            VALUES ('{$_POST['idConfirmacionVenta']}','{$contacto}','{$_POST['incoterm']}','{$_POST['via']}','{$_POST['metodoPago']}','{$_POST['codifTalla']}',3,'{$_POST['fechaContrato']}','{$_POST['fechaEnvio']}','{$_POST['idReferencia']}')");
+            $query = mysqli_query($link, "INSERT INTO ConfirmacionVenta(idContrato, idContacto, idIncoterm, idVia, idMetodoPago, idcodificacionTalla, idEstado, fecha, shipdate, reference, moneda)
+            VALUES ('{$_POST['idConfirmacionVenta']}','{$contacto}','{$_POST['incoterm']}','{$_POST['via']}','{$_POST['metodoPago']}','{$_POST['codifTalla']}',3,'{$_POST['fechaContrato']}','{$_POST['fechaEnvio']}','{$_POST['idReferencia']}','{$_POST['moneda']}')");
 
             $queryPerformed = "INSERT INTO ConfirmacionVenta(idContrato, idContacto, idIncoterm, idVia, idMetodoPago, idcodificacionTalla, idEstado, fecha, shipdate, reference)
-            VALUES ({$_POST['idConfirmacionVenta']},{$contacto},{$_POST['incoterm']},{$_POST['via']},{$_POST['metodoPago']},{$_POST['codifTalla']},3,{$_POST['fechaContrato']},{$_POST['fechaEnvio']},{$_POST['idReferencia']})";
+            VALUES ({$_POST['idConfirmacionVenta']},{$contacto},{$_POST['incoterm']},{$_POST['via']},{$_POST['metodoPago']},{$_POST['codifTalla']},3,{$_POST['fechaContrato']},{$_POST['fechaEnvio']},{$_POST['idReferencia']},{$_POST['moneda']})";
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Nueva ConfirmacionVenta','{$queryPerformed}')");
 
@@ -262,6 +262,20 @@ if(isset($_SESSION['login'])){
                                     </thead>
                                     <tbody>
                                     <?php
+                                    $resultX = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+                                    while ($filaX = mysqli_fetch_array($resultX)){
+                                        switch($filaX['moneda']){
+                                            case 1:
+                                                $simbolo = "S/.";
+                                                break;
+                                            case 2:
+                                                $simbolo = "$";
+                                                break;
+                                            case 3:
+                                                $simbolo = "€";
+                                                break;
+                                        }
+                                    }
                                     $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
                                     while ($fila = mysqli_fetch_array($result)){
                                         echo "<tr>";
@@ -280,7 +294,7 @@ if(isset($_SESSION['login'])){
                                         }
                                         echo "<td>{$material}</td>";
                                         echo "<td>{$combinacioncolor}</td>";
-                                        echo "<td>{$fila['precio']}</td>";
+                                        echo "<td>{$simbolo} {$fila['precio']}</td>";
                                         echo "<td>{$talla}</td>";
                                         echo "<td>{$fila['cantidad']}</td>";
                                         echo "

@@ -132,7 +132,7 @@ if(isset($_SESSION['login'])){
                                                     <button name='verOP' class='dropdown-item' type='submit' formaction='detalleOP.php'>Ver Detalle</button>
                                                     <button name='tarjetas' class='dropdown-item' type='submit' formaction='crearTarjetas.php'>Crear Tarjetas</button>
                                                     <button name='nuevaObs' class='dropdown-item' type='submit' formaction='nuevaObservacionOP.php'>Agregar Observación</button>
-                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleOPPDF.php'>Descargar PDF</button>
+                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleOPpdf.php'>Descargar PDF</button>
                                                 </div>
                                             </div>
                                         </form>
