@@ -109,15 +109,7 @@ if(isset($_SESSION['login'])){
                                 <label class="sr-only" for="cliente">Cliente</label>
                                 <input type="text" class="search-key form-control mt-2 mb-2 mr-2" id="cliente" placeholder="Cliente" onkeyup="myFunction()">
                                 <label class="sr-only" for="estado">Estado</label>
-                                <select class="form-control mt-2 mb-2 mr-2" id="estado" onchange="myFunction()">
-                                    <option disabled selected value="a">Estado</option>
-                                    <?php
-                                    $query = mysqli_query($link, "SELECT * FROM Estado");
-                                    while($row = mysqli_fetch_array($query)){
-                                        echo "<option value='{$row['descripcion']}'>{$row['descripcion']}</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control mt-2 mb-2 mr-2" id="estado" placeholder="Estado" onkeyup="myFunction()">
                                 <input type="submit" class="btn btn-primary" value="Limpiar" style="padding-left:28px; padding-right: 28px;">
                             </form>
                         </div>
@@ -163,7 +155,7 @@ if(isset($_SESSION['login'])){
                                                 </button>
                                                 <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
                                                     <button name='verCV' class='dropdown-item' type='submit' formaction='detalleCV.php'>Ver Detalle</button>
-                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleCVPDF.php'>Descargar PDF</button>
+                                                    <button name='pdf' class='dropdown-item' type='submit' formaction='detalleCVpdf.php'>Descargar PDF</button>
                                 ";
                                                 if($descripcion == "Abierta"){
                                                     echo "

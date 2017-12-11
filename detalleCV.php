@@ -8,8 +8,7 @@ if(isset($_SESSION['login'])){
     include('navbarAdmin.php');
     ?>
 
-    <div class="spacer35"></div>
-    <section class="container">
+    <div class="spacer5"></div>
     <section class="container">
         <div class="card">
             <div class="card-header card-inverse card-info">
@@ -64,6 +63,20 @@ if(isset($_SESSION['login'])){
                         <?php
                         $result = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
                         while ($fila = mysqli_fetch_array($result)){
+                            switch($fila['moneda']){
+                                case 1:
+                                    $simbolo = "S/.";
+                                    $denominacion = "SOLES";
+                                    break;
+                                case 2:
+                                    $simbolo = "$";
+                                    $denominacion = "USD";
+                                    break;
+                                case 3:
+                                    $simbolo = "€";
+                                    $denominacion = "EURO";
+                                    break;
+                            }
                             $result1 = mysqli_query($link,"SELECT * FROM Incoterms WHERE idIncoterm = '{$fila['idIncoterm']}'");
                             while ($fila1 = mysqli_fetch_array($result1)){
                                 $incoterm = $fila1['descripcion'];
@@ -165,8 +178,8 @@ if(isset($_SESSION['login'])){
                                 }
                                 ?>
                                 <th>Total</th>
-                                <th>Price (USD)</th>
-                                <th>Total (USD)</th>
+                                <th>Price <?php echo $denominacion;?></th>
+                                <th>Total <?php echo $denominacion;?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -239,11 +252,11 @@ if(isset($_SESSION['login'])){
                                     $suma = array_sum($numproductos);
                                     echo "
                                                             <td>{$suma }</td>
-                                                            <td>{$fila1['precio']}</td>
+                                                            <td>{$simbolo} {$fila1['precio']}</td>
                                                         ";
                                     $totalusd = $suma * $fila1['precio'];
                                     echo "
-                                                            <td>$ {$totalusd}</td>
+                                                            <td>{$simbolo} {$totalusd}</td>
                                                         ";
                                     $sumafinal = $sumafinal + $totalusd;
                                     $sumafinalprod = $sumafinalprod + $suma;
@@ -261,9 +274,9 @@ if(isset($_SESSION['login'])){
                                 ";
                             }
                             echo "
-                                <td>".$sumafinalprod."</td>
+                                <td>{$sumafinalprod}</td>
                                 <td></td>
-                                <td>$ ".$sumafinal."</td>
+                                <td>{$simbolo} {$sumafinal}</td>
                             </tr>
                     ";
                             ?>

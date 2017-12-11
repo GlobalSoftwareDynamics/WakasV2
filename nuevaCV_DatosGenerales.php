@@ -113,6 +113,17 @@ if(isset($_SESSION['login'])){
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label for="moneda" class="col-2 col-form-label">Moneda:</label>
+                                            <div class="col-10">
+                                                <select class="form-control" id="moneda" name="moneda">
+                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="1">Soles</option>
+                                                    <option value="2">Dólares</option>
+                                                    <option value="3">Euros</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane" id="envio" role="tabpanel">
                                         <div class="spacer30"></div>

@@ -43,7 +43,7 @@
                             <a class="dropdown-item" href="gestionInsumos.php">Insumos</a>
                             <a class="dropdown-item" href="gestionMaquinas.php">Máquinas</a>
                             <a class="dropdown-item" href="gestionColaboradores.php">Colaboradores</a>
-                            <a class="dropdown-item" href="gestionProcesos.php">Procesos</a>
+                            <a class="dropdown-item" href="gestionProcedimientos.php">Procedimientos</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
