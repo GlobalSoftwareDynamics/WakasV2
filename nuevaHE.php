@@ -40,6 +40,11 @@ if(isset($_SESSION['login'])){
 
 	?>
     <form method="post" id="formProducto" action="#">
+        <?php
+        if(isset($_POST['addProductoSimilar'])){
+            echo "<input type='hidden' name='idProductoSimilar' value='{$_POST['idProductoCrear']}'>";
+        }
+        ?>
 	<section class="container">
         <div class="row">
             <div class="col-12">
@@ -58,7 +63,6 @@ if(isset($_SESSION['login'])){
                     <div class="card-block">
                         <div class="col-12">
                             <div class="spacer20"></div>
-                            <input type="hidden" name="idProductoCrear" value="<?php echo $idProd;?>">
                             <div class="form-group row">
                                 <label for="idProductoCrear" class="col-2 col-form-label">ID Producto:</label>
                                 <div class="col-10">

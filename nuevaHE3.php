@@ -377,6 +377,81 @@ if(isset($_SESSION['login'])){
 		}
 	}
 
+	if(isset($_POST['insumoLavado'])){
+	    ?>
+        <section class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header card-inverse card-info">
+                            <div class="float-left mt-1">
+                                <i class="fa fa-pencil"></i>
+                                &nbsp;&nbsp;Agregar Insumos de Lavado
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <div class="col-12">
+                                <div class="spacer20"></div>
+                                <form method="post" action="#" id="formInsumoLavado">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Componente</th>
+                                            <th class="text-center">Insumo</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Acción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                        <?php
+                                        $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$_POST['compEspecifico']}' AND idProducto = '{$_POST['idProductoCrear']}' AND indice = '{$_POST['indice']}' AND idSubProcesoCaracteristica = 12");
+                                        while($row = mysqli_fetch_array($query)){
+                                            echo "<input type='hidden' name='idPCPSPC' value='{$row['idPCPSPC']}'>";
+                                        }
+                                        ?>
+                                        <tr>
+                                            <?php
+                                            $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$_POST['compEspecifico']}'");
+                                            while($row = mysqli_fetch_array($query)){
+                                                $query2 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row['idComponente']}'");
+                                                while($row2 = mysqli_fetch_array($query2)){
+                                                    $componente = $row2['descripcion'];
+                                                }
+                                            }
+                                            ?>
+                                            <td class="text-center"><input type="text" value="<?php echo $componente;?>" class="form-control" readonly></td>
+                                            <td class="text-center"><select class="form-control" name="selectInsumo">
+                                                    <option selected disabled>Seleccionar</option>
+                                                    <?php
+                                                    $query = mysqli_query($link,"SELECT * FROM Insumos");
+                                                    while($row = mysqli_fetch_array($query)){
+                                                        echo "<option value='{$row['idInsumo']}'>{$row['descripcion']}</option>";
+                                                    }
+                                                    ?>
+                                                </select></td>
+                                            <td class="text-center"><input type="number" name="cantidadInsumo" step="0.01" min="0" class="form-control"></td>
+                                            <td class="text-center"><input type="submit" name="addInsumoLavado" value="Agregar" class="btn btn-outline-primary" form="formInsumoLavado"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="spacer30"></div>
+        <?php
+	}
+
+	if(isset($_POST['addInsumoLavado'])){
+		$insert = mysqli_query($link,"INSERT INTO PCPSPCInsumos VALUES ('{$_POST['idPCPSPC']}','{$_POST['selectInsumo']}','{$_POST['cantidadInsumo']}')");
+		$queryPerformed = "INSERT INTO PCPSPCInsumos VALUES ({$_POST['idPCPSPC']},{$_POST['selectInsumo']},{$_POST['cantidadInsumo']})";
+		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT INSUMO LAVADO','INSERT','{$queryPerformed}')");
+	}
+
     ?>
 
 		<section class="container">
@@ -410,7 +485,7 @@ if(isset($_SESSION['login'])){
 								if(isset($_POST['siguienteHE2']) || isset($_POST['volverHE4']) || isset($_POST['addTejido']) || $selectTab == 1){
 									$activoTejido = 'active';
 								}
-								if(isset($_POST['addLavado']) || $selectTab == 2){
+								if(isset($_POST['addLavado']) || isset($_POST['addInsumoLavado']) || isset($_POST['insumoLavado']) || $selectTab == 2){
 									$activoLavado = 'active';
 								}
 								if(isset($_POST['addSecado']) || $selectTab == 3){
@@ -627,9 +702,11 @@ if(isset($_SESSION['login'])){
                                                                 <div>
                                                                     <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
                                                                     <input type='hidden' name='indice' value='{$row['indice']}' form='formMenu{$row['indice']}'>
+                                                                    <input type='hidden' name='compEspecifico' value='{$row['idComponenteEspecifico']}' form='formMenu{$row['indice']}'>
                                                                     <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                                                     Acciones</button>
                                                                     <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                        <input name='insumoLavado' class='dropdown-item' type='submit' formaction='#' value='Agregar Insumo de Lavado' form='formMenu{$row['indice']}'>
                                                                         <input name='subir' class='dropdown-item' type='submit' formaction='#' value='Subir' form='formMenu{$row['indice']}'>
                                                                         <input name='bajar' class='dropdown-item' type='submit' formaction='#' value='Bajar' form='formMenu{$row['indice']}'>
                                                                         <input name='insertar' class='dropdown-item' type='submit' formaction='#' value='Insertar' form='formMenu{$row['indice']}'>
@@ -639,6 +716,24 @@ if(isset($_SESSION['login'])){
                                                                 </form>
                                                               </td>";
 		                                                echo "</tr>";
+
+		                                                /*echo "<tr>
+                                                                <th colspan='3' class='text-center'>Insumo</th>
+                                                                <th colspan='3' class='text-center'>Cantidad</th>
+                                                              </tr>";*/
+		                                                $search = mysqli_query($link,"SELECT * FROM PCPSPCInsumos WHERE idPCPSPC = '{$row['idPCPSPC']}'");
+		                                                while($index = mysqli_fetch_array($search)){
+		                                                    $search2 =  mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$index['idInsumo']}'");
+		                                                    while($index2 = mysqli_fetch_array($search2)){
+		                                                        $insumoElegido = $index2['descripcion'];
+		                                                        $unidadMedida = $index2['idUnidadMedida'];
+                                                            }
+		                                                    echo "<tr>
+                                                                    <td class='text-center' colspan='3'>{$insumoElegido}</td>
+                                                                    <td class='text-center' colspan='3'>{$index['cantidad']} {$unidadMedida}</td>
+                                                                  </tr>";
+                                                        }
+                                                        echo "<tr><td colspan='6'></td></tr>";
 	                                                }
                                                 }
                                                 ?>
@@ -795,6 +890,7 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 <?php
                                                 $flag = true;
+                                                $flag2 = true;
                                                 $indice = 0;
                                                 $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 25 AND idSubProcesoCaracteristica > 19 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
                                                 while($row = mysqli_fetch_array($query)){
@@ -811,7 +907,30 @@ if(isset($_SESSION['login'])){
 			                                                }
 		                                                }
 	                                                }
-	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                $arrayValido = [20,32];
+	                                                foreach($arrayValido as $validez){
+		                                                if($row['idSubProcesoCaracteristica'] == $validez){
+			                                                $query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+				                                                $flag2 = false;
+			                                                }
+		                                                }
+	                                                }
+	                                                $arrayValido = [22,28,33];
+	                                                foreach($arrayValido as $validez){
+		                                                if($row['idSubProcesoCaracteristica'] == $validez){
+			                                                $query2 = mysqli_query($link,"SELECT * FROM Maquina WHERE idMaquina = '{$row['valor']}'");
+			                                                while($row2 = mysqli_fetch_array($query2)){
+				                                                echo "<td class='text-center'>{$row2['descripcion']}</td>";
+				                                                $flag2 = false;
+			                                                }
+		                                                }
+	                                                }
+	                                                if($flag2){
+		                                                echo "<td class='text-center'>{$row['valor']}</td>";
+                                                    }
+                                                    $flag2 = true;
 	                                                if($row['idSubProcesoCaracteristica'] == 24){
 		                                                echo "<td class='text-center'>
                                                                 <form method='post' action='#' id='formMenu{$row['indice']}'>
@@ -896,6 +1015,7 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 <?php
                                                 $flag = true;
+                                                $flag2 = true;
                                                 $indice = 0;
                                                 $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 31 AND idSubProcesoCaracteristica > 25 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
                                                 while($row = mysqli_fetch_array($query)){
@@ -912,7 +1032,30 @@ if(isset($_SESSION['login'])){
 			                                                }
 		                                                }
 	                                                }
-	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                $arrayValido = [26];
+	                                                foreach($arrayValido as $validez){
+		                                                if($row['idSubProcesoCaracteristica'] == $validez){
+			                                                $query2 = mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$row['valor']}'");
+			                                                while($row2 = mysqli_fetch_array($query2)){
+				                                                echo "<td class='text-center'>{$row2['descripcion']}</td>";
+				                                                $flag2 = false;
+			                                                }
+		                                                }
+	                                                }
+	                                                $arrayValido = [22,28,33];
+	                                                foreach($arrayValido as $validez){
+		                                                if($row['idSubProcesoCaracteristica'] == $validez){
+			                                                $query2 = mysqli_query($link,"SELECT * FROM Maquina WHERE idMaquina = '{$row['valor']}'");
+			                                                while($row2 = mysqli_fetch_array($query2)){
+				                                                echo "<td class='text-center'>{$row2['descripcion']}</td>";
+				                                                $flag2 = false;
+			                                                }
+		                                                }
+	                                                }
+	                                                if($flag2){
+		                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                }
+	                                                $flag2 = true;
 	                                                if($row['idSubProcesoCaracteristica'] == 30){
 		                                                echo "<td class='text-center'>
                                                                 <form method='post' action='#' id='formMenu{$row['indice']}'>
@@ -995,6 +1138,7 @@ if(isset($_SESSION['login'])){
                                                 </tr>
                                                 <?php
                                                 $flag = true;
+                                                $flag2 = true;
                                                 $indice = 0;
                                                 $query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' AND idSubProcesoCaracteristica < 36 AND idSubProcesoCaracteristica > 31 ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
                                                 while($row = mysqli_fetch_array($query)){
@@ -1011,7 +1155,30 @@ if(isset($_SESSION['login'])){
 			                                                }
 		                                                }
 	                                                }
-	                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                $arrayValido = [20,32];
+	                                                foreach($arrayValido as $validez){
+		                                                if($row['idSubProcesoCaracteristica'] == $validez){
+			                                                $query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
+			                                                while($row3 = mysqli_fetch_array($query3)){
+				                                                echo "<td class='text-center'>{$row3['descripcion']}</td>";
+				                                                $flag2 = false;
+			                                                }
+		                                                }
+	                                                }
+	                                                $arrayValido = [22,28,33];
+	                                                foreach($arrayValido as $validez){
+		                                                if($row['idSubProcesoCaracteristica'] == $validez){
+			                                                $query2 = mysqli_query($link,"SELECT * FROM Maquina WHERE idMaquina = '{$row['valor']}'");
+			                                                while($row2 = mysqli_fetch_array($query2)){
+				                                                echo "<td class='text-center'>{$row2['descripcion']}</td>";
+				                                                $flag2 = false;
+			                                                }
+		                                                }
+	                                                }
+	                                                if($flag2){
+		                                                echo "<td class='text-center'>{$row['valor']}</td>";
+	                                                }
+	                                                $flag2 = true;
 	                                                if($row['idSubProcesoCaracteristica'] == 35){
 		                                                echo "<td class='text-center'>
                                                                 <form method='post' action='#' id='formMenu{$row['indice']}'>

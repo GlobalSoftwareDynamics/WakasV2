@@ -74,40 +74,121 @@ if(isset($_SESSION['login'])){
 
 	?>
 
-	<section class="container">
-		<div class="row">
-			<div class="col-12">
-				<div class="card">
-					<div class="card-header card-inverse card-info">
-						<div class="float-left mt-1">
-							<i class="fa fa-pencil"></i>
-							&nbsp;&nbsp;Revisión de Secuencia de Procesos/Subprocesos
-						</div>
-						<div class="float-right">
-							<div class="dropdown">
-								<button name="volver" type="submit" class="btn btn-light btn-sm" form="formSiguiente" formaction="nuevaHE3.php">Volver</button>
-								<button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Finalizar</button>
-							</div>
-						</div>
-					</div>
-					<form id="formSiguiente" method="post" action="mainAdmin.php">
-						<input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
-						<input type="hidden" name="volverHE4">
-					</form>
-					<div class="card-block">
-						<div class="col-12">
-							<div class="spacer20"></div>
-									<table class="table table-bordered">
-										<thead>
-										<tr>
-											<th class="text-center">Subproceso</th>
-											<th class="text-center">Componente</th>
-											<th class="text-center">Observaciones</th>
-											<th class="text-center">Tiempo</th>
-											<th class="text-center">Acciones</th>
-										</tr>
-										</thead>
-										<tbody>
+    <script>
+        $(document).on('click', '#close-preview', function(){
+            $('.image-preview').popover('hide');
+            // Hover befor close the preview
+            $('.image-preview').hover(
+                function () {
+                    $('.image-preview').popover('show');
+                },
+                function () {
+                    $('.image-preview').popover('hide');
+                }
+            );
+        });
+
+        $(function() {
+            // Create the close button
+            var closebtn = $('<button/>', {
+                type:"button",
+                text: 'x',
+                id: 'close-preview',
+                style: 'font-size: initial;',
+            });
+            closebtn.attr("class","close pull-right");
+            // Set the popover default content
+            $('.image-preview').popover({
+                trigger:'manual',
+                html:true,
+                title: "<strong>Vista Previa</strong>"+$(closebtn)[0].outerHTML,
+                content: "There's no image",
+                placement:'bottom'
+            });
+            // Clear event
+            $('.image-preview-clear').click(function(){
+                $('.image-preview').attr("data-content","").popover('hide');
+                $('.image-preview-filename').val("");
+                $('.image-preview-clear').hide();
+                $('.image-preview-input input:file').val("");
+                $(".image-preview-input-title").text("Browse");
+            });
+            // Create the preview image
+            $(".image-preview-input input:file").change(function (){
+                var img = $('<img/>', {
+                    id: 'dynamic',
+                    width:250
+                });
+                var file = this.files[0];
+                var reader = new FileReader();
+                // Set preview image into the popover data-content
+                reader.onload = function (e) {
+                    $(".image-preview-input-title").text("Change");
+                    $(".image-preview-clear").show();
+                    $(".image-preview-filename").val(file.name);
+                    img.attr('src', e.target.result);
+                    $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+
+    <section class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-inverse card-info">
+                        <div class="float-left mt-1">
+                            <i class="fa fa-pencil"></i>
+                            &nbsp;&nbsp;Revisión de Secuencia de Procesos/Subprocesos
+                        </div>
+                        <div class="float-right">
+                            <div class="dropdown">
+                                <button name="volver" type="submit" class="btn btn-light btn-sm" form="formSiguiente" formaction="nuevaHE3.php">Volver</button>
+                                <button name="siguiente" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Finalizar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="formSiguiente" method="post" action="nuevaHE5.php" enctype='multipart/form-data'>
+                        <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                        <input type="hidden" name="volverHE4">
+                    </form>
+                    <div class="card-block">
+                        <div class="col-12">
+	                        <?php
+	                        $activoSecuencia = '';
+	                        $activoFotografia = '';
+	                        if(isset($_POST['siguiente']) || isset($_POST['subir']) || isset($_POST['bajar'])){
+		                        $activoSecuencia = 'active';
+	                        }
+	                        if(isset($_POST['addFotografia']) || isset($_POST['volverHE5'])){
+		                        $activoFotografia = 'active';
+	                        }
+	                        ?>
+                            <div class="spacer20"></div>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo $activoSecuencia;?>" data-toggle="tab" href="#secuencia" role="tab">Secuencia de Procesos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo $activoFotografia;?>" data-toggle="tab" href="#fotografias" role="tab">Fotografía</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane <?php echo $activoSecuencia;?>" id="secuencia" role="tabpanel">
+                                    <div class="spacer20"></div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Subproceso</th>
+                                            <th class="text-center">Componente</th>
+                                            <th class="text-center">Observaciones</th>
+                                            <th class="text-center">Tiempo</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 										<?php
 										$flag = true;
 										$indice = 0;
@@ -162,15 +243,41 @@ if(isset($_SESSION['login'])){
 											}
 										}
 										?>
-										</tbody>
-									</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane <?php echo $activoFotografia;?>" id="fotografias" role="tabpanel">
+                                    <div class="spacer20"></div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h5 class="text-center">Fotografía de Producto</h5>
+                                                <hr>
+                                                <div class="input-group image-preview">
+                                                    <input type="text" class="form-control image-preview-filename" disabled="disabled">
+                                                    <div class="input-group-btn">
+                                                        <!-- image-preview-clear button -->
+                                                        <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+                                                            <span class="glyphicon glyphicon-remove"></span> Limpiar
+                                                        </button>
+                                                        <div class="btn btn-default image-preview-input">
+                                                            Subir
+                                                            <input type="file" accept="image/png, image/jpeg, image/gif" name="fileToUpload" form="formSiguiente"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="spacer20"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 	<?php
 	include('footer.php');

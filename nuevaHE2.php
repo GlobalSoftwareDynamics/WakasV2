@@ -72,7 +72,6 @@ if(isset($_SESSION['login'])){
 			// Éxito en la creación del producto
 
 			if(isset($_POST['addProducto'])) {
-
 				if (isset($_POST['idProvisional'])) {
 					$idProvisional = $_POST['idProvisional'];
 				} else {
@@ -120,6 +119,20 @@ if(isset($_SESSION['login'])){
                           ({$_POST['idProductoCrear']},1,NULL,$cantidadMaterial,NULL,NULL)";
 
 				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTE PRENDA','INSERT','{$queryPerformed}')");
+
+				if(isset($_POST['addProductoSimilar'])){
+				    $query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoSimilar']}'");
+				    while($row = mysqli_fetch_array($query)){
+				        $insert = mysqli_query($link,"INSERT INTO ProductoMedida (idProducto, idMedida, tolerancia, observacion, indice) VALUES 
+                                  ('{$_POST['idProductoCrear']}','{$row['idMedida']}','{$row['tolerancia']}','{$row['observacion']}','{$row['indice']}')");
+                    }
+
+				    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoSimilar']}'");
+				    while($row = mysqli_fetch_array($query)){
+				        $insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor, numMetrico) VALUES 
+                                  ('{$_POST['idProductoCrear']}','{$row['idComponente']}','{$row['idMaterial']}','{$row['cantidadMaterial']}','{$row['codigoColor']}','{$row['numMetrico']}')");
+                    }
+				}
 			}
 
 			if(isset($_POST['insertar'])){
@@ -338,7 +351,7 @@ if(isset($_SESSION['login'])){
 										$activoMedidas = '';
 										$activoComponentes = '';
 										$activoPartes = '';
-										if(isset($_POST['addTipoProducto']) || isset($_POST['addCodificacion']) || isset($_POST['addCliente']) || isset($_POST['addTalla'])){
+										if(isset($_POST['addTipoProducto']) || isset($_POST['addCodificacion']) || isset($_POST['addCliente']) || isset($_POST['addTalla']) || isset($_POST['editarProducto'])){
 											$activoGeneral = 'active';
 										}
 										if(isset($_POST['addMedida']) || isset($_POST['medidaSelect']) || isset($_POST['addProducto']) || isset($_POST['actualizarProducto']) || isset($_POST['volver'])){
