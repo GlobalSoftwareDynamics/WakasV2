@@ -56,8 +56,6 @@ if (!empty($_POST['nombreCliente'])) {
 }
 
 if(!empty($_POST["productoCV"])) {
-    echo $_POST["productoCV"];
-    echo $_POST["idcodificacionTallaCV"];
 
     $result = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST["productoCV"]}'");
     while ($fila = mysqli_fetch_array($result)){
@@ -236,5 +234,41 @@ if(!empty($_POST['idComponenteEspecifico'])){
 	if($flag){
 		echo "<input type='text' class='form-control' readonly>";
 	}
+
+}
+
+if(!empty($_POST['fechaContrato'])){
+
+    echo "<option disabled selected>Seleccionar</option>";
+    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE fecha = '{$_POST['fechaContrato']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        echo "<option value='{$fila['idContrato']}'>{$fila['idContrato']}</option>";
+    }
+
+}
+
+if(!empty($_POST['idConfirmacionVenta'])){
+
+    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}' AND cantidad <> cantidadop ORDER BY idTalla ASC");
+    while ($fila = mysqli_fetch_array($result)){
+        $result1 = mysqli_query($link,"SELECT * FROM Talla WHERE idTalla = '{$fila['idTalla']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            $talla = $fila1['descripcion'];
+        }
+        $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            $combinacion = $fila1['descripcion'];
+        }
+        $cantidadRestante = $fila['cantidad'] - $fila['cantidadop'];
+        echo "<tr>";
+        echo "<input type='hidden' name='{$fila['idConfirmacionVentaProducto']}' value='{$fila['idConfirmacionVentaProducto']}'>";
+        echo "<td>{$fila['idProducto']}</td>";
+        echo "<td>{$talla}</td>";
+        echo "<td>{$combinacion}</td>";
+        echo "<td>{$fila['cantidad']}</td>";
+        echo "<td><input type='number' value='{$cantidadRestante}' min='0' max='{$cantidadRestante}' name='cantidad{$fila['idConfirmacionVentaProducto']}' class='form-control'></td>";
+        echo "<td><input type='checkbox' class='form-check-input' name='marcacion{$fila['idConfirmacionVentaProducto']}'>Marcar</td>";
+        echo "</tr>";
+    }
 
 }

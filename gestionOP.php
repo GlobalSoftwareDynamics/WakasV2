@@ -66,6 +66,16 @@ if(isset($_SESSION['login'])){
             <div class="card-header card-inverse card-info">
                 <i class="fa fa-list"></i>
                 Listado de Órdenes de Producción
+                <div class="float-right">
+                    <div class="dropdown">
+                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Acciones
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="nuevaOP_DatosGenerales.php">Registrar Nueva Orden de Producción</a>
+                        </div>
+                    </div>
+                </div>
                 <span class="float-right">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="float-right">
                     <button href="#collapsed" class="btn btn-light btn-sm" data-toggle="collapse">Mostrar Filtros</button>

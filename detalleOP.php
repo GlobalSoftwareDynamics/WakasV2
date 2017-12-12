@@ -80,85 +80,97 @@ if(isset($_SESSION['login'])){
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Emitir CV','{$queryPerformed}')");
 
         }
-    }else{
-        $idOrdProd = $_POST['idOrdenProduccion'];
-    }
+    }elseif(isset($_POST['nuevaOPparcial'])){
 
-    /*if(isset($_POST['ordenprodform'])){
         $aux = 0;
-        $result = selectTable("OrdenProduccion");
-        while($fila = mysql_fetch_array($result)){
-            $aux++;
-        }
-        date_default_timezone_set('America/Lima');
+        $aux1=0;
+        $result = mysqli_query($link,"SELECT * FROM OrdenProduccion");
+        $aux = mysqli_num_rows($result);
+
         $aux++;
-        $idOrdProd="OP".$aux;
-        $result1=selectTableWhere('ConfirmacionVenta','idContrato',"'".$_POST['contrato']."'");
-        while ($fila=mysql_fetch_array($result1)){
-            $fechacreacion=date('m/d/Y');
-            $fechadespacho=(string)$fila['shipdate'];
+        $idOrdProd = "OP".$aux;
+        $result = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+        while ($fila = mysqli_fetch_array($result)){
+            $fechacreacion = (string)date("Y-m-d");
+            $fechadespacho = (string)$fila['shipdate'];
         }
 
-        $result2="INSERT INTO ordenproduccion(idOrdenProduccion, idContrato, idEmpleado, fechaCreacion, fechaDespacho) VALUES ('".$idOrdProd."','".$_POST['contrato']."','".$idempleado."','".$fechacreacion."','".$fechadespacho."')";
-        $agregar=mysql_query($result2);
-        if ( !empty( $error = mysql_error() ) ) {
-            echo 'Mysql error '. $error ."<br />\n";
-        }
-        $aux1 = 0;
-        $result1=selectTableWhere('Talla','idcodificacionTalla',"'".$_POST['idcodificacionTalla']."'");
-        while ($fila2=mysql_fetch_array($result1)){
-            if(isset($_POST[$fila2['idTalla']])&&$_POST[$fila2['idTalla']]){
-                $result4="SELECT * FROM confirmacionventaproducto WHERE idContrato='".$_POST['contrato']."' AND idProducto='".$_POST['producto']."' AND idColor='".$_POST['color']."' AND idTalla='".$fila2['idTalla']."' ORDER BY idProducto ASC, idColor ASC, idTalla DESC";
-                $result5=mysql_query($result4);
-                while ($fila1=mysql_fetch_array($result5)){
-                    $cantidadrestante=$fila1['cantidad']-$fila1['cantidadop'];
-                    if ($cantidadrestante<$_POST[$fila2['idTalla']]){
-                        echo "<div class='container'><span class='alert alert-danger col-sm-8 col-sm-offset-2'>La cantidad ingresada es inválida.</span></div><hr>";
-                    }else {
-                        $material=selectTableWhere('Material','idMaterial',"'".$fila1['idMaterial']."'");
-                        while ($fila6=mysql_fetch_array($material)){
-                            $nombremat=$fila6['material'];
-                        }
-                        $result6=selectTableWhere('Producto','idProducto',"'".$fila1['idProducto']."'");
-                        $cantidadlote=$_POST[$fila2['idTalla']];
-                        settype($cantidadlote,"integer");
-                        while ($fila5=mysql_fetch_array($result6)){
-                            $result8=selectTableWhere('TipoProducto','idTipoProducto',"'".$fila5['idTipoProducto']."'");
-                            while ($fila4=mysql_fetch_array($result8)){
-                                $tamanolote=$fila4['tamanoLote'];
-                                $aux2=0;
-                                for ($i=0;$cantidadlote > 0;$i++) {
-                                    if (($cantidadlote) > $fila4['tamanoLote']) {
-                                        $aux1++;
-                                        $idlote = $idOrdProd . "LT" . $aux1;
-                                        $cantidadlote1 = $fila4['tamanoLote'];
-                                        settype($cantidadlote1,"integer");
-                                        $agreglote = "INSERT INTO Lote(idLote, idOrdenProduccion, idProducto, idColor, idTalla, cantidad, material, estado, posicion) VALUES ('" . $idlote . "','" . $idOrdProd . "','" . $fila1['idProducto'] . "','" . $fila1['idColor'] . "','" . $fila1['idTalla'] . "','" . $cantidadlote1 . "','" . $nombremat . "','1','".$aux1."')";
-                                        $agregarlote1 = mysql_query($agreglote);
-                                    } else {
-                                        $aux1++;
-                                        $idlote = $idOrdProd . "LT" . $aux1;
-                                        $agreglote = "INSERT INTO Lote(idLote, idOrdenProduccion, idProducto, idColor, idTalla, cantidad, material, estado, posicion) VALUES ('" . $idlote . "','" . $idOrdProd . "','" . $fila1['idProducto'] . "','" . $fila1['idColor'] . "','" . $fila1['idTalla'] . "','" . $cantidadlote . "','" . $nombremat . "','1','".$aux1."')";
-                                        $agregarlote1 = mysql_query($agreglote);
-                                    }
-                                    $cantidadlote = $cantidadlote - $tamanolote;
-                                    $aux2++;
-                                }
+        $query = mysqli_query($link,"INSERT INTO OrdenProduccion(idOrdenProduccion, idContrato, idEmpleado, fechaCreacion, fechaDespacho) VALUES ('{$idOrdProd}','{$_POST['idConfirmacionVenta']}','{$_SESSION['user']}','{$fechacreacion}','{$fechadespacho}')");
+
+        $queryPerformed = "INSERT INTO OrdenProduccion(idOrdenProduccion, idContrato, idEmpleado, fechaCreacion, fechaDespacho) VALUES ({$idOrdProd},{$_POST['idConfirmacionVenta']},{$_SESSION['user']},{$fechacreacion},{$fechadespacho})";
+
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','OrdenProduccion','{$queryPerformed}')");
+
+        $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato='{$_POST['idConfirmacionVenta']}' ORDER BY idProducto ASC, idTalla ASC");
+        while ($fila = mysqli_fetch_array($result)){
+
+            $marcacion = "marcacion".$fila['idConfirmacionVentaProducto'];
+
+            if(isset($_POST[$fila['idConfirmacionVentaProducto']])&&$_POST[$fila['idConfirmacionVentaProducto']]&&isset($_POST[$marcacion])&&$_POST[$marcacion]&&$_POST[$marcacion]==true){
+
+                $nombreVariable = "cantidad".$fila['idConfirmacionVentaProducto'];
+
+                $cantidadlote = $_POST[$nombreVariable];
+
+                $result1 = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$fila['idProducto']}'");
+                while ($fila1 = mysqli_fetch_array($result1)){
+                    $nombremat = $fila1['codificacionMaterial'];
+
+                    $result2 = mysqli_query($link,"SELECT * FROM TipoProducto WHERE idTipoProducto = '{$fila1['idTipoProducto']}'");
+                    while ($fila2 = mysqli_fetch_array($result2)){
+                        $tamanolote = $fila2['tamanoLote'];
+
+                        $aux2=0;
+                        for ($i=0;$cantidadlote > 0;$i++) {
+                            if (($cantidadlote) > $fila2['tamanoLote']) {
+                                $aux1++;
+                                $idlote = $idOrdProd . "LT" . $aux1;
+                                $cantidadlote1 = $fila2['tamanoLote'];
+
+                                $query = mysqli_query($link,"INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ('{$idlote}','{$fila['idConfirmacionVentaProducto']}','{$idOrdProd}','6','{$cantidadlote1}','{$nombremat}','{$aux1}')");
+
+                                $queryPerformed = "INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ({$idlote},{$fila['idConfirmacionVentaProducto']},{$idOrdProd},6,{$cantidadlote1},{$nombremat},{$aux1})";
+
+                                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Lote','{$queryPerformed}')");
+
+                            } else {
+                                $aux1++;
+                                $idlote = $idOrdProd . "LT" . $aux1;
+
+                                $query = mysqli_query($link,"INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ('{$idlote}','{$fila['idConfirmacionVentaProducto']}','{$idOrdProd}','1','{$cantidadlote}','{$nombremat}','{$aux1}')");
+
+                                $queryPerformed = "INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ({$idlote},{$fila['idConfirmacionVentaProducto']},{$idOrdProd},1,{$cantidadlote},{$nombremat},{$aux1})";
+
+                                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Lote','{$queryPerformed}')");
+
                             }
-                        }
-                        $cantidadactual=$fila1['cantidadop']+$_POST[$fila2['idTalla']];
-                        $actualizar="UPDATE confirmacionventaproducto SET cantidadop = '".$cantidadactual."' WHERE idContrato='".$_POST['contrato']."' AND idProducto='".$_POST['producto']."' AND idColor='".$_POST['color']."' AND idTalla='".$fila2['idTalla']."'";
-                        $query=mysql_query($actualizar);
-                        $resta=$fila1['cantidad']-$cantidadactual;
-                        if($resta==0){
-                            $actualizar1="UPDATE confirmacionventaproducto SET estado = '0' WHERE idContrato='".$_POST['contrato']."' AND idProducto='".$_POST['producto']."' AND idColor='".$_POST['color']."' AND idTalla='".$fila2['idTalla']."'";
-                            $query1=mysql_query($actualizar1);
+                            $cantidadlote = $cantidadlote - $tamanolote;
+                            $aux2++;
                         }
                     }
                 }
+
+                $cantidadop = $fila['cantidadop'] + $_POST[$nombreVariable];
+
+                $query = mysqli_query($link,"UPDATE ConfirmacionVentaProducto SET idEstado = 6, cantidadop = '{$cantidadop}' WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
+
+                $queryPerformed = "UPDATE ConfirmacionVentaProducto SET idEstado = 6, cantidadop = {$cantidadop} WHERE idConfirmacionVentaProducto = {$fila['idConfirmacionVentaProducto']}";
+
+                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','ConfirmacionVentaProducto','{$queryPerformed}')");
+
+                $query = mysqli_query($link, "UPDATE ConfirmacionVenta SET idEstado = 4 WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+
+                $queryPerformed = "UPDATE ConfirmacionVenta SET idEstado = 4 WHERE idContrato = '{$_POST['idConfirmacionVenta']}'";
+
+                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Emitir CV','{$queryPerformed}')");
+
             }
+
         }
-    }*/
+
+    }else{
+        $idOrdProd = $_POST['idOrdenProduccion'];
+    }
 
     include('header.php');
     include('navbarAdmin.php');

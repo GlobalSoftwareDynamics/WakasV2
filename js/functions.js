@@ -79,3 +79,24 @@ function getMaterial(val) {
     });
 }
 
+function getContrato(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'fechaContrato':val},
+        success: function(data){
+            $("#idConfirmacionVenta").html(data);
+        }
+    });
+}
+
+function getProductosContrato(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idConfirmacionVenta':val},
+        success: function(data){
+            $("#formMarcacion").html(data);
+        }
+    });
+}

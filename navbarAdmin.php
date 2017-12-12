@@ -31,6 +31,7 @@
                             Producción
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="nuevaOP_DatosGenerales.php">Nueva Orden de Producción</a>
                             <a class="dropdown-item" href="gestionOP.php">Listado de Órdenes de Producción</a>
                         </div>
                     </li>

@@ -88,7 +88,7 @@ if(isset($_SESSION['login'])){
                             Acciones
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="nuevaCV_DatosGenerales.php">Registrar Nueva Orden de Venta</a>
+                            <a class="dropdown-item" href="nuevaCV_DatosGenerales.php">Registrar Nueva Confirmación de Venta</a>
                         </div>
                     </div>
                 </div>
