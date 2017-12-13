@@ -149,179 +149,460 @@ if(isset($_SESSION['login'])){
     include('navbarAdmin.php');
 
     if ($flag) {
-        ?>
+        if(isset($_POST['addCombinacion'])){
+            ?>
 
-        <section class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header card-inverse card-info">
-                            <div class="float-left mt-1">
-                                <i class="fa fa-shopping-bag"></i>
-                                &nbsp;&nbsp;Selección de Productos
+            <section class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-inverse card-info">
+                                <div class="float-left mt-1">
+                                    <i class="fa fa-shopping-bag"></i>
+                                    &nbsp;&nbsp;Selección de Productos
+                                </div>
+                                <div class="float-right">
+                                    <div class="dropdown">
+                                        <form method="post" action="detalleCV.php">
+                                            <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
+                                            <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla']?>">
+                                            <input name="siguiente" type="submit" class="btn btn-light btn-sm" value="Finalizar">
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="float-right">
-                                <div class="dropdown">
-                                    <form method="post" action="detalleCV.php">
+                            <div class="card-block">
+                                <div class="col-12">
+                                    <div class="spacer20"></div>
+                                    <form method="post" action="#">
                                         <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
                                         <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla']?>">
-                                        <input name="siguiente" type="submit" class="btn btn-light btn-sm" value="Finalizar">
+                                        <div class="form-group row">
+                                            <label for="idProducto" class="col-2 col-form-label">Código de Producto:</label>
+                                            <div class="col-10">
+                                                <input class="form-control" type="text" id="idProducto" value="<?php echo $_POST['idProducto']?>" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla']?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta']?>,<?php echo $_POST['codifTalla']?>)" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" id="rowColor">
+                                            <label for='idCombinacionColores' class='col-2 col-form-label'>Combinación de Colores:</label>
+                                            <div class='col-7'>
+                                                <select class='form-control' id='idCombinacionColores' name='idCombinacionColores'>
+                                                    <option disabled selected>Seleccionar</option>
+                                                    <?php
+                                                    $result = mysqli_query($link,"SELECT * FROM CombinacionesColorProducto WHERE idProducto = '{$_POST['idProducto']}'");
+                                                    while ($fila = mysqli_fetch_array($result)){
+                                                        $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
+                                                        while ($fila1 = mysqli_fetch_array($result1)){
+                                                            echo "<option value='{$fila['idCombinacionesColor']}'>{$fila1['descripcion']}</option>";
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class='col-2'>
+                                                <button type='button' class='btn btn-outline-primary' data-toggle='modal' data-target='#modalNuevaCombinacion'>Agregar Combinación</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <table class="table text-center">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 15%">Código Cliente</th>
+                                                    <th style="width: 10%">Material</th>
+                                                    <th style="width: 10%">Precio</th>
+                                                    <?php
+                                                    $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}'");
+                                                    while ($fila = mysqli_fetch_array($result)){
+                                                        echo "<th>{$fila['descripcion']}</th>";
+                                                    }
+                                                    ?>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr id="row">
+                                                    <?php
+                                                    $result = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST["idProducto"]}'");
+                                                    while ($fila = mysqli_fetch_array($result)){
+                                                        $material = $fila['codificacionMaterial'];
+                                                    }
+
+                                                    echo "
+                                                        <td>
+                                                            <label for='code' class='sr-only'>Código del Cliente</label>
+                                                            <input id='code' type='text' name='yourcode' class='form-control'>
+                                                        </td>
+                                                        <td>{$material}</td>
+                                                        <td>
+                                                            <label for='precio' class='sr-only'>Precio</label>
+                                                            <input id='precio' type='text' name='precio' class='form-control'>
+                                                        </td>
+                                                    ";
+                                                    $tallas1=array();
+                                                    $tallas2=array();
+                                                    $indice1=0;
+                                                    $indice2=0;
+                                                    $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}' ORDER BY indice ASC");
+                                                    while ($fila = mysqli_fetch_array($result)) {
+                                                        $tallas1[$indice1] = $fila['idTalla'];
+                                                        $indice1++;
+                                                    }
+                                                    $talla = mysqli_query($link,"SELECT DISTINCT idTalla FROM TallaMedida WHERE idProducto = '{$_POST["idProducto"]}' AND valor>0");
+                                                    while ($fila1 = mysqli_fetch_array($talla)){
+                                                        $tallas2[$indice2]=$fila1['idTalla'];
+                                                        $indice2++;
+                                                    }
+                                                    foreach ($tallas1 as $value1) {
+                                                        $encontrado=false;
+                                                        foreach ($tallas2 as $value2) {
+                                                            if ($value1 == $value2){
+                                                                $encontrado=true;
+                                                                echo "<td><input type='number' class='form-control' name='{$value2}' min='0'></td>";
+                                                            }
+                                                        }
+                                                        if ($encontrado == false){
+                                                            echo "<td><input type='number' class='form-control' min='0' readonly></td>";
+                                                        }
+                                                    }
+                                                    echo "
+                                                        <td><input type='submit' value='Agregar' name='addProductoCV' class='btn btn-primary'></td>
+                                                    ";
+                                                    ?>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-block">
-                            <div class="col-12">
-                                <div class="spacer20"></div>
-                                <form method="post" action="#">
-                                    <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
-                                    <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla']?>">
-                                    <div class="form-group row">
-                                        <label for="idProducto" class="col-2 col-form-label">Código de Producto:</label>
-                                        <div class="col-10">
-                                            <input class="form-control" type="text" id="idProducto" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla']?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta']?>,<?php echo $_POST['codifTalla']?>)" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row" id="rowColor">
-                                    </div>
-                                    <div class="form-group row">
-                                        <table class="table text-center">
-                                            <thead>
-                                            <tr>
-                                                <th style="width: 15%">Código Cliente</th>
-                                                <th style="width: 10%">Material</th>
-                                                <th style="width: 10%">Precio</th>
+                    </div>
+                </div>
+            </section>
+
+            <section class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-inverse card-info">
+                                <div class="float-left mt-1">
+                                    <i class="fa fa-shopping-bag"></i>
+                                    &nbsp;&nbsp;Productos Seleccionados
+                                </div>
+                                <div class="float-right">
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <div class="col-12">
+                                    <div class="spacer20"></div>
+                                    <table class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Código Cliente</th>
+                                            <th class="text-center">Material</th>
+                                            <th class="text-center">Colores</th>
+                                            <th class="text-center">Precio</th>
+                                            <th class="text-center">Talla</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        $resultX = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+                                        while ($filaX = mysqli_fetch_array($resultX)){
+                                            switch($filaX['moneda']){
+                                                case 1:
+                                                    $simbolo = "S/.";
+                                                    break;
+                                                case 2:
+                                                    $simbolo = "$";
+                                                    break;
+                                                case 3:
+                                                    $simbolo = "€";
+                                                    break;
+                                            }
+                                        }
+                                        $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+                                        while ($fila = mysqli_fetch_array($result)){
+                                            echo "<tr>";
+                                            echo "<td>{$fila['codigoCliente']}</td>";
+                                            $result1 = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$fila["idProducto"]}'");
+                                            while ($fila1 = mysqli_fetch_array($result1)){
+                                                $material = $fila1['codificacionMaterial'];
+                                            }
+                                            $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
+                                            while ($fila1 = mysqli_fetch_array($result1)){
+                                                $combinacioncolor = $fila1['descripcion'];
+                                            }
+                                            $result1 = mysqli_query($link,"SELECT * FROM Talla WHERE idTalla = '{$fila['idTalla']}'");
+                                            while ($fila1 = mysqli_fetch_array($result1)){
+                                                $talla = $fila1['descripcion'];
+                                            }
+                                            echo "<td>{$material}</td>";
+                                            echo "<td>{$combinacioncolor}</td>";
+                                            echo "<td>{$simbolo} {$fila['precio']}</td>";
+                                            echo "<td>{$talla}</td>";
+                                            echo "<td>{$fila['cantidad']}</td>";
+                                            echo "
+                                                <td>
+                                                    <form method='post' action='#'>
+                                                        <input type='hidden' value='{$_POST['idConfirmacionVenta']}' name='idConfirmacionVenta'>
+                                                        <input type='hidden' value='{$_POST['codifTalla']}' name='codifTalla'>
+                                                        <input type='hidden' value='{$fila['idConfirmacionVentaProducto']}' name='idConfirmacionVentaProducto'>
+                                                        <input type='submit' value='Eliminar' name='eliminar' class='btn btn-primary'>
+                                                    </form>
+                                                </td>
+                                            ";
+                                            echo "</tr>";
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="modalColores">
+                <div class="modal fade" id="modalNuevaCombinacion" tabindex="-1" role="dialog" aria-labelledby="modalNuevaCombinacion" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Agregar Combinación de Colores</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form id="formCombinacion" method="post" action="#">
+                                        <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
+                                        <input type="hidden" name="idProducto" value="<?php echo $_POST['idProducto']?>">
+                                        <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla']?>">
+                                        <div class="form-group row">
+                                            <table class="table text-center">
+                                                <thead>
+                                                <tr>
+                                                    <th>Nro. Color</th>
+                                                    <th>Color</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
                                                 <?php
-                                                $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}'");
+                                                $result = mysqli_query($link,"SELECT DISTINCT codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProducto']}' AND codigoColor IS NOT NULL ORDER BY codigoColor ASC");
                                                 while ($fila = mysqli_fetch_array($result)){
-                                                    echo "<th>{$fila['descripcion']}</th>";
+                                                    echo "<tr>";
+                                                    echo "<td>{$fila['codigoColor']}</td>";
+                                                    echo "
+                                                    <td>
+                                                        <label for='colorCombinacion{$fila['codigoColor']}' class='sr-only'>Color</label>
+                                                        <select id='colorCombinacion{$fila['codigoColor']}' name='colorCombinacion{$fila['codigoColor']}' class='form-control'>
+                                                            <option selected disabled>Seleccionar</option>";
+                                                    $result1 = mysqli_query($link,"SELECT * FROM Color");
+                                                    while ($fila1 = mysqli_fetch_array($result1)){
+                                                        echo "<option value='{$fila1['idColor']}'>{$fila1['idColor']}-{$fila1['descripcion']}</option>";
+                                                    }
+                                                    echo "
+                                                            </select>
+                                                        </td>
+                                                    ";
+                                                    echo "</tr>";
                                                 }
                                                 ?>
-                                                <th>Acciones</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr id="row">
-                                                <td>
-                                                    <label for='code' class='sr-only'>Código del Cliente</label>
-                                                    <input id="code" type="text" name="yourcode" class="form-control" disabled>
-                                                </td>
-                                                <td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary" form="formCombinacion" value="Submit" name="addCombinacion">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                                                </td>
-                                                <td>
-                                                    <label for='precio' class='sr-only'>Precio</label>
-                                                    <input id='precio' type='text' name='precio' class='form-control' disabled>
-                                                </td>
-                                                <?php
-                                                $result = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}'");
-                                                while ($fila = mysqli_fetch_array($result)){
-                                                    echo "
+            <?php
+        }else {
+            ?>
+
+            <section class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-inverse card-info">
+                                <div class="float-left mt-1">
+                                    <i class="fa fa-shopping-bag"></i>
+                                    &nbsp;&nbsp;Selección de Productos
+                                </div>
+                                <div class="float-right">
+                                    <div class="dropdown">
+                                        <form method="post" action="detalleCV.php">
+                                            <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta'] ?>">
+                                            <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla'] ?>">
+                                            <input name="siguiente" type="submit" class="btn btn-light btn-sm" value="Finalizar">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <div class="col-12">
+                                    <div class="spacer20"></div>
+                                    <form method="post" action="#">
+                                        <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta'] ?>">
+                                        <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla'] ?>">
+                                        <div class="form-group row">
+                                            <label for="idProducto" class="col-2 col-form-label">Código de Producto:</label>
+                                            <div class="col-10">
+                                                <input class="form-control" type="text" id="idProducto" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla'] ?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta'] ?>,<?php echo $_POST['codifTalla'] ?>)" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" id="rowColor">
+                                        </div>
+                                        <div class="form-group row">
+                                            <table class="table text-center">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 15%">Código Cliente</th>
+                                                    <th style="width: 10%">Material</th>
+                                                    <th style="width: 10%">Precio</th>
+                                                    <?php
+                                                    $result = mysqli_query($link, "SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}'");
+                                                    while ($fila = mysqli_fetch_array($result)) {
+                                                        echo "<th>{$fila['descripcion']}</th>";
+                                                    }
+                                                    ?>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr id="row">
+                                                    <td>
+                                                        <label for='code' class='sr-only'>Código del Cliente</label>
+                                                        <input id="code" type="text" name="yourcode" class="form-control" disabled>
+                                                    </td>
+                                                    <td>
+
+                                                    </td>
+                                                    <td>
+                                                        <label for='precio' class='sr-only'>Precio</label>
+                                                        <input id='precio' type='text' name='precio' class='form-control' disabled>
+                                                    </td>
+                                                    <?php
+                                                    $result = mysqli_query($link, "SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codifTalla']}'");
+                                                    while ($fila = mysqli_fetch_array($result)) {
+                                                        echo "
                                                         <td><input type='number' class='form-control' min='0'></td>
                                                     ";
-                                                }
-                                                ?>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header card-inverse card-info">
-                            <div class="float-left mt-1">
-                                <i class="fa fa-shopping-bag"></i>
-                                &nbsp;&nbsp;Productos Seleccionados
-                            </div>
-                            <div class="float-right">
-                            </div>
-                        </div>
-                        <div class="card-block">
-                            <div class="col-12">
-                                <div class="spacer20"></div>
-                                <table class="table text-center">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-center">Código Cliente</th>
-                                        <th class="text-center">Material</th>
-                                        <th class="text-center">Colores</th>
-                                        <th class="text-center">Precio</th>
-                                        <th class="text-center">Talla</th>
-                                        <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Acciones</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    $resultX = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
-                                    while ($filaX = mysqli_fetch_array($resultX)){
-                                        switch($filaX['moneda']){
-                                            case 1:
-                                                $simbolo = "S/.";
-                                                break;
-                                            case 2:
-                                                $simbolo = "$";
-                                                break;
-                                            case 3:
-                                                $simbolo = "€";
-                                                break;
-                                        }
-                                    }
-                                    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
-                                    while ($fila = mysqli_fetch_array($result)){
-                                        echo "<tr>";
-                                        echo "<td>{$fila['codigoCliente']}</td>";
-                                        $result1 = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$fila["idProducto"]}'");
-                                        while ($fila1 = mysqli_fetch_array($result1)){
-                                            $material = $fila1['codificacionMaterial'];
-                                        }
-                                        $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
-                                        while ($fila1 = mysqli_fetch_array($result1)){
-                                            $combinacioncolor = $fila1['descripcion'];
-                                        }
-                                        $result1 = mysqli_query($link,"SELECT * FROM Talla WHERE idTalla = '{$fila['idTalla']}'");
-                                        while ($fila1 = mysqli_fetch_array($result1)){
-                                            $talla = $fila1['descripcion'];
-                                        }
-                                        echo "<td>{$material}</td>";
-                                        echo "<td>{$combinacioncolor}</td>";
-                                        echo "<td>{$simbolo} {$fila['precio']}</td>";
-                                        echo "<td>{$talla}</td>";
-                                        echo "<td>{$fila['cantidad']}</td>";
-                                        echo "
-                                <td>
-                                    <form method='post' action='#'>
-                                        <input type='hidden' value='{$_POST['idConfirmacionVenta']}' name='idConfirmacionVenta'>
-                                        <input type='hidden' value='{$_POST['codifTalla']}' name='codifTalla'>
-                                        <input type='hidden' value='{$fila['idConfirmacionVentaProducto']}' name='idConfirmacionVentaProducto'>
-                                        <input type='submit' value='Eliminar' name='eliminar' class='btn btn-primary'>
+                                                    }
+                                                    ?>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </form>
-                                </td>
-                            ";
-                                        echo "</tr>";
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <div id="modalColores"></div>
+            <section class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header card-inverse card-info">
+                                <div class="float-left mt-1">
+                                    <i class="fa fa-shopping-bag"></i>
+                                    &nbsp;&nbsp;Productos Seleccionados
+                                </div>
+                                <div class="float-right">
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <div class="col-12">
+                                    <div class="spacer20"></div>
+                                    <table class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Código Cliente</th>
+                                            <th class="text-center">Material</th>
+                                            <th class="text-center">Colores</th>
+                                            <th class="text-center">Precio</th>
+                                            <th class="text-center">Talla</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        $resultX = mysqli_query($link, "SELECT * FROM ConfirmacionVenta WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+                                        while ($filaX = mysqli_fetch_array($resultX)) {
+                                            switch ($filaX['moneda']) {
+                                                case 1:
+                                                    $simbolo = "S/.";
+                                                    break;
+                                                case 2:
+                                                    $simbolo = "$";
+                                                    break;
+                                                case 3:
+                                                    $simbolo = "€";
+                                                    break;
+                                            }
+                                        }
+                                        $result = mysqli_query($link, "SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}'");
+                                        while ($fila = mysqli_fetch_array($result)) {
+                                            echo "<tr>";
+                                            echo "<td>{$fila['codigoCliente']}</td>";
+                                            $result1 = mysqli_query($link, "SELECT * FROM Producto WHERE idProducto = '{$fila["idProducto"]}'");
+                                            while ($fila1 = mysqli_fetch_array($result1)) {
+                                                $material = $fila1['codificacionMaterial'];
+                                            }
+                                            $result1 = mysqli_query($link, "SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
+                                            while ($fila1 = mysqli_fetch_array($result1)) {
+                                                $combinacioncolor = $fila1['descripcion'];
+                                            }
+                                            $result1 = mysqli_query($link, "SELECT * FROM Talla WHERE idTalla = '{$fila['idTalla']}'");
+                                            while ($fila1 = mysqli_fetch_array($result1)) {
+                                                $talla = $fila1['descripcion'];
+                                            }
+                                            echo "<td>{$material}</td>";
+                                            echo "<td>{$combinacioncolor}</td>";
+                                            echo "<td>{$simbolo} {$fila['precio']}</td>";
+                                            echo "<td>{$talla}</td>";
+                                            echo "<td>{$fila['cantidad']}</td>";
+                                            echo "
+                                                <td>
+                                                    <form method='post' action='#'>
+                                                        <input type='hidden' value='{$_POST['idConfirmacionVenta']}' name='idConfirmacionVenta'>
+                                                        <input type='hidden' value='{$_POST['codifTalla']}' name='codifTalla'>
+                                                        <input type='hidden' value='{$fila['idConfirmacionVentaProducto']}' name='idConfirmacionVentaProducto'>
+                                                        <input type='submit' value='Eliminar' name='eliminar' class='btn btn-primary'>
+                                                    </form>
+                                                </td>
+                                            ";
+                                            echo "</tr>";
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <?php
+            <div id="modalColores"></div>
+
+            <?php
+        }
     }else{
         ?>
 
@@ -356,6 +637,7 @@ if(isset($_SESSION['login'])){
 
         <?php
     }
+
     include('footer.php');
 }
 ?>

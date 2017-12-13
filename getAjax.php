@@ -56,8 +56,6 @@ if (!empty($_POST['nombreCliente'])) {
 }
 
 if(!empty($_POST["productoCV"])) {
-    echo $_POST["productoCV"];
-    echo $_POST["idcodificacionTallaCV"];
 
     $result = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST["productoCV"]}'");
     while ($fila = mysqli_fetch_array($result)){
@@ -236,5 +234,168 @@ if(!empty($_POST['idComponenteEspecifico'])){
 	if($flag){
 		echo "<input type='text' class='form-control' readonly>";
 	}
+
+}
+
+if(!empty($_POST['fechaContrato'])){
+
+    echo "<option disabled selected>Seleccionar</option>";
+    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE fecha = '{$_POST['fechaContrato']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        echo "<option value='{$fila['idContrato']}'>{$fila['idContrato']}</option>";
+    }
+
+}
+
+if(!empty($_POST['idConfirmacionVenta'])){
+
+    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}' AND cantidad <> cantidadop ORDER BY idTalla ASC");
+    while ($fila = mysqli_fetch_array($result)){
+        $result1 = mysqli_query($link,"SELECT * FROM Talla WHERE idTalla = '{$fila['idTalla']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            $talla = $fila1['descripcion'];
+        }
+        $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            $combinacion = $fila1['descripcion'];
+        }
+        $cantidadRestante = $fila['cantidad'] - $fila['cantidadop'];
+        echo "<tr>";
+        echo "<input type='hidden' name='{$fila['idConfirmacionVentaProducto']}' value='{$fila['idConfirmacionVentaProducto']}'>";
+        echo "<td>{$fila['idProducto']}</td>";
+        echo "<td>{$talla}</td>";
+        echo "<td>{$combinacion}</td>";
+        echo "<td>{$fila['cantidad']}</td>";
+        echo "<td><input type='number' value='{$cantidadRestante}' min='0' max='{$cantidadRestante}' name='cantidad{$fila['idConfirmacionVentaProducto']}' class='form-control'></td>";
+        echo "<td><input type='checkbox' class='form-check-input' name='marcacion{$fila['idConfirmacionVentaProducto']}'>Marcar</td>";
+        echo "</tr>";
+    }
+
+}
+
+if(!empty($_POST['idLoteA'])){
+
+    $result = mysqli_query($link,"SELECT * FROM Lote WHERE idLote = '{$_POST['idLoteA']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            echo "<input type='text' name='idProducto' value='{$fila1['idProducto']}' class='form-control'>";
+        }
+    }
+}
+
+if(!empty($_POST['idLoteB'])){
+
+    echo "<option>Seleccionar</option>";
+    $result = mysqli_query($link,"SELECT * FROM Lote WHERE idLote = '{$_POST['idLoteB']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            $result2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$fila1['idProducto']}'");
+            while ($fila2 = mysqli_fetch_array($result2)){
+                $result3 = mysqli_query($link,"SELECT idProducto, idComponenteEspecifico, COUNT(*) AS cantidadProcesos FROM PCPSPC WHERE idProducto = '{$fila1['idProducto']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = 7)");
+                while ($fila3 = mysqli_fetch_array($result3)){
+                    $cantidadTotal = $fila3['cantidadProcesos']*$fila['cantidad'];
+                }
+                $result4 = mysqli_query($link,"SELECT idComponenteEspecifico, SUM(cantidad) AS cantidadRealizada FROM EmpleadoLote WHERE idLote = '{$_POST['idLoteB']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}'");
+                $filasArray = mysqli_num_rows($result4);
+                while ($fila4 = mysqli_fetch_array($result4)){
+                    if($fila4['idComponenteEspecifico']==null){
+                        $cantidadRealizada = 0;
+                    }else{
+                        $cantidadRealizada = $fila4['cantidadRealizada'];
+                    }
+                }
+                if($cantidadTotal === $cantidadRealizada){
+                }else{
+                    $result5 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente IN (SELECT idComponente FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}')");
+                    while ($fila5 = mysqli_fetch_array($result5)){
+                        echo "<option value='{$fila2['idComponente']}'>{$fila5['descripcion']}</option>";
+                    }
+                }
+            }
+        }
+    }
+}
+
+if(!empty($_POST['idComponenteEspecificoC'])){
+
+    echo "<option>Seleccionar</option>";
+    $result = mysqli_query($link,"SELECT * FROM Lote WHERE idLote = '{$_POST['idLoteC']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
+        while ($fila1 = mysqli_fetch_array($result1)){
+            $result2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$fila1['idProducto']}' AND idComponente = '{$_POST['idComponenteEspecificoC']}'");
+            while ($fila2 = mysqli_fetch_array($result2)){
+                $result3 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$fila1['idProducto']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = 7 AND idProcedimiento <> 4 AND idProcedimiento <> 6)");
+                while ($fila3 = mysqli_fetch_array($result3)){
+                    $result4 = mysqli_query($link,"SELECT idComponenteEspecifico, SUM(cantidad) AS cantidadRealizada FROM EmpleadoLote WHERE idLote = '{$_POST['idLoteB']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idProcedimiento IN (SELECT idProcedimiento FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$fila3['idSubProcesoCaracteristica']}')");
+                    $filasArray = mysqli_num_rows($result4);
+                    while ($fila4 = mysqli_fetch_array($result4)){
+                        if($fila4['idComponenteEspecifico']==null){
+                            $cantidadRealizada = 0;
+                        }else{
+                            $cantidadRealizada = $fila4['cantidadRealizada'];
+                        }
+                    }
+                    if($fila['cantidad'] === $cantidadRealizada){
+                    }else{
+                        $result5 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento IN (SELECT idProcedimiento FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$fila3['idSubProcesoCaracteristica']}')");
+                        while ($fila5 = mysqli_fetch_array($result5)){
+                            echo "<option value='{$fila5['idProcedimiento']}'>{$fila5['descripcion']}</option>";
+                        }
+                    }
+                }
+                $result3 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$fila1['idProducto']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = 11)");
+                while ($fila3 = mysqli_fetch_array($result3)){
+                    $result4 = mysqli_query($link,"SELECT idComponenteEspecifico, SUM(cantidad) AS cantidadRealizada FROM EmpleadoLote WHERE idLote = '{$_POST['idLoteB']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idProcedimiento = '{$fila3['valor']}'");
+                    $filasArray = mysqli_num_rows($result4);
+                    while ($fila4 = mysqli_fetch_array($result4)){
+                        if($fila4['idComponenteEspecifico']==null){
+                            $cantidadRealizada = 0;
+                        }else{
+                            $cantidadRealizada = $fila4['cantidadRealizada'];
+                        }
+                    }
+                    if($fila['cantidad'] === $cantidadRealizada){
+                    }else{
+                        $result5 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$fila3['valor']}'");
+                        while ($fila5 = mysqli_fetch_array($result5)){
+                            echo "<option value='{$fila5['idProcedimiento']}'>{$fila5['descripcion']}</option>";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+if(!empty($_POST['idMaquinaProcedimiento'])){
+
+    echo "<option>Seleccionar</option>";
+    $result = mysqli_query($link,"SELECT * FROM Maquina WHERE idMaquina IN (SELECT idMaquina FROM MaquinaSubproceso WHERE idProcedimiento = '{$_POST['idMaquinaProcedimiento']}')");
+    while ($fila = mysqli_fetch_array($result)){
+        echo "<option value='{$fila['idMaquina']}'>{$fila['descripcion']}</option>";
+    }
+}
+
+if(!empty($_POST['idProcedimientoSeleccionado'])){
+
+    $result4 = mysqli_query($link,"SELECT idComponenteEspecifico, idProcedimiento, SUM(cantidad) AS cantidadRealizada FROM EmpleadoLote WHERE idLote = '{$_POST['idLoteD']}' AND idComponenteEspecifico = '{$_POST['idComponenteSeleccionado']}' AND idProcedimiento = '{$_POST['idProcedimientoSeleccionado']}'");
+    $filasArray = mysqli_num_rows($result4);
+    while ($fila4 = mysqli_fetch_array($result4)){
+        if($fila4['idComponenteEspecifico']==null){
+            $cantidadRealizada = 0;
+        }else{
+            $cantidadRealizada = $fila4['cantidadRealizada'];
+        }
+    }
+    $result = mysqli_query($link,"SELECT * FROM Lote WHERE idLote = '{$_POST['idLoteD']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $cantidadLote = $fila['cantidad'];
+    }
+    $cantidadSinFabricar = $cantidadLote - $cantidadRealizada;
+
+    echo "<input type='number' name='cantidad' id='cantidad' value='{$cantidadSinFabricar}' max='{$cantidadSinFabricar}' min='0' class='form-control'>";
 
 }
