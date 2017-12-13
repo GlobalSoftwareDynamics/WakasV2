@@ -100,3 +100,39 @@ function getProductosContrato(val) {
         }
     });
 }
+
+function getProductoLote(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idLoteA':val},
+        success: function(data){
+            $("#productoLote").html(data);
+        }
+    });
+}
+
+function getComponentesProductoLote(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idLoteB':val},
+        success: function(data){
+            $("#componente").html(data);
+        }
+    });
+}
+
+function getProcesosComponente(val) {
+
+    var componenteEspecifico = document.getElementById("idLote").value;
+
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idComponenteEspecificoC':val, 'idLoteC': componenteEspecifico},
+        success: function(data){
+            $("#procedimiento").html(data);
+        }
+    });
+}
