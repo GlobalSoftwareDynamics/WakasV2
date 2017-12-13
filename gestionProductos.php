@@ -111,7 +111,8 @@ if(isset($_SESSION['login'])){
                                 <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                 Acciones</button>
                                 <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                    <input name='addProductoSimilar' class='dropdown-item' type='submit' formaction='nuevaHE.php' value='Añadir Producto Similar'>
+                                    <input name='addProductoSimilar' class='dropdown-item' type='submit' formaction='nuevaHESimilar.php' value='Añadir Producto Similar'>
+                                    <input name='verProducto' class='dropdown-item' type='submit' formaction='verHE.php' value='Visualizar Hoja de Especificaciones'>
                                     <input name='editarProducto' class='dropdown-item' type='submit' formaction='nuevaHE2.php' value='Editar Hoja de Especificaciones'>
                                     <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
                                 </div>

@@ -203,3 +203,13 @@ input[type='file'] {
 .datosCV p {
     margin-bottom: 0px;
 }
+
+/*Estilos HE*/
+
+a.crowded.nav-link{
+    font-size:13px;
+}
+
+.fotografiaProducto{
+    width: 210px;
+}

@@ -40,30 +40,41 @@ if(isset($_SESSION['login'])){
 	}
 
 	if(isset($_POST['addProducto'])){
-		if($_POST['idProductoCrear'] == ''){
-			$flag = false;
-		}
+	    if(isset($_POST['idProductoSimilar'])){
+		    if($_POST['idProductoCrear'] == ''){
+			    $flag = false;
+		    }
 
-		$search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoCrear']}'");
-		while($index = mysqli_fetch_array($search)){
-			$flag = false;
-		}
+		    $search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoCrear']}'");
+		    while($index = mysqli_fetch_array($search)){
+			    $flag = false;
+		    }
+        }else{
+		    if($_POST['idProductoCrear'] == ''){
+			    $flag = false;
+		    }
 
-		if(!isset($_POST['genero']) || $_POST['genero'] == ''){
-			$flag = false;
-		}
+		    $search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoCrear']}'");
+		    while($index = mysqli_fetch_array($search)){
+			    $flag = false;
+		    }
 
-		if(!isset($_POST['tipoProducto']) || $_POST['tipoProducto'] == ''){
-			$flag = false;
-		}
+		    if(!isset($_POST['genero']) || $_POST['genero'] == ''){
+			    $flag = false;
+		    }
 
-		if(!isset($_POST['codificacionTalla']) || $_POST['codificacionTalla'] == ''){
-			$flag = false;
-		}
+		    if(!isset($_POST['tipoProducto']) || $_POST['tipoProducto'] == ''){
+			    $flag = false;
+		    }
 
-		if(!isset($_POST['idCliente']) || $_POST['idCliente'] == ''){
-			$flag = false;
-		}
+		    if(!isset($_POST['codificacionTalla']) || $_POST['codificacionTalla'] == ''){
+			    $flag = false;
+		    }
+
+		    if(!isset($_POST['idCliente']) || $_POST['idCliente'] == ''){
+			    $flag = false;
+		    }
+        }
 	}
 
 
@@ -96,43 +107,84 @@ if(isset($_SESSION['login'])){
 					$codificacionMaterial = null;
 				}
 
-				$insert = mysqli_query($link, "INSERT INTO Producto VALUES ('{$_POST['idProductoCrear']}','{$_POST['tipoProducto']}','{$_POST['idCliente']}',
+				if(isset($_POST['idProductoSimilar'])){
+				    $query = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoSimilar']}'");
+				    while($row = mysqli_fetch_array($query)){
+				        $tipoProducto = $row['idTipoProducto'];
+				        $cliente = $row['idCliente'];
+				        $genero = $row['idgenero'];
+				        $codificacionTalla = $row['idcodificacionTalla'];
+				        $observaciones = $row['observaciones'];
+				        $descripcionGeneral = $row['descripcionGeneral'];
+				        $codificacionMaterial = $row['codificacionMaterial'];
+                    }
+
+					$insert = mysqli_query($link, "INSERT INTO Producto VALUES ('{$_POST['idProductoCrear']}','{$tipoProducto}','{$cliente}',
+												'{$_SESSION['user']}','{$genero}','{$codificacionTalla}',1,'{$idProvisional}','{$date}',
+												'{$observaciones}','{$descripcionGeneral}','{$codificacionMaterial}')");
+
+					$queryPerformed = "INSERT INTO Producto VALUES ({$_POST['idProductoCrear']},{$tipoProducto},{$cliente},
+												{$_SESSION['user']},{$genero},{$codificacionTalla},1,{$idProvisional},{$date},
+												{$observaciones},{$descripcionGeneral},{$codificacionMaterial})";
+
+					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PRODUCTO SIMILAR','INSERT','{$queryPerformed}')");
+
+					$query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoSimilar']}'");
+					while($row = mysqli_fetch_array($query)){
+						$insert = mysqli_query($link,"INSERT INTO ProductoMedida (idProducto, idMedida, tolerancia, observacion, indice) VALUES 
+                                  ('{$_POST['idProductoCrear']}','{$row['idMedida']}','{$row['tolerancia']}','{$row['observacion']}','{$row['indice']}')");
+
+						$queryPerformed = "INSERT INTO ProductoMedida (idProducto, idMedida, tolerancia, observacion, indice) VALUES 
+                                  ({$_POST['idProductoCrear']},{$row['idMedida']},{$row['tolerancia']},{$row['observacion']},{$row['indice']})";
+
+						$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT MEDIDAS PRODUCTO SIMILAR','INSERT','{$queryPerformed}')");
+					}
+
+					$query = mysqli_query($link,"SELECT * FROM TallaMedida WHERE idProducto = '{$_POST['idProductoSimilar']}'");
+					while($row = mysqli_fetch_array($query)){
+						$insert = mysqli_query($link,"INSERT INTO TallaMedida (idProducto, idTalla, idMedida, valor) VALUES 
+                                  ('{$_POST['idProductoCrear']}','{$row['idTalla']}','{$row['idMedida']}','{$row['valor']}')");
+
+						$queryPerformed = "INSERT INTO TallaMedida (idProducto, idTalla, idMedida, valor) VALUES 
+                                  ({$_POST['idProductoCrear']},{$row['idTalla']},{$row['idMedida']},{$row['valor']})";
+
+						$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT TALLAS PRODUCTO SIMILAR','INSERT','{$queryPerformed}')");
+					}
+
+					$query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoSimilar']}'");
+					while($row = mysqli_fetch_array($query)){
+						$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor, numMetrico) VALUES 
+                                  ('{$_POST['idProductoCrear']}','{$row['idComponente']}','{$row['idMaterial']}','{$row['cantidadMaterial']}','{$row['codigoColor']}','{$row['numMetrico']}')");
+
+						if(!$insert){
+							$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor, numMetrico) VALUES 
+                                  ('{$_POST['idProductoCrear']}','{$row['idComponente']}',null,null,null,null)");
+                        }
+
+						$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor, numMetrico) VALUES 
+                                  ({$_POST['idProductoCrear']},{$row['idComponente']},{$row['idMaterial']},{$row['cantidadMaterial']},{$row['codigoColor']},{$row['numMetrico']})";
+
+						$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTES PRODUCTO SIMILAR','INSERT','{$queryPerformed}')");
+					}
+				}else{
+					$insert = mysqli_query($link, "INSERT INTO Producto VALUES ('{$_POST['idProductoCrear']}','{$_POST['tipoProducto']}','{$_POST['idCliente']}',
 												'{$_SESSION['user']}','{$_POST['genero']}','{$_POST['codificacionTalla']}',1,'{$idProvisional}','{$date}',
 												'{$observaciones}','{$descripcionGeneral}','{$codificacionMaterial}')");
 
-				$queryPerformed = "INSERT INTO Producto VALUES ({$_POST['idProductoCrear']},{$_POST['tipoProducto']},{$_POST['idCliente']},
+					$queryPerformed = "INSERT INTO Producto VALUES ({$_POST['idProductoCrear']},{$_POST['tipoProducto']},{$_POST['idCliente']},
 												{$_SESSION['user']},{$_POST['genero']},{$_POST['codificacionTalla']},1,{$idProvisional},{$date},
 												{$observaciones},{$descripcionGeneral},{$codificacionMaterial})";
 
-				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PRODUCTO','INSERT','{$queryPerformed}')");
+					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT PRODUCTO','INSERT','{$queryPerformed}')");
 
-				$cantidadMaterial = 0;
-				$query = mysqli_query($link,"SELECT * FROM TipoProducto WHERE idTipoProducto = '{$_POST['tipoProducto']}'");
-				while($row = mysqli_fetch_array($query)){
-				    $cantidadMaterial = $row['cantidadMaterial'];
+					$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,codigoColor,numMetrico) VALUES 
+                          ('{$_POST['idProductoCrear']}',1,NULL,NULL,NULL,NULL)");
+
+					$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,codigoColor,numMetrico) VALUES 
+                          ({$_POST['idProductoCrear']},1,NULL,NULL,NULL,NULL)";
+
+					$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTE PRENDA','INSERT','{$queryPerformed}')");
                 }
-
-				$insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,codigoColor,numMetrico) VALUES 
-                          ('{$_POST['idProductoCrear']}',1,NULL,$cantidadMaterial,NULL,NULL)");
-
-				$queryPerformed = "INSERT INTO ProductoComponentesPrenda(idProducto,idComponente,idMaterial,cantidadMaterial,codigoColor,numMetrico) VALUES 
-                          ({$_POST['idProductoCrear']},1,NULL,$cantidadMaterial,NULL,NULL)";
-
-				$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT COMPONENTE PRENDA','INSERT','{$queryPerformed}')");
-
-				if(isset($_POST['addProductoSimilar'])){
-				    $query = mysqli_query($link,"SELECT * FROM ProductoMedida WHERE idProducto = '{$_POST['idProductoSimilar']}'");
-				    while($row = mysqli_fetch_array($query)){
-				        $insert = mysqli_query($link,"INSERT INTO ProductoMedida (idProducto, idMedida, tolerancia, observacion, indice) VALUES 
-                                  ('{$_POST['idProductoCrear']}','{$row['idMedida']}','{$row['tolerancia']}','{$row['observacion']}','{$row['indice']}')");
-                    }
-
-				    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoSimilar']}'");
-				    while($row = mysqli_fetch_array($query)){
-				        $insert = mysqli_query($link,"INSERT INTO ProductoComponentesPrenda(idProducto, idComponente, idMaterial, cantidadMaterial, codigoColor, numMetrico) VALUES 
-                                  ('{$_POST['idProductoCrear']}','{$row['idComponente']}','{$row['idMaterial']}','{$row['cantidadMaterial']}','{$row['codigoColor']}','{$row['numMetrico']}')");
-                    }
-				}
 			}
 
 			if(isset($_POST['insertar'])){
@@ -688,7 +740,11 @@ if(isset($_SESSION['login'])){
 	                                                            }else{
 		                                                            echo "<td class='text-center'>{$row['codigoColor']}</td>";
 	                                                            }
-	                                                            echo "<td class='text-center'>{$row['cantidadMaterial']}</td>";
+	                                                            if($row['cantidadMaterial'] == ''){
+		                                                            echo "<td class='text-center'>-</td>";
+	                                                            }else{
+		                                                            echo "<td class='text-center'>{$row['cantidadMaterial']}</td>";
+	                                                            }
 	                                                            echo "<td class='text-center'>
                                                                 <form method='post' action='#'>
                                                                 <div>

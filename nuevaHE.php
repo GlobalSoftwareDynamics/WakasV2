@@ -7,9 +7,9 @@ if(isset($_SESSION['login'])){
 	include('declaracionFechas.php');
 
 	if(isset($_POST['addTipoProducto'])){
-		$insert = mysqli_query($link, "INSERT INTO TipoProducto(descripcion,tamanoLote,cantidadMaterial) VALUES ('{$_POST['descripcionTipoProducto']}','{$_POST['tamanoLote']}','{$_POST['cantidadMaterial']}')");
+		$insert = mysqli_query($link, "INSERT INTO TipoProducto(descripcion,tamanoLote,cantidadMaterial) VALUES ('{$_POST['descripcionTipoProducto']}','{$_POST['tamanoLote']}')");
 
-		$queryPerformed = "INSERT INTO TipoProducto VALUES ({$_POST['descripcionTipoProducto']},{$_POST['tamanoLote']},{$_POST['cantidadMaterial']})";
+		$queryPerformed = "INSERT INTO TipoProducto VALUES ({$_POST['descripcionTipoProducto']},{$_POST['tamanoLote']})";
 
 		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT TIPO PRODUCTO','INSERT','{$queryPerformed}')");
 	}
@@ -40,11 +40,6 @@ if(isset($_SESSION['login'])){
 
 	?>
     <form method="post" id="formProducto" action="#">
-        <?php
-        if(isset($_POST['addProductoSimilar'])){
-            echo "<input type='hidden' name='idProductoSimilar' value='{$_POST['idProductoCrear']}'>";
-        }
-        ?>
 	<section class="container">
         <div class="row">
             <div class="col-12">
@@ -246,10 +241,6 @@ if(isset($_SESSION['login'])){
                         <div class="form-group row">
                             <label class="col-form-label" for="tamanoLote">Tamaño de Lote:</label>
                             <input type="text" name="tamanoLote" id="tamanoLote" class="form-control">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-form-label" for="cantidadMaterial">Cantidad de Material (Kg):</label>
-                            <input type="text" name="cantidadMaterial" id="cantidadMaterial" class="form-control">
                         </div>
                     </div>
                 </div>

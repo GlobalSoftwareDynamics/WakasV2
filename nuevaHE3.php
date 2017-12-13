@@ -630,7 +630,6 @@ if(isset($_SESSION['login'])){
                                             ?>
                                             </tbody>
                                         </table>
-
 									</div>
                                     <div class="tab-pane <?php echo $activoLavado;?>" id="lavado" role="tabpanel">
                                         <div class="spacer20"></div>

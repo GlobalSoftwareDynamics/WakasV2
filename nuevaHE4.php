@@ -203,7 +203,15 @@ if(isset($_SESSION['login'])){
 												while($row2 = mysqli_fetch_array($query2)){
 													$query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row2['idProcedimiento']}'");
 													while($row3 = mysqli_fetch_array($query3)){
-														echo "<td class='text-center'>{$row3['descripcion']}</td>";
+													    if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
+														    $query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
+														    while($row4 = mysqli_fetch_array($query4)){
+															    echo "<td class='text-center'>{$row4['descripcion']}</td>";
+															    $flag2 = false;
+														    }
+                                                        }else{
+														    echo "<td class='text-center'>{$row3['descripcion']}</td>";
+                                                        }
 													}
 												}
 												$query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
