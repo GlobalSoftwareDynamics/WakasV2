@@ -5,9 +5,11 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <form class="form-inline my-2 my-lg-0 ml-1" action="index.php" method="post">
-                <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Cerrar Sesión</button>
-            </form>
+            <div class="collapse navbar-collapse float-right" id="navbarSupportedContent">
+                <form class="form-inline my-2 my-lg-0 ml-1" action="index.php" method="post">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Cerrar Sesión</button>
+                </form>
+            </div>
         </nav>
     </section>
 </header>

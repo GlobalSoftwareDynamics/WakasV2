@@ -136,3 +136,29 @@ function getProcesosComponente(val) {
         }
     });
 }
+
+function getMaquinasProcedimiento(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idMaquinaProcedimiento':val},
+        success: function(data){
+            $("#maquina").html(data);
+        }
+    });
+}
+
+function getCantidadRestanteLote(val) {
+
+    var lote = document.getElementById("idLote").value;
+    var componente = document.getElementById("componente").value;
+
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idProcedimientoSeleccionado':val, 'idLoteD': lote, 'idComponenteSeleccionado': componente},
+        success: function(data){
+            $("#cantidadRestanteLote").html(data);
+        }
+    });
+}
