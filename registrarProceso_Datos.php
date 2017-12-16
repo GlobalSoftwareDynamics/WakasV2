@@ -29,7 +29,7 @@ if(isset($_SESSION['login'])){
                             <div class="form-group row">
                                 <label for="idLote" class="col-12 col-form-label">Lote:</label>
                                 <div class="col-12">
-                                    <input class="form-control" type="text" id="idLote" name="idLote" onkeyup="getProductoLote(this.value);getComponentesProductoLote(this.value)">
+                                    <input class="form-control" type="text" id="idLote" name="idLote" onkeyup="getProductoLote(this.value);getComponentesProductoLote(this.value)" onchange="getProductoLote(this.value);getComponentesProductoLote(this.value)">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -74,6 +74,7 @@ if(isset($_SESSION['login'])){
             </div>
         </div>
     </section>
+    </form>
 
     <?php
     include('footer.php');
