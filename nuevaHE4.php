@@ -72,6 +72,50 @@ if(isset($_SESSION['login'])){
 		}
 	}
 
+	if(isset($_POST['submitMultiples'])){
+		if(opendir("img/fotografias/".$_POST['idProductoCrear']."/")){
+			//echo "Directorio creado.";
+		}else{
+			mkdir("img/fotografias/{$_POST['idProductoCrear']}/",0777,true);
+			//echo "Directorio existente.";
+		}
+		if(count($_FILES['upload']['name']) > 0){
+			//Loop through each file
+			for($i=0; $i<count($_FILES['upload']['name']); $i++) {
+				//Get the temp file path
+				$tmpFilePath = $_FILES['upload']['tmp_name'][$i];
+
+				//Make sure we have a filepath
+				if($tmpFilePath != ""){
+
+					$temp[$i] = explode(".", $_FILES["upload"]["name"][$i]);
+					$newfilename = $_POST['idProductoCrear'].$i.'.' . end($temp[$i]);
+
+					//save the filename
+					$shortname = $_FILES['upload']['name'][$i];
+
+					//save the url and the file
+					$filePath = "img/fotografias/".$_POST['idProductoCrear']."/";
+
+					//Upload the file into the temp dir
+					if(move_uploaded_file($tmpFilePath, $filePath.$newfilename)) {
+
+						$files[] = $shortname;
+						//insert into db
+						//use $shortname for the filename
+						//use $filePath for the relative url to the file
+
+					}
+				}
+			}
+		}
+
+		//show success message
+        echo "<section class='container'>";
+		echo "<div class='alert alert-success col-12'>Sus fotografías han sido registradas exitosamente</div><br>";
+		echo "</section>";
+	}
+
 	?>
 
     <script>
@@ -134,6 +178,7 @@ if(isset($_SESSION['login'])){
         });
     </script>
 
+
     <section class="container">
         <div class="row">
             <div class="col-12">
@@ -162,7 +207,7 @@ if(isset($_SESSION['login'])){
 	                        if(isset($_POST['siguiente']) || isset($_POST['subir']) || isset($_POST['bajar'])){
 		                        $activoSecuencia = 'active';
 	                        }
-	                        if(isset($_POST['addFotografia']) || isset($_POST['volverHE5'])){
+	                        if(isset($_POST['addFotografia']) || isset($_POST['volverHE5']) || isset($_POST['submitMultiples'])){
 		                        $activoFotografia = 'active';
 	                        }
 	                        ?>
@@ -270,10 +315,29 @@ if(isset($_SESSION['login'])){
                                                         </button>
                                                         <div class="btn btn-default image-preview-input">
                                                             Subir
-                                                            <input type="file" accept="image/png, image/jpeg, image/gif" name="fileToUpload" form="formSiguiente"/>
+                                                            <input type="file" class="fotografia" accept="image/png, image/jpeg, image/gif" name="fileToUpload" form="formSiguiente"/>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="spacer20"></div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <form action="#" enctype="multipart/form-data" method="post">
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                    <h5 class="text-center">Fotografías Adicionales</h5>
+                                                    <hr>
+                                                    <div class="col-6 offset-4" style="padding-left: 70px">
+                                                        <input type="file" name="upload[]" id="file" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
+                                                        <label for="file"><i class="fa fa-photo"></i><span> Elegir las Fotografías</span></label>
+                                                    </div>
+                                                    <div class="col-6 offset-5">
+                                                        <input type="submit" name="submitMultiples" value="Subir Fotografías" class="btn btn-outline-primary">
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>

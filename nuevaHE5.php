@@ -31,49 +31,21 @@ if(isset($_SESSION['login'])){
                         <div class="col-12">
                             <div class="spacer20"></div>
 	                        <?php
-	                        $target_dir = "img/fotografias/";
+	                        if(opendir("img/fotografias/".$_POST['idProductoCrear']."/")){
+		                        //echo "Directorio creado.";
+	                        }else{
+		                        mkdir("img/fotografias/{$_POST['idProductoCrear']}/",0777,true);
+		                        //echo "Directorio existente.";
+	                        }
+	                        $target_dir = "img/fotografias/".$_POST['idProductoCrear']."/";
 	                        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 	                        $uploadOk = 1;
 	                        $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-
-	                        if (file_exists($target_file)) {
-		                        echo "<div class='alert alert-danger col-12'>Lo lamentamos, su fotografía ya ha sido agregada previamente.</div><br>";
-		                        $uploadOk = 0;
-	                        }
-
-	                        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "PNG" && $imageFileType != "jpeg"
-		                        && $imageFileType != "gif" ) {
-		                        echo "<div class='alert alert-danger col-12'>Lo lamentamos, solo se permiten los formatos de imagen jpg, png, jpeg y gif.</div><br>";
-		                        $uploadOk = 0;
-	                        }
 
 	                        if ($uploadOk == 0) {
 		                        echo "<div class='alert alert-danger col-12'>Su fotografía no fue subida.</div><br>";
 
 	                        } else {
-		                        $i = 0;
-		                        $aux=0;
-		                        $dir = 'img/fotografias/';
-		                        for($j=0;$j<3;$j++) {
-			                        $file = null;
-			                        $filenamejpg = 'img/fotografias/' . $_POST['idProductoCrear'] . $j . '.jpg';
-			                        $filenamejpeg = 'img/fotografias/' . $_POST['idProductoCrear'] . $j . '.jpeg';
-			                        $filenamegif = 'img/fotografias/' . $_POST['idProductoCrear'] . $j . '.gif';
-			                        $filenamepng = 'img/fotografias/' . $_POST['idProductoCrear'] . $j . '.png';
-			                        if (file_exists($filenamejpg)) {
-				                        $file = $filenamejpg;
-				                        $aux++;
-			                        } elseif (file_exists($filenamejpeg)) {
-				                        $file = $filenamejpeg;
-				                        $aux++;
-			                        } elseif (file_exists($filenamegif)) {
-				                        $file = $filenamegif;
-				                        $aux++;
-			                        } elseif (file_exists($filenamepng)) {
-				                        $file = $filenamepng;
-				                        $aux++;
-			                        }
-		                        }
 		                        $temp = explode(".", $_FILES["fileToUpload"]["name"]);
 		                        $newfilename = $_POST['idProductoCrear'].'.' . end($temp);
 		                        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_dir.$newfilename)) {

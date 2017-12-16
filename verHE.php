@@ -19,7 +19,9 @@ if(isset($_SESSION['login'])){
 							<div class="float-right">
 								<div class="dropdown">
                                     <form method="post" id="formSiguiente" action="gestionProductos.php">
+                                        <input type="hidden" value="<?php echo $_POST['idProductoCrear']?>" name="idProductoCrear">
                                         <button name="volver" type="submit" class="btn btn-light btn-sm" form="formSiguiente">Volver</button>
+                                        <button name="pdf" type="submit" class="btn btn-light btn-sm" form="formSiguiente" formaction="verHEpdf.php">Descargar PDF</button>
                                     </form>
 								</div>
 							</div>
@@ -79,7 +81,7 @@ if(isset($_SESSION['login'])){
 										}
 										?>
                                         <div class="row">
-                                            <div class="col-2 offset-1">
+                                            <div class="col-2">
                                                 <p><strong>ID Producto:</strong></p>
                                                 <p><strong>ID Provisional:</strong></p>
 	                                            <?php
@@ -124,8 +126,9 @@ if(isset($_SESSION['login'])){
 	                                            ?>
                                             </div>
                                             <div class="col-4 offset-1">
-                                                <img class="fotografiaProducto" src="img/fotografias/<?php echo $_POST['idProductoCrear'];?>.jpg">
+                                                <img class="fotografiaProducto" src="img/fotografias/<?php echo $_POST['idProductoCrear'];?>/<?php echo $_POST['idProductoCrear'];?>.jpg">
                                             </div>
+                                            <div class="spacer20"></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-2 offset-1"><p><strong>Descripción General: </strong></p></div>
@@ -138,6 +141,30 @@ if(isset($_SESSION['login'])){
                                         <div class="row">
                                             <div class="col-2 offset-1"><p><strong>Codificación de Material: </strong></p></div>
                                             <div class="col-8"><p class="text-justify"><?php echo $codificacionMaterial?></p></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="table">
+                                                <tr>
+                                                    <th class="text-center">Fotografías Adicionales de Producto</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+	                                        <?php
+	                                        $i = 0;
+	                                        $dir = "img/fotografias/".$_POST['idProductoCrear']."/";
+	                                        if ($handle = opendir($dir)) {
+		                                        while (($file = readdir($handle)) !== false){
+			                                        if (!in_array($file, array('.', '..')) && !is_dir($dir.$file))
+				                                        $i++;
+		                                        }
+	                                        }
+	                                        for($j=0;$j<($i-1);$j++){
+	                                            echo "<div class='col-4'>";
+		                                        echo "<img src='img/fotografias/{$_POST['idProductoCrear']}/{$_POST['idProductoCrear']}{$j}.jpg' alt='Evidencia{$j}' style='width:304px;height:228px;margin-bottom:20px;margin-left: 10px;margin-right: 65px;'>";
+		                                        echo "</div>";
+	                                        }
+	                                        ?>
                                         </div>
 									</div>
 									<div class="tab-pane" id="medidas" role="tabpanel">
@@ -272,18 +299,18 @@ if(isset($_SESSION['login'])){
                                     <div class="tab-pane" id="tejido" role="tabpanel">
                                         <div class="spacer20"></div>
                                         <table class="table table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th class="text-center">Componente</th>
-                                                <th class="text-center">Material</th>
-                                                <th class="text-center">Tipo de Tejido</th>
-                                                <th class="text-center">Galgas</th>
-                                                <th class="text-center">Comprobación de Tejido</th>
-                                                <th class="text-center">Observaciones</th>
-                                                <th class="text-center">Tiempo</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">Componente</th>
+                                                    <th class="text-center">Material</th>
+                                                    <th class="text-center">Tipo de Tejido</th>
+                                                    <th class="text-center">Galgas</th>
+                                                    <th class="text-center">Comprobación de Tejido</th>
+                                                    <th class="text-center">Observaciones</th>
+                                                    <th class="text-center">Tiempo</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
 		                                    <?php
 		                                    $flag = true;
 		                                    $indice = 0;
