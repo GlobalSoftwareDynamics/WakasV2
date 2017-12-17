@@ -599,6 +599,34 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 											$html.= "
                                                 </tbody>
                                                 </table>
+                                                
+                                                <pagebreak></pagebreak>
+                                                
+                                                <table class='table table-bordered'>
+                                                <tbody>";
+
+													$i = 0;
+													$dir = "img/fotografias/".$_POST['idProductoCrear']."/";
+													if ($handle = opendir($dir)) {
+														while (($file = readdir($handle)) !== false){
+															if (!in_array($file, array('.', '..')) && !is_dir($dir.$file))
+																$i++;
+														}
+													}
+													for($j=0;$j<($i-1);$j++){
+														if(($j%3 == 0) || $j==0){
+															if($j >= 3){
+																$html.= "</tr>";
+															}
+															$html.= "<tr>";
+														}
+														$html.= "<td><img src='img/fotografias/{$_POST['idProductoCrear']}/{$_POST['idProductoCrear']}{$j}.jpg' alt='Evidencia{$j}' style='width:304px;height:228px;margin-bottom:20px;margin-left: 10px;margin-right: 65px;'></td>";
+													}
+
+                                                $html.= "	
+                                                </tbody>
+                                                </table>
+                                                
 												";
 
 
