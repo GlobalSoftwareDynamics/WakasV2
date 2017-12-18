@@ -81,7 +81,7 @@ if(isset($_SESSION['login'])){
 										}
 										?>
                                         <div class="row">
-                                            <div class="col-2">
+                                            <div class="col-2 offset-1">
                                                 <p><strong>ID Producto:</strong></p>
                                                 <p><strong>ID Provisional:</strong></p>
 	                                            <?php
