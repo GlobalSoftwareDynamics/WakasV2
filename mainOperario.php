@@ -28,7 +28,7 @@ if(isset($_SESSION['login'])){
                     </div>
                     <div class="form-group row">
                         <div class="col-12">
-                            <input type="submit" formaction="registrarActividadMuerta.php" class="btn btn-primary col-12" value="Registrar Actividad Muerta" name="regActMuerta">
+                            <input type="submit" formaction="registrarActividadMuerta_Datos.php" class="btn btn-primary col-12" value="Registrar Actividad Muerta" name="regActMuerta">
                         </div>
                     </div>
                 </form>

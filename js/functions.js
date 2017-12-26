@@ -90,6 +90,39 @@ function getContrato(val) {
     });
 }
 
+function getContratoReporte(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'fechaContratoReporte':val},
+        success: function(data){
+            $("#idConfirmacionVenta").html(data);
+        }
+    });
+}
+
+function getOrdenProduccionReporte(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idConfirmacionVentaReporte':val},
+        success: function(data){
+            $("#idOrdenProduccion").html(data);
+        }
+    });
+}
+
+function getLoteReporte(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'idLoteReporte':val},
+        success: function(data){
+            $("#loteOrden").html(data);
+        }
+    });
+}
+
 function getProductosContrato(val) {
     $.ajax({
         type: "POST",
