@@ -52,8 +52,10 @@
                             Reportes
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Reportes de Producción</a>
-                            <a class="dropdown-item" href="#">Reportes de Personal</a>
+                            <a class="dropdown-item" href="reporteProduccion.php">Reportes de Producción</a>
+                            <a class="dropdown-item" href="reportePersonal.php">Reportes de Personal</a>
+                            <a class="dropdown-item" href="reporteMaquina.php">Reportes de Máquina</a>
+                            <a class="dropdown-item" href="reporteIngresoSalida.php">Reporte de Ingreso/Salida</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

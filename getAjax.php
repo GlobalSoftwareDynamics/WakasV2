@@ -247,6 +247,37 @@ if(!empty($_POST['fechaContrato'])){
 
 }
 
+if(!empty($_POST['fechaContratoReporte'])){
+
+    echo "<option disabled selected>Confirmación de Venta</option>";
+    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVenta WHERE fecha = '{$_POST['fechaContratoReporte']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        echo "<option value='{$fila['idContrato']}'>{$fila['idContrato']} - {$fila['fecha']}</option>";
+    }
+
+}
+
+if(!empty($_POST['idConfirmacionVentaReporte'])){
+
+    echo "<option disabled selected>Orden de Producción</option>";
+    $result = mysqli_query($link,"SELECT * FROM OrdenProduccion WHERE idContrato = '{$_POST['idConfirmacionVentaReporte']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        echo "<option value='{$fila['idOrdenProduccion']}'>{$fila['idOrdenProduccion']} - {$fila['fechaCreacion']}</option>";
+    }
+
+}
+
+if(!empty($_POST['idLoteReporte'])){
+    echo "<select name='idLote' id='idLote' class='form-control mt-2 mb-2 mr-2'>";
+    echo "<option disabled selected>Lote</option>";
+    $result = mysqli_query($link,"SELECT * FROM Lote WHERE idOrdenProduccion = '{$_POST['idLoteReporte']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        echo "<option value='{$fila['idLote']}'>{$fila['idLote']}</option>";
+    }
+    echo "</select>";
+
+}
+
 if(!empty($_POST['idConfirmacionVenta'])){
 
     $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}' AND cantidad <> cantidadop ORDER BY idTalla ASC");
