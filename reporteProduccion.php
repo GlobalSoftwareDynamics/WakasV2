@@ -95,9 +95,9 @@ if(isset($_SESSION['login'])){
                                     <input type="text" class="form-control mt-2 mb-2 mr-2" id="idLote" name="idLote" placeholder="Lote">
                                 </div>
                                 <label class="sr-only" for="fechaInicio">Fecha Inicio</label>
-                                <input type="date" class="form-control mt-2 mb-2 mr-2" id="fechaInicio" name="fechaInicio" placeholder="Fecha Inicio" data-toggle="popover" data-trigger="focus" title="Fecha de Inicio" data-content="Determina la Fecha de Inicio para el Reporte." data-placement="top">
+                                <input type="date" class="form-control mt-2 mb-2 mr-2" id="fechaInicio" name="fechaInicio" placeholder="Fecha Inicio" data-toggle="popover" data-trigger="focus" title="Fecha de Inicio" data-content="Determina la Fecha de Inicio para el Reporte." data-placement="top" required>
                                 <label class="sr-only" for="fechaFin">Fecha Fin</label>
-                                <input type="date" class="form-control mt-2 mb-2 mr-2" id="fechaFin" name="fechaFin" placeholder="Fecha Fin" data-toggle="popover" data-trigger="focus" title="Fecha de Fin" data-content="Determina la Fecha de Fin para el Reporte." data-placement="top">
+                                <input type="date" class="form-control mt-2 mb-2 mr-2" id="fechaFin" name="fechaFin" placeholder="Fecha Fin" data-toggle="popover" data-trigger="focus" title="Fecha de Fin" data-content="Determina la Fecha de Fin para el Reporte." data-placement="top" required>
                                 <input type="submit" class="btn btn-primary" value="Generar" style="padding-left:28px; padding-right: 28px;" name="generarReporte">
                             </form>
                         </div>
