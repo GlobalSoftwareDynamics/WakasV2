@@ -441,3 +441,38 @@ if(!empty($_POST['idProcedimientoSeleccionado'])){
     echo "<input type='number' name='cantidad' id='cantidad' value='{$cantidadSinFabricar}' max='{$cantidadSinFabricar}' min='0' class='form-control'>";
 
 }
+
+if(!empty($_POST['getNombreEmpleado'])){
+
+    $result = mysqli_query($link,"SELECT * FROM Empleado WHERE idEmpleado = '{$_POST['getNombreEmpleado']}'");
+    while ($fila = mysqli_fetch_array($result)){
+        $nombreCompleto = $fila['nombres']."_".$fila['apellidos'];
+    }
+    echo $nombreCompleto;
+}
+
+if(!empty($_POST['getDniEmpleado'])){
+
+    $nombreApellidos = explode("_",$_POST['getDniEmpleado']);
+    $result = mysqli_query($link,"SELECT * FROM Empleado WHERE nombres = '{$nombreApellidos[0]}' AND apellidos = '{$nombreApellidos[1]}'");
+    $numrows = mysqli_num_rows($result);
+    if($numrows == 0){
+        echo "<input type='number' class='form-control mt-2 mb-2 mr-2' id='idEmpleado' name='idEmpleado' placeholder='DNI' onchange='getNombreEmpleado(this.value)'>";
+    }else{
+        if ($numrows>1){
+            echo "
+                <select name='idEmpleado' id='idEmpleado' class='form-control mt-2 mb-2 mr-2'>
+                    <option selected disabled>Seleccionar</option>";
+                    while ($fila = mysqli_fetch_array($result)){
+                        echo "<option value='{$fila['idEmpleado']}'>{$fila['idEmpleado']}</option>";
+                    }
+            echo "
+                </select>
+                ";
+        }else{
+            while ($fila = mysqli_fetch_array($result)){
+                echo "<input type='number' class='form-control mt-2 mb-2 mr-2' id='idEmpleado' name='idEmpleado' value='{$fila['idEmpleado']}'>";
+            }
+        }
+    }
+}

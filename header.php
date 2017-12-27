@@ -62,6 +62,28 @@
         <?php
     }
 
+    if($_SERVER['REQUEST_URI'] == '/WakasV2/reportePersonal.php'){
+        $arrayProductos = autocompletarEstadoActivo("Empleado","idEmpleado",$link);
+        $arrayProductos1 = autocompletarEstadoActivoDoble("Empleado","nombres","apellidos",$link);
+        ?>
+        <script>
+            $( function() {
+                $( "#idEmpleado" ).autocomplete({
+                    source: <?php echo $arrayProductos?>
+                });
+            } );
+        </script>
+
+        <script>
+            $( function() {
+                $( "#nombreEmpleado" ).autocomplete({
+                    source: <?php echo $arrayProductos1?>
+                });
+            } );
+        </script>
+        <?php
+    }
+
     ?>
 </head>
 

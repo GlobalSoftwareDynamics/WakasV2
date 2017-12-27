@@ -123,6 +123,28 @@ function getLoteReporte(val) {
     });
 }
 
+function getNombreEmpleado(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'getNombreEmpleado':val},
+        success: function(data){
+            $("#nombreEmpleado").attr("value",data);
+        }
+    });
+}
+
+function getDniEmpleado(val) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'getDniEmpleado':val},
+        success: function(data){
+            $("#Empleado").html(data);
+        }
+    });
+}
+
 function getProductosContrato(val) {
     $.ajax({
         type: "POST",

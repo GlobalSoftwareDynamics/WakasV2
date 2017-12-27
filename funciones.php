@@ -16,6 +16,22 @@ function autocompletarEstadoActivo($table,$campo,$link){
     return $array;
 }
 
+function autocompletarEstadoActivoDoble($table,$campo,$campo1,$link){
+    $array = '[';
+    $query = mysqli_query($link,"SELECT * FROM {$table} WHERE idEstado = 1");
+    $aux = 0;
+    $numrows = mysqli_num_rows($query);
+    while ($row = mysqli_fetch_array($query)){
+        $aux++;
+        if($aux == $numrows){
+            $array .= "'".$row[$campo]."_".$row[$campo1]."']";
+        }else{
+            $array .= "'".$row[$campo]."_".$row[$campo1]."',";
+        }
+    }
+    return $array;
+}
+
 function idgen($clase){
 	date_default_timezone_set('America/Lima');
 	$hora = date('H:i:s');
