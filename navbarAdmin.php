@@ -45,6 +45,7 @@
                             <a class="dropdown-item" href="gestionMaquinas.php">Máquinas</a>
                             <a class="dropdown-item" href="gestionColaboradores.php">Colaboradores</a>
                             <a class="dropdown-item" href="gestionProcedimientos.php">Procedimientos</a>
+                            <a class="dropdown-item" href="marcaciones.php">Hojas de Marcación</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -55,7 +56,7 @@
                             <a class="dropdown-item" href="reporteProduccion.php">Reportes de Producción</a>
                             <a class="dropdown-item" href="reportePersonal.php">Reportes de Personal</a>
                             <a class="dropdown-item" href="reporteMaquina.php">Reportes de Máquina</a>
-                            <a class="dropdown-item" href="reporteIngresoSalida.php">Reporte de Ingreso/Salida</a>
+                            <!--<a class="dropdown-item" href="reporteIngresoSalida.php">Reporte de Ingreso/Salida</a>-->
                         </div>
                     </li>
                     <li class="nav-item dropdown">
