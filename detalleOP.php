@@ -54,7 +54,7 @@ if(isset($_SESSION['login'])){
                             $aux1++;
                             $idlote = $idOrdProd . "LT" . $aux1;
 
-                            $query = mysqli_query($link,"INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ('{$idlote}','{$fila['idConfirmacionVentaProducto']}','{$idOrdProd}','1','{$cantidadlote}','{$nombremat}','{$aux1}')");
+                            $query = mysqli_query($link,"INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ('{$idlote}','{$fila['idConfirmacionVentaProducto']}','{$idOrdProd}','6','{$cantidadlote}','{$nombremat}','{$aux1}')");
 
                             $queryPerformed = "INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ({$idlote},{$fila['idConfirmacionVentaProducto']},{$idOrdProd},1,{$cantidadlote},{$nombremat},{$aux1})";
 
@@ -137,7 +137,7 @@ if(isset($_SESSION['login'])){
                                 $aux1++;
                                 $idlote = $idOrdProd . "LT" . $aux1;
 
-                                $query = mysqli_query($link,"INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ('{$idlote}','{$fila['idConfirmacionVentaProducto']}','{$idOrdProd}','1','{$cantidadlote}','{$nombremat}','{$aux1}')");
+                                $query = mysqli_query($link,"INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ('{$idlote}','{$fila['idConfirmacionVentaProducto']}','{$idOrdProd}','6','{$cantidadlote}','{$nombremat}','{$aux1}')");
 
                                 $queryPerformed = "INSERT INTO Lote(idLote, idConfirmacionVentaProducto,idOrdenProduccion, idEstado, cantidad, material, posicion) VALUES ({$idlote},{$fila['idConfirmacionVentaProducto']},{$idOrdProd},1,{$cantidadlote},{$nombremat},{$aux1})";
 

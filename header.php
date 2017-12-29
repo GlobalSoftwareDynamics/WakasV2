@@ -62,6 +62,20 @@
         <?php
     }
 
+    if($_SERVER['REQUEST_URI'] == '/WakasV2/reporteMaquina.php'){
+        $arrayProductos = autocompletarEstadoActivo("Maquina","descripcion",$link)
+
+        ?>
+        <script>
+            $( function() {
+                $( "#idMaquina" ).autocomplete({
+                    source: <?php echo $arrayProductos?>
+                });
+            } );
+        </script>
+        <?php
+    }
+
     if($_SERVER['REQUEST_URI'] == '/WakasV2/reportePersonal.php'){
         $arrayProductos = autocompletarEstadoActivo("Empleado","idEmpleado",$link);
         $arrayProductos1 = autocompletarEstadoActivoDoble("Empleado","nombres","apellidos",$link);

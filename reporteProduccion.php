@@ -452,6 +452,8 @@ if(isset($_SESSION['login'])){
                                         while ($fila1 = mysqli_fetch_array($result1)){
                                             $maquina = $fila1['descripcion'];
                                         }
+                                    }else{
+                                        $maquina = "";
                                     }
                                     $result1 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$fila['idProcedimiento']}'");
                                     while ($fila1 = mysqli_fetch_array($result1)){
@@ -461,9 +463,8 @@ if(isset($_SESSION['login'])){
                                     while ($fila1 = mysqli_fetch_array($result1)){
                                         $componente = $fila1['descripcion'];
                                     }
-                                    $fecha = explode("|",$fila['fecha']);
                                     echo "<tr>";
-                                    echo "<td>{$fecha[0]} - {$fecha[1]}</td>";
+                                    echo "<td>{$fila['fecha']}</td>";
                                     echo "<td>{$nombre}</td>";
                                     echo "<td>{$componente}</td>";
                                     echo "<td>{$procedimiento}</td>";

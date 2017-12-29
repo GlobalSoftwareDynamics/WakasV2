@@ -28,15 +28,7 @@ if(isset($_SESSION['login'])){
                             <form method="post">
                                 <?php
                                 if(isset($_POST['generarReporte'])){
-                                    if (isset($_POST['idConfirmacionVenta'])){
-                                        echo "<input type='hidden' name='idConfirmacionVenta' value='{$_POST['idConfirmacionVenta']}'>";
-                                    }
-                                    if (isset($_POST['idOrdenProduccion'])){
-                                        echo "<input type='hidden' name='idOrdenProduccion' value='{$_POST['idOrdenProduccion']}'>";
-                                    }
-                                    if (isset($_POST['idLote'])&&!empty($_POST['idLote'])){
-                                        echo "<input type='hidden' name='idLote' value='{$_POST['idLote']}'>";
-                                    }
+                                    echo "<input type='hidden' name='idEmpleado' value='{$_POST['idEmpleado']}'>";
                                     echo "<input type='hidden' name='fechaInicio' value='{$_POST['fechaInicio']}'>";
                                     echo "<input type='hidden' name='fechaFin' value='{$_POST['fechaFin']}'>";
                                 }
@@ -58,7 +50,7 @@ if(isset($_SESSION['login'])){
                             <form class="form-inline justify-content-center" method="post" action="#">
                                 <label class="sr-only" for="idEmpleado">DNI</label>
                                 <div id="Empleado">
-                                    <input type="number" class="form-control mt-2 mb-2 mr-2" id="idEmpleado" name="idEmpleado" placeholder="DNI" onchange="getNombreEmpleado(this.value)">
+                                    <input type="number" class="form-control mt-2 mb-2 mr-2" id="idEmpleado" name="idEmpleado" placeholder="DNI" onchange="getNombreEmpleado(this.value)" required>
                                 </div>
                                 <label class="sr-only" for="nombreEmpleado">Nombre</label>
                                 <input type="text" class="form-control mt-2 mb-2 mr-2" id="nombreEmpleado" name="nombreEmpleado" placeholder="Nombre" onchange="getDniEmpleado(this.value)">
