@@ -205,10 +205,21 @@ if(isset($_SESSION['login'])){
                                         while ($fila1 = mysqli_fetch_array($result1)){
                                             $componente = $fila1['descripcion'];
                                         }
-                                        $result1 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idProcedimiento = '{$fila['idProcedimiento']}' AND idCaracteristica = '7')");
-                                        while ($fila1 = mysqli_fetch_array($result1)){
-                                            $tiempo = $fila1['valor'];
+                                        if ($fila['idProcedimiento']>5){
+                                            $result1 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = '11')");
+                                            while ($fila1 = mysqli_fetch_array($result1)){
+                                                $result2 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND indice = '{$fila1['indice']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = '7')");
+                                                while ($fila2 = mysqli_fetch_array($result2)){
+                                                    $tiempo = $fila2['valor'];
+                                                }
+                                            }
+                                        }else{
+                                            $result1 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idProcedimiento = '{$fila['idProcedimiento']}' AND idCaracteristica = '7')");
+                                            while ($fila1 = mysqli_fetch_array($result1)){
+                                                $tiempo = $fila1['valor'];
+                                            }
                                         }
+
                                         echo "<tr>";
                                         echo "<td>{$fila['fecha']}</td>";
                                         echo "<td>{$fila['idLote']}</td>";
