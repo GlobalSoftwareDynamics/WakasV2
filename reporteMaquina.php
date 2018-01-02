@@ -33,7 +33,7 @@ if(isset($_SESSION['login'])){
                                     echo "<input type='hidden' name='fechaFin' value='{$_POST['fechaFin']}'>";
                                 }
                                 ?>
-                                <input class="dropdown-item" type="submit" name="pdf" formaction="#" value="Descargar PDF">
+                                <input class="dropdown-item" type="submit" name="pdf" formaction="reporteMaquinaPDF.php" value="Descargar PDF">
                             </form>
                         </div>
                     </div>
@@ -232,7 +232,7 @@ if(isset($_SESSION['login'])){
                                     $HorasWakas = $tiempoActividadMuerta/60;
                                     $HorasWakas1 = round($HorasWakas,0,PHP_ROUND_HALF_DOWN);
                                     $HorasWakas2 = $tiempoActividadMuerta-($HorasWakas1*60);
-                                    $HorasFinalE = $HorasWakas1.":".$HorasWakas2
+                                    $HorasFinalE = $HorasWakas1.":".$HorasWakas2;
                                     ?>
                                     </tbody>
                                 </table>

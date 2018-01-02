@@ -33,7 +33,7 @@ if(isset($_SESSION['login'])){
                                     echo "<input type='hidden' name='fechaFin' value='{$_POST['fechaFin']}'>";
                                 }
                                 ?>
-                                <input class="dropdown-item" type="submit" name="pdf" formaction="#" value="Descargar PDF">
+                                <input class="dropdown-item" type="submit" name="pdf" formaction="reportePersonalPDF.php" value="Descargar PDF">
                             </form>
                         </div>
                     </div>
@@ -162,7 +162,7 @@ if(isset($_SESSION['login'])){
                                     $HorasWakas = $tiempoTotalIntervalo/60;
                                     $HorasWakas1 = round($HorasWakas,0,PHP_ROUND_HALF_DOWN);
                                     $HorasWakas2 = $tiempoTotalIntervalo-($HorasWakas1*60);
-                                    $HorasFinalE = $HorasWakas1.":".$HorasWakas2
+                                    $HorasFinalE = $HorasWakas1.":".$HorasWakas2;
                                     ?>
                                     <tr>
                                         <th>Total Horas Trabajadas</th>
@@ -235,7 +235,7 @@ if(isset($_SESSION['login'])){
                                     $HorasWakas3 = $tiempoTotalTrabajado/60;
                                     $HorasWakas4 = round($HorasWakas3,0,PHP_ROUND_HALF_DOWN);
                                     $HorasWakas5 = $tiempoTotalTrabajado-($HorasWakas4*60);
-                                    $HorasFinalT = $HorasWakas4.":".$HorasWakas5
+                                    $HorasFinalT = $HorasWakas4.":".$HorasWakas5;
                                     ?>
                                     <tr>
                                         <th>Total</th>
@@ -286,7 +286,7 @@ if(isset($_SESSION['login'])){
                                     $HorasWakas6 = $tiempoTotalActividadMuerta/60;
                                     $HorasWakas7 = round($HorasWakas6,0,PHP_ROUND_HALF_DOWN);
                                     $HorasWakas8 = $tiempoTotalActividadMuerta-($HorasWakas7*60);
-                                    $HorasFinalAM = $HorasWakas7.":".$HorasWakas8
+                                    $HorasFinalAM = $HorasWakas7.":".$HorasWakas8;
                                     ?>
                                     <tr>
                                         <th>Total Horas Muertas</th>

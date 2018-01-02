@@ -30,18 +30,21 @@ if(isset($_SESSION['login'])){
                                 if(isset($_POST['generarReporte'])){
                                     if (isset($_POST['idConfirmacionVenta'])){
                                         echo "<input type='hidden' name='idConfirmacionVenta' value='{$_POST['idConfirmacionVenta']}'>";
+                                        $destino = "reporteProduccionCVPDF.php";
                                     }
                                     if (isset($_POST['idOrdenProduccion'])){
                                         echo "<input type='hidden' name='idOrdenProduccion' value='{$_POST['idOrdenProduccion']}'>";
+                                        $destino = "reporteProduccionOPPDF.php";
                                     }
                                     if (isset($_POST['idLote'])&&!empty($_POST['idLote'])){
                                         echo "<input type='hidden' name='idLote' value='{$_POST['idLote']}'>";
+                                        $destino = "reporteProduccionLotePDF.php";
                                     }
                                     echo "<input type='hidden' name='fechaInicio' value='{$_POST['fechaInicio']}'>";
                                     echo "<input type='hidden' name='fechaFin' value='{$_POST['fechaFin']}'>";
                                 }
                                 ?>
-                                <input class="dropdown-item" type="submit" name="pdf" formaction="#" value="Descargar PDF">
+                                <input class="dropdown-item" type="submit" name="pdf" formaction="<?php echo $destino;?>" value="Descargar PDF">
                             </form>
                         </div>
                     </div>
