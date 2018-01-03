@@ -28,7 +28,7 @@ if(isset($_SESSION['login'])){
         while ($fila1 = mysqli_fetch_array($result1)){
             $result2 = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$fila1['idProducto']}'");
             while ($fila2 = mysqli_fetch_array($result2)){
-                $descripcion = substr($fila2['descripcionGeneral'],0,10);
+                $descripcion = substr($fila2['descripcionGeneral'],0,25);
             }
             $bar=$fila['idLote'];
             $html .='        
