@@ -98,7 +98,7 @@ if(isset($_SESSION['login'])){
                     $tiempoTotalIntervalo = $tiempoTotalIntervalo + $MinutosWakas;
                 }
                 $HorasWakas = $tiempoTotalIntervalo/60;
-                $HorasWakas1 = round($HorasWakas,0,PHP_ROUND_HALF_DOWN);
+                $HorasWakas1 = floor($HorasWakas);
                 $HorasWakas2 = $tiempoTotalIntervalo-($HorasWakas1*60);
                 $HorasFinalE = $HorasWakas1.":".$HorasWakas2;
     $html .='
@@ -171,7 +171,7 @@ if(isset($_SESSION['login'])){
                     $tiempoTotalTrabajado = $tiempoTotalTrabajado + $tiempoComponente;
                 }
                 $HorasWakas3 = $tiempoTotalTrabajado/60;
-                $HorasWakas4 = round($HorasWakas3,0,PHP_ROUND_HALF_DOWN);
+                $HorasWakas4 = floor($HorasWakas3);
                 $HorasWakas5 = $tiempoTotalTrabajado-($HorasWakas4*60);
                 $HorasFinalT = $HorasWakas4.":".$HorasWakas5;
     $html .='
@@ -222,7 +222,7 @@ if(isset($_SESSION['login'])){
                     $tiempoTotalActividadMuerta = $tiempoTotalActividadMuerta + $fila['tiempo'];
                 }
                 $HorasWakas6 = $tiempoTotalActividadMuerta/60;
-                $HorasWakas7 = round($HorasWakas6,0,PHP_ROUND_HALF_DOWN);
+                $HorasWakas7 = floor($HorasWakas6);
                 $HorasWakas8 = $tiempoTotalActividadMuerta-($HorasWakas7*60);
                 $HorasFinalAM = $HorasWakas7.":".$HorasWakas8;
     $html .='

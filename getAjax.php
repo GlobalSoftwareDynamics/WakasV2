@@ -358,7 +358,7 @@ if(!empty($_POST['idComponenteEspecificoC'])){
         while ($fila1 = mysqli_fetch_array($result1)){
             $result2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$fila1['idProducto']}' AND idComponente = '{$_POST['idComponenteEspecificoC']}'");
             while ($fila2 = mysqli_fetch_array($result2)){
-                $result3 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$fila1['idProducto']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = 7 AND idProcedimiento <> 4 AND idProcedimiento <> 6)");
+                $result3 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$fila1['idProducto']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = 7 AND idProcedimiento <> 4 AND idProcedimiento <> 6  AND idProcedimiento <> 5)");
                 while ($fila3 = mysqli_fetch_array($result3)){
                     $result4 = mysqli_query($link,"SELECT idComponenteEspecifico, SUM(cantidad) AS cantidadRealizada FROM EmpleadoLote WHERE idLote = '{$_POST['idLoteC']}' AND idComponenteEspecifico = '{$fila2['idComponenteEspecifico']}' AND idProcedimiento IN (SELECT idProcedimiento FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$fila3['idSubProcesoCaracteristica']}')");
                     $filasArray = mysqli_num_rows($result4);

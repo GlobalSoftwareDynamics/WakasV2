@@ -230,7 +230,7 @@ if(isset($_SESSION['login'])){
                                         $tiempoActividadMuerta = $tiempoActividadMuerta + $fila['tiempo'];
                                     }
                                     $HorasWakas = $tiempoActividadMuerta/60;
-                                    $HorasWakas1 = round($HorasWakas,0,PHP_ROUND_HALF_DOWN);
+                                    $HorasWakas1 = floor($HorasWakas);
                                     $HorasWakas2 = $tiempoActividadMuerta-($HorasWakas1*60);
                                     $HorasFinalE = $HorasWakas1.":".$HorasWakas2;
                                     ?>

@@ -185,7 +185,7 @@ if(isset($_SESSION['login'])){
                             </thead>
                             <tbody>
                             <?php
-                            $restult = mysqli_query($link, "SELECT * FROM Contacto WHERE idCliente = '{$_POST['idCliente']}' ORDER BY idEstado ASC");
+                            $restult = mysqli_query($link, "SELECT * FROM Contacto WHERE idCliente = '{$_POST['idCliente']}' ORDER BY idEstado ASC, nombreCompleto ASC");
                             while ($fila = mysqli_fetch_array($restult)){
                                 echo "<tr>";
                                 echo "<td>{$fila['nombreCompleto']}</td>";

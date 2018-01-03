@@ -26,6 +26,10 @@ if(isset($_SESSION['login'])){
     while ($fila = mysqli_fetch_array($result)){
         $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
         while ($fila1 = mysqli_fetch_array($result1)){
+            $result2 = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$fila1['idProducto']}'");
+            while ($fila2 = mysqli_fetch_array($result2)){
+                $descripcion = substr($fila2['descripcionGeneral'],0,10);
+            }
             $bar=$fila['idLote'];
             $html .='        
                 <section class="container" style="height: 15.2cm; width: 10cm;">
@@ -46,7 +50,7 @@ if(isset($_SESSION['login'])){
                                         </tr>
                                         <tr class="tarjetacont">
                                             <td class="columnaizquierda1">idModelo</td>
-                                            <td>'.$fila1['idProducto'].'</td>
+                                            <td>'.$fila1['idProducto'].' - '.$descripcion.'</td>
                                         </tr>
                                         <tr class="tarjetacont">
                                             <td class="columnaizquierda1">Material</td>
