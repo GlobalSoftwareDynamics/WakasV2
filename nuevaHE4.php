@@ -235,55 +235,60 @@ if(isset($_SESSION['login'])){
 										while($row = mysqli_fetch_array($query)){
 											if($indice != $row['indice']){$flag = true;}
 											if($flag){
-												$flag = false;
-												$indice = $row['indice'];
-												echo "<tr>";
+											    if($row['idSubProcesoCaracteristica'] == 36){
+                                                }else{
+												    $flag = false;
+												    $indice = $row['indice'];
+												    echo "<tr>";
+												    $query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
+												    while($row2 = mysqli_fetch_array($query2)){
+													    $query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row2['idProcedimiento']}'");
+													    while($row3 = mysqli_fetch_array($query3)){
+														    if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
+															    $query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
+															    while($row4 = mysqli_fetch_array($query4)){
+																    echo "<td class='text-center'>{$row4['descripcion']}</td>";
+																    $flag2 = false;
+															    }
+														    }else{
+															    if($row3['idProcedimiento'] == 5){
+																    echo "<td class='text-center'>{$row3['descripcion']} ";
+																    $arrayValido = [26];
+																    foreach($arrayValido as $validez){
+																	    if($row['idSubProcesoCaracteristica'] == $validez){
+																		    $name = mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$row['valor']}'");
+																		    while($searchName = mysqli_fetch_array($name)){
+																			    echo "- {$searchName['descripcion']}</td>";
+																		    }
+																	    }
+																    }
+															    }else{
+																    echo "<td class='text-center'>{$row3['descripcion']}</td>";
+															    }
+														    }
+													    }
+												    }
+												    $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+												    while($row2 = mysqli_fetch_array($query2)){
+													    $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+													    while($row3 = mysqli_fetch_array($query3)){
+														    echo "<td class='text-center'>{$row3['descripcion']}</td>";
+													    }
+												    }
+                                                }
+											}
+											if($row['idSubProcesoCaracteristica'] == 36){
+											}else{
+												$arrayValido = [6,7,11,12,17,18,23,24,29,30,34,35];
+												foreach($arrayValido as $validez){
+													if($row['idSubProcesoCaracteristica'] == $validez){
+														echo "<td class='text-center'>{$row['valor']}</td>";
+													}
+												}
 												$query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
 												while($row2 = mysqli_fetch_array($query2)){
-													$query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row2['idProcedimiento']}'");
-													while($row3 = mysqli_fetch_array($query3)){
-														if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
-															$query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
-															while($row4 = mysqli_fetch_array($query4)){
-																echo "<td class='text-center'>{$row4['descripcion']}</td>";
-																$flag2 = false;
-															}
-														}else{
-															if($row3['idProcedimiento'] == 5){
-																echo "<td class='text-center'>{$row3['descripcion']} ";
-																$arrayValido = [26];
-																foreach($arrayValido as $validez){
-																	if($row['idSubProcesoCaracteristica'] == $validez){
-																		$name = mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$row['valor']}'");
-																		while($searchName = mysqli_fetch_array($name)){
-																			echo "- {$searchName['descripcion']}</td>";
-																		}
-																	}
-																}
-															}else{
-																echo "<td class='text-center'>{$row3['descripcion']}</td>";
-															}
-														}
-													}
-												}
-												$query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
-												while($row2 = mysqli_fetch_array($query2)){
-													$query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
-													while($row3 = mysqli_fetch_array($query3)){
-														echo "<td class='text-center'>{$row3['descripcion']}</td>";
-													}
-												}
-											}
-											$arrayValido = [6,7,11,12,17,18,23,24,29,30,34,35];
-											foreach($arrayValido as $validez){
-												if($row['idSubProcesoCaracteristica'] == $validez){
-													echo "<td class='text-center'>{$row['valor']}</td>";
-												}
-											}
-											$query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
-											while($row2 = mysqli_fetch_array($query2)){
-												if($row2['idCaracteristica'] == 7){
-													echo "<td class='text-center'>
+													if($row2['idCaracteristica'] == 7){
+														echo "<td class='text-center'>
                                                                 <form method='post' action='#' id='formMenu{$row['indice']}'>
                                                                 <div>
                                                                     <input type='hidden' name='idProductoCrear' value='{$_POST['idProductoCrear']}' form='formMenu{$row['indice']}'>
@@ -298,9 +303,10 @@ if(isset($_SESSION['login'])){
                                                                 </div>
                                                                 </form>
                                                               </td>";
-													echo "</tr>";
+														echo "</tr>";
+													}
 												}
-											}
+                                            }
 										}
 										?>
                                         </tbody>

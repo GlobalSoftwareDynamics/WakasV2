@@ -551,12 +551,14 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
                                                 </tr>
                                                 </thead>
                                                 <tbody>";
-													$flag = true;
-													$indice = 0;
-													$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
-													while($row = mysqli_fetch_array($query)){
-														if($indice != $row['indice']){$flag = true;}
-														if($flag){
+												$flag = true;
+												$indice = 0;
+												$query = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idProducto = '{$_POST['idProductoCrear']}' ORDER BY indice ASC, idSubProcesoCaracteristica ASC");
+												while($row = mysqli_fetch_array($query)){
+													if($indice != $row['indice']){$flag = true;}
+													if($flag){
+														if($row['idSubProcesoCaracteristica'] == 36){
+														}else{
 															$flag = false;
 															$indice = $row['indice'];
 															$html.= "<tr>";
@@ -567,11 +569,24 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 																	if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
 																		$query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
 																		while($row4 = mysqli_fetch_array($query4)){
-																			$html.= "<td>{$row4['descripcion']}</td>";
+																			$html.= "<td class='text-center'>{$row4['descripcion']}</td>";
 																			$flag2 = false;
 																		}
 																	}else{
-																		$html.= "<td>{$row3['descripcion']}</td>";
+																		if($row3['idProcedimiento'] == 5){
+																			$html.= "<td class='text-center'>{$row3['descripcion']} ";
+																			$arrayValido = [26];
+																			foreach($arrayValido as $validez){
+																				if($row['idSubProcesoCaracteristica'] == $validez){
+																					$name = mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$row['valor']}'");
+																					while($searchName = mysqli_fetch_array($name)){
+																						$html.= "- {$searchName['descripcion']}</td>";
+																					}
+																				}
+																			}
+																		}else{
+																			$html.= "<td class='text-center'>{$row3['descripcion']}</td>";
+																		}
 																	}
 																}
 															}
@@ -579,14 +594,17 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 															while($row2 = mysqli_fetch_array($query2)){
 																$query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
 																while($row3 = mysqli_fetch_array($query3)){
-																	$html.= "<td>{$row3['descripcion']}</td>";
+																	$html.= "<td class='text-center'>{$row3['descripcion']}</td>";
 																}
 															}
 														}
+													}
+													if($row['idSubProcesoCaracteristica'] == 36){
+													}else{
 														$arrayValido = [6,7,11,12,17,18,23,24,29,30,34,35];
 														foreach($arrayValido as $validez){
 															if($row['idSubProcesoCaracteristica'] == $validez){
-																$html.= "<td>{$row['valor']}</td>";
+																$html.= "<td class='text-center'>{$row['valor']}</td>";
 															}
 														}
 														$query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
@@ -596,6 +614,7 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 															}
 														}
 													}
+												}
 											$html.= "
                                                 </tbody>
                                                 </table>

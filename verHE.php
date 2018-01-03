@@ -151,19 +151,25 @@ if(isset($_SESSION['login'])){
                                         </div>
                                         <div class="row">
 	                                        <?php
-	                                        $i = 0;
-	                                        $dir = "img/fotografias/".$_POST['idProductoCrear']."/";
-	                                        if ($handle = opendir($dir)) {
-		                                        while (($file = readdir($handle)) !== false){
-			                                        if (!in_array($file, array('.', '..')) && !is_dir($dir.$file))
-				                                        $i++;
-		                                        }
-	                                        }
-	                                        for($j=0;$j<($i-1);$j++){
-	                                            echo "<div class='col-4'>";
-		                                        echo "<img src='img/fotografias/{$_POST['idProductoCrear']}/{$_POST['idProductoCrear']}{$j}.jpg' alt='Evidencia{$j}' style='width:304px;height:228px;margin-bottom:20px;margin-left: 10px;margin-right: 65px;'>";
-		                                        echo "</div>";
-	                                        }
+                                            $folder = "img/fotografias/{$_POST['idProductoCrear']}/";
+                                            if (file_exists($folder)) {
+	                                            $i = 0;
+	                                            $dir = "img/fotografias/" . $_POST['idProductoCrear'] . "/";
+	                                            if ($handle = opendir($dir)) {
+		                                            while (($file = readdir($handle)) !== false) {
+			                                            if (!in_array($file, array('.', '..')) && !is_dir($dir . $file))
+				                                            $i++;
+		                                            }
+	                                            }
+	                                            for ($j = 0; $j < ($i - 1); $j++) {
+		                                            echo "<div class='col-4'>";
+		                                            echo "<img src='img/fotografias/{$_POST['idProductoCrear']}/{$_POST['idProductoCrear']}{$j}.jpg' alt='Evidencia{$j}' style='width:304px;height:228px;margin-bottom:20px;margin-left: 10px;margin-right: 65px;'>";
+		                                            echo "</div>";
+	                                            }
+                                            }else{
+                                                echo "<div class='col-12 text-center'>No existen fotografías adicionales</div>";
+                                                echo "<div class='spacer20'></div>";
+                                            }
 	                                        ?>
                                         </div>
 									</div>
@@ -637,6 +643,7 @@ if(isset($_SESSION['login'])){
                                     </div>
                                     <div class="tab-pane" id="secuencia" role="tabpanel">
                                         <div class="spacer20"></div>
+                                        <div class="spacer20"></div>
                                         <table class="table table-bordered">
                                             <thead>
                                             <tr>
@@ -654,42 +661,61 @@ if(isset($_SESSION['login'])){
 		                                    while($row = mysqli_fetch_array($query)){
 			                                    if($indice != $row['indice']){$flag = true;}
 			                                    if($flag){
-				                                    $flag = false;
-				                                    $indice = $row['indice'];
-				                                    echo "<tr>";
-				                                    $query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
-				                                    while($row2 = mysqli_fetch_array($query2)){
-					                                    $query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row2['idProcedimiento']}'");
-					                                    while($row3 = mysqli_fetch_array($query3)){
-						                                    if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
-							                                    $query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
-							                                    while($row4 = mysqli_fetch_array($query4)){
-								                                    echo "<td class='text-center'>{$row4['descripcion']}</td>";
-								                                    $flag2 = false;
+				                                    if($row['idSubProcesoCaracteristica'] == 36){
+				                                    }else{
+					                                    $flag = false;
+					                                    $indice = $row['indice'];
+					                                    echo "<tr>";
+					                                    $query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
+					                                    while($row2 = mysqli_fetch_array($query2)){
+						                                    $query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row2['idProcedimiento']}'");
+						                                    while($row3 = mysqli_fetch_array($query3)){
+							                                    if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
+								                                    $query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
+								                                    while($row4 = mysqli_fetch_array($query4)){
+									                                    echo "<td class='text-center'>{$row4['descripcion']}</td>";
+									                                    $flag2 = false;
+								                                    }
+							                                    }else{
+								                                    if($row3['idProcedimiento'] == 5){
+									                                    echo "<td class='text-center'>{$row3['descripcion']} ";
+									                                    $arrayValido = [26];
+									                                    foreach($arrayValido as $validez){
+										                                    if($row['idSubProcesoCaracteristica'] == $validez){
+											                                    $name = mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$row['valor']}'");
+											                                    while($searchName = mysqli_fetch_array($name)){
+												                                    echo "- {$searchName['descripcion']}</td>";
+											                                    }
+										                                    }
+									                                    }
+								                                    }else{
+									                                    echo "<td class='text-center'>{$row3['descripcion']}</td>";
+								                                    }
 							                                    }
-						                                    }else{
+						                                    }
+					                                    }
+					                                    $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
+					                                    while($row2 = mysqli_fetch_array($query2)){
+						                                    $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
+						                                    while($row3 = mysqli_fetch_array($query3)){
 							                                    echo "<td class='text-center'>{$row3['descripcion']}</td>";
 						                                    }
 					                                    }
 				                                    }
-				                                    $query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
-				                                    while($row2 = mysqli_fetch_array($query2)){
-					                                    $query3 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$row2['idComponente']}'");
-					                                    while($row3 = mysqli_fetch_array($query3)){
-						                                    echo "<td class='text-center'>{$row3['descripcion']}</td>";
+			                                    }
+			                                    if($row['idSubProcesoCaracteristica'] == 36){
+			                                    }else{
+				                                    $arrayValido = [6,7,11,12,17,18,23,24,29,30,34,35];
+				                                    foreach($arrayValido as $validez){
+					                                    if($row['idSubProcesoCaracteristica'] == $validez){
+						                                    echo "<td class='text-center'>{$row['valor']}</td>";
 					                                    }
 				                                    }
-			                                    }
-			                                    $arrayValido = [6,7,11,12,17,18,23,24,29,30,34,35];
-			                                    foreach($arrayValido as $validez){
-				                                    if($row['idSubProcesoCaracteristica'] == $validez){
-					                                    echo "<td class='text-center'>{$row['valor']}</td>";
-				                                    }
-			                                    }
-			                                    $query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
-			                                    while($row2 = mysqli_fetch_array($query2)){
-				                                    if($row2['idCaracteristica'] == 7){
-					                                    echo "</tr>";
+				                                    $query2 = mysqli_query($link,"SELECT * FROM SubProcesoCaracteristica WHERE idSubProcesoCaracteristica = '{$row['idSubProcesoCaracteristica']}'");
+				                                    while($row2 = mysqli_fetch_array($query2)){
+					                                    if($row2['idCaracteristica'] == 7){
+						                                    echo "</tr>";
+					                                    }
 				                                    }
 			                                    }
 		                                    }
