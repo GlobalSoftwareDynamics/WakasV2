@@ -38,9 +38,8 @@ if(isset($_SESSION['login'])){
                                 <div class="col-6">
                                     <select class="form-control" name="tipoInsumo" id="tipoInsumo">
                                         <option disabled selected>Seleccionar</option>
-                                        <option value="1">Tejido</option>
-                                        <option value="2">Lavado</option>
-                                        <option value="3">Acondicionamiento</option>
+                                        <option value="0">Lavado</option>
+                                        <option value="1">Acondicionamiento</option>
                                     </select>
                                 </div>
                             </div>
