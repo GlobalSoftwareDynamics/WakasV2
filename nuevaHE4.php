@@ -72,13 +72,54 @@ if(isset($_SESSION['login'])){
 		}
 	}
 
-	if(isset($_POST['submitMultiples'])){
-		if(opendir("img/fotografias/".$_POST['idProductoCrear']."/")){
-			//echo "Directorio creado.";
-		}else{
-			mkdir("img/fotografias/{$_POST['idProductoCrear']}/",0777,true);
-			//echo "Directorio existente.";
+	if(isset($_POST['submitFoto'])) {
+	    $folder = "img/fotografias/{$_POST['idProductoCrear']}/";
+		if (!file_exists($folder)) {
+			mkdir("img/fotografias/{$_POST['idProductoCrear']}/", 0777, true);
+        }
+		$target_dir = "img/fotografias/{$_POST['idProductoCrear']}/";
+		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+
+		if ($uploadOk == 0) {
+			echo "<div class='container'><span class='alert alert-danger col-md-8 col-md-offset-2'>Su fotografía no fue subida.</span></div><br>";
+		} else {
+			$i = 0;
+			$dir = "img/fotografias/{$_POST['idProductoCrear']}/";
+			if ($handle = opendir($dir)) {
+				while (($file = readdir($handle)) !== false) {
+					if (!in_array($file, array('.', '..')) && !is_dir($dir . $file))
+						$i++;
+				}
+			}
+			$temp = explode(".", $_FILES["fileToUpload"]["name"]);
+			$newfilename = $_POST['idProductoCrear'].'.jpg';
+			$destination = $target_dir . $newfilename;
+
+			if ($uploadOk == 1) {
+				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $destination)) {
+					echo "<section class='container'>";
+					echo "<div class='alert alert-success col-12'>Sus fotografías han sido registradas exitosamente</div><br>";
+					echo "</section>";
+				} else {
+					echo "<div class='container'><span class='alert alert-danger col-md-8 col-md-offset-2'>Lo lamentamos, hubo un error subiendo su fotografía.</span></div><br>";
+				}
+			} else {
+				echo "<div class='container'><span class='alert alert-danger col-md-8 col-md-offset-2'>Reduzca la resolución de la imagen.</span></div><br>";
+			}
+
+			//show success message
+
 		}
+	}
+
+	if(isset($_POST['submitMultiples'])){
+		$folder = "img/fotografias/{$_POST['idProductoCrear']}/";
+		if (!file_exists($folder)) {
+			mkdir("img/fotografias/{$_POST['idProductoCrear']}/", 0777, true);
+		}
+	    $bandera = true;
 		if(count($_FILES['upload']['name']) > 0){
 			//Loop through each file
 			for($i=0; $i<count($_FILES['upload']['name']); $i++) {
@@ -104,81 +145,34 @@ if(isset($_SESSION['login'])){
 						//insert into db
 						//use $shortname for the filename
 						//use $filePath for the relative url to the file
-
-					}
+                        if($bandera){
+                            $bandera = false;
+	                        echo "<section class='container'>";
+	                        echo "<div class='alert alert-success col-12'>Sus fotografías han sido registradas exitosamente</div><br>";
+	                        echo "</section>";
+                        }
+					}else{
+					    if($bandera){
+					        $bandera = false;
+						    echo "<section class='container'>";
+						    echo "<div class='alert alert-danger col-12'>Sus fotografías no han sido registradas</div><br>";
+						    echo "</section>";
+                        }
+                    }
 				}
 			}
 		}
 
 		//show success message
-        echo "<section class='container'>";
-		echo "<div class='alert alert-success col-12'>Sus fotografías han sido registradas exitosamente</div><br>";
-		echo "</section>";
+
 	}
 
+	if(isset($_POST['deleteFoto'])){
+		$file = $_POST['fotografiaEliminar'];
+		unlink($file);
+    }
+
 	?>
-
-    <script>
-        $(document).on('click', '#close-preview', function(){
-            $('.image-preview').popover('hide');
-            // Hover befor close the preview
-            $('.image-preview').hover(
-                function () {
-                    $('.image-preview').popover('show');
-                },
-                function () {
-                    $('.image-preview').popover('hide');
-                }
-            );
-        });
-
-        $(function() {
-            // Create the close button
-            var closebtn = $('<button/>', {
-                type:"button",
-                text: 'x',
-                id: 'close-preview',
-                style: 'font-size: initial;',
-            });
-            closebtn.attr("class","close pull-right");
-            // Set the popover default content
-            $('.image-preview').popover({
-                trigger:'manual',
-                html:true,
-                title: "<strong>Vista Previa</strong>"+$(closebtn)[0].outerHTML,
-                content: "There's no image",
-                placement:'bottom'
-            });
-            // Clear event
-            $('.image-preview-clear').click(function(){
-                $('.image-preview').attr("data-content","").popover('hide');
-                $('.image-preview-filename').val("");
-                $('.image-preview-clear').hide();
-                $('.image-preview-input input:file').val("");
-                $(".image-preview-input-title").text("Browse");
-            });
-            // Create the preview image
-            $(".image-preview-input input:file").change(function (){
-                var img = $('<img/>', {
-                    id: 'dynamic',
-                    width:250
-                });
-                var file = this.files[0];
-                var reader = new FileReader();
-                // Set preview image into the popover data-content
-                reader.onload = function (e) {
-                    $(".image-preview-input-title").text("Change");
-                    $(".image-preview-clear").show();
-                    $(".image-preview-filename").val(file.name);
-                    img.attr('src', e.target.result);
-                    $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
-                }
-                reader.readAsDataURL(file);
-            });
-        });
-    </script>
-
-
     <section class="container">
         <div class="row">
             <div class="col-12">
@@ -195,22 +189,22 @@ if(isset($_SESSION['login'])){
                             </div>
                         </div>
                     </div>
-                    <form id="formSiguiente" method="post" action="nuevaHE5.php" enctype='multipart/form-data'>
+                    <form id="formSiguiente" method="post" action="gestionProductos.php" enctype='multipart/form-data'>
                         <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                         <input type="hidden" name="volverHE4">
                     </form>
                     <div class="card-block">
                         <div class="col-12">
-	                        <?php
-	                        $activoSecuencia = '';
-	                        $activoFotografia = '';
-	                        if(isset($_POST['siguiente']) || isset($_POST['subir']) || isset($_POST['bajar'])){
-		                        $activoSecuencia = 'active';
-	                        }
-	                        if(isset($_POST['addFotografia']) || isset($_POST['volverHE5']) || isset($_POST['submitMultiples'])){
-		                        $activoFotografia = 'active';
-	                        }
-	                        ?>
+							<?php
+							$activoSecuencia = '';
+							$activoFotografia = '';
+							if(isset($_POST['siguiente']) || isset($_POST['subir']) || isset($_POST['bajar'])){
+								$activoSecuencia = 'active';
+							}
+							if(isset($_POST['addFotografia']) || isset($_POST['volverHE5']) || isset($_POST['submitMultiples']) || isset($_POST['submitFoto']) || isset($_POST['deleteFoto'])){
+								$activoFotografia = 'active';
+							}
+							?>
                             <div class="spacer20"></div>
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
@@ -248,15 +242,28 @@ if(isset($_SESSION['login'])){
 												while($row2 = mysqli_fetch_array($query2)){
 													$query3 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row2['idProcedimiento']}'");
 													while($row3 = mysqli_fetch_array($query3)){
-													    if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
-														    $query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
-														    while($row4 = mysqli_fetch_array($query4)){
-															    echo "<td class='text-center'>{$row4['descripcion']}</td>";
-															    $flag2 = false;
-														    }
-                                                        }else{
-														    echo "<td class='text-center'>{$row3['descripcion']}</td>";
-                                                        }
+														if($row3['idProcedimiento'] == 6 || $row3['idProcedimiento'] == 4){
+															$query4 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$row['valor']}'");
+															while($row4 = mysqli_fetch_array($query4)){
+																echo "<td class='text-center'>{$row4['descripcion']}</td>";
+																$flag2 = false;
+															}
+														}else{
+															if($row3['idProcedimiento'] == 5){
+																echo "<td class='text-center'>{$row3['descripcion']} ";
+																$arrayValido = [26];
+																foreach($arrayValido as $validez){
+																	if($row['idSubProcesoCaracteristica'] == $validez){
+																		$name = mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$row['valor']}'");
+																		while($searchName = mysqli_fetch_array($name)){
+																			echo "- {$searchName['descripcion']}</td>";
+																		}
+																	}
+																}
+															}else{
+																echo "<td class='text-center'>{$row3['descripcion']}</td>";
+															}
+														}
 													}
 												}
 												$query2 = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idComponenteEspecifico = '{$row['idComponenteEspecifico']}'");
@@ -303,33 +310,35 @@ if(isset($_SESSION['login'])){
                                     <div class="spacer20"></div>
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-12">
-                                                <h5 class="text-center">Fotografía de Producto</h5>
-                                                <hr>
-                                                <div class="input-group image-preview">
-                                                    <input type="text" class="form-control image-preview-filename" disabled="disabled">
-                                                    <div class="input-group-btn">
-                                                        <!-- image-preview-clear button -->
-                                                        <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
-                                                            <span class="glyphicon glyphicon-remove"></span> Limpiar
-                                                        </button>
-                                                        <div class="btn btn-default image-preview-input">
-                                                            Subir
-                                                            <input type="file" class="fotografia" accept="image/png, image/jpeg, image/gif" name="fileToUpload" form="formSiguiente"/>
-                                                        </div>
+                                            <div class="col-6">
+                                                <form action="#" enctype="multipart/form-data" method="post">
+                                                    <div class="spacer30"></div>
+                                                    <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
+                                                    <h5 class="text-center">Fotografía de Producto</h5>
+                                                    <hr>
+                                                    <div class="col-12 text-center">
+                                                        <input type="file" name="fileToUpload" class="inputfile inputfile-1" id="file2"/>
+                                                        <label for="file2"><i class="fa fa-photo"></i><span> Elegir la Fotografía</span></label>
                                                     </div>
-                                                </div>
+                                                    <div class="col-12 text-center">
+                                                        <input type="submit" name="submitFoto" value="Subir Fotografía" class="btn btn-outline-primary">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col-4 offset-1">
+                                                <img class="fotografiaProducto" src="img/fotografias/<?php echo $_POST['idProductoCrear'];?>/<?php echo $_POST['idProductoCrear'];?>.jpg">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="spacer20"></div>
+                                    <div class="spacer30"></div>
+                                    <hr>
+                                    <div class="spacer30"></div>
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-12">
                                                 <form action="#" enctype="multipart/form-data" method="post">
                                                     <input type="hidden" name="idProductoCrear" value="<?php echo $_POST['idProductoCrear']?>">
                                                     <h5 class="text-center">Fotografías Adicionales</h5>
-                                                    <hr>
                                                     <div class="col-6 offset-4" style="padding-left: 70px">
                                                         <input type="file" name="upload[]" id="file" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
                                                         <label for="file"><i class="fa fa-photo"></i><span> Elegir las Fotografías</span></label>
@@ -341,7 +350,37 @@ if(isset($_SESSION['login'])){
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="spacer20"></div>
+                                    <div class="spacer30"></div>
+                                    <div class="container">
+                                        <div class="row">
+	                                            <?php
+                                                $folder = "img/fotografias/{$_POST['idProductoCrear']}/";
+                                                if (file_exists($folder)) {
+	                                                $i = 0;
+	                                                $dir = "img/fotografias/" . $_POST['idProductoCrear'] . "/";
+	                                                if ($handle = opendir($dir)) {
+		                                                while (($file = readdir($handle)) !== false) {
+			                                                if (!in_array($file, array('.', '..')) && !is_dir($dir . $file))
+				                                                $i++;
+		                                                }
+	                                                }
+	                                                for ($j = 0; $j < ($i + 10); $j++) {
+	                                                    $file = "img/fotografias/".$_POST['idProductoCrear']."/".$_POST['idProductoCrear'].$j.".jpg";
+	                                                    if(file_exists($file)){
+		                                                    echo "<div class='col-4 text-center'>";
+		                                                    echo "<img src='img/fotografias/{$_POST['idProductoCrear']}/{$_POST['idProductoCrear']}{$j}.jpg' alt='Evidencia{$j}' style='width:304px;height:228px;margin-bottom:20px;margin-left: 10px;margin-right: 65px;'>";
+		                                                    echo "<form method='post' action='#'>
+                                                            <input type='hidden' value='img/fotografias/{$_POST['idProductoCrear']}/{$_POST['idProductoCrear']}{$j}.jpg' name='fotografiaEliminar'>
+                                                            <input type='hidden' value='{$_POST['idProductoCrear']}' name='idProductoCrear'>
+                                                            <input type='submit' class='btn btn-outline-primary' value='Eliminar' name='deleteFoto'>
+                                                          </form>";
+		                                                    echo "<br></div>";
+                                                        }
+	                                                }
+                                                }
+	                                            ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

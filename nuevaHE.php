@@ -7,7 +7,7 @@ if(isset($_SESSION['login'])){
 	include('declaracionFechas.php');
 
 	if(isset($_POST['addTipoProducto'])){
-		$insert = mysqli_query($link, "INSERT INTO TipoProducto(descripcion,tamanoLote,cantidadMaterial) VALUES ('{$_POST['descripcionTipoProducto']}','{$_POST['tamanoLote']}')");
+		$insert = mysqli_query($link, "INSERT INTO TipoProducto(descripcion,tamanoLote) VALUES ('{$_POST['descripcionTipoProducto']}','{$_POST['tamanoLote']}')");
 
 		$queryPerformed = "INSERT INTO TipoProducto VALUES ({$_POST['descripcionTipoProducto']},{$_POST['tamanoLote']})";
 
@@ -23,9 +23,15 @@ if(isset($_SESSION['login'])){
     }
 
 	if(isset($_POST['addTalla'])){
-		$insert = mysqli_query($link, "INSERT INTO Talla(descripcion,idcodificacionTalla) VALUES ('{$_POST['talla']}','{$_POST['codificacionTallaSelect']}')");
+	    $contador = 1;
+	    $query = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$_POST['codificacionTallaSelect']}'");
+	    while($row = mysqli_fetch_array($query)){
+	        $contador++;
+        }
 
-		$queryPerformed = "INSERT INTO Talla(descripcion,idcodificacionTalla) VALUES ({$_POST['talla']},{$_POST['codificacionTallaSelect']})";
+		$insert = mysqli_query($link, "INSERT INTO Talla(descripcion,idcodificacionTalla,indice) VALUES ('{$_POST['talla']}','{$_POST['codificacionTallaSelect']}','{$contador}')");
+
+		$queryPerformed = "INSERT INTO Talla(descripcion,idcodificacionTalla) VALUES ({$_POST['talla']},{$_POST['codificacionTallaSelect']},{$contador})";
 
 		$databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT TALLA','INSERT','{$queryPerformed}')");
 	}
@@ -270,7 +276,7 @@ if(isset($_SESSION['login'])){
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" form="formProducto" value="Submit" name="addCodificacion">Guardar Cambios</button>
                 </div>
             </div>
@@ -308,7 +314,7 @@ if(isset($_SESSION['login'])){
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" form="formProducto" value="Submit" name="addTalla">Guardar Cambios</button>
                 </div>
             </div>
@@ -337,7 +343,7 @@ if(isset($_SESSION['login'])){
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" form="formProducto" value="Submit" name="addCliente">Guardar Cambios</button>
                 </div>
             </div>

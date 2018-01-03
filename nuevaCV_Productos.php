@@ -100,7 +100,7 @@ if(isset($_SESSION['login'])){
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','CombinacionesColorColores','{$queryPerformed}')");
 
-            $nombreCombinacion .= $fila['codigoColor'].": ".$_POST[$color]."; ";
+            $nombreCombinacion .= $fila['codigoColor'].": ".$_POST[$color].";<br>";
 
         }
 
