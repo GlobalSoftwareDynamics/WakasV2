@@ -584,7 +584,7 @@ if(isset($_SESSION['login'])){
                                                         while($index = mysqli_fetch_array($search)){
                                                             $idCodificacionTalla = $index['idcodificacionTalla'];
 	                                                        //$search2 = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$index['idcodificacionTalla']}' ORDER BY indice ASC");
-	                                                        $search2 = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$index['idcodificacionTalla']}'");
+	                                                        $search2 = mysqli_query($link,"SELECT * FROM Talla WHERE idcodificacionTalla = '{$index['idcodificacionTalla']}' ORDER BY indice ASC");
 	                                                        while($index2 = mysqli_fetch_array($search2)){
 	                                                            echo "<th class=\"text-center\" style='width:6.5%;'>{$index2['descripcion']}</th>";
                                                             }

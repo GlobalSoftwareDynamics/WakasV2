@@ -103,7 +103,7 @@ if(isset($_SESSION['login'])){
 			                        while ($fila2 = mysqli_fetch_array($result2)){
 				                        echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
 			                        }
-                                    $result2 = mysqli_query($link,"SELECT * FROM Genero WHERE idGenero = '{$fila['idGenero']}'");
+                                    $result2 = mysqli_query($link,"SELECT * FROM Genero WHERE idGenero = '{$fila['idgenero']}'");
                                     while ($fila2 = mysqli_fetch_array($result2)){
                                         echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
                                     }

@@ -30,10 +30,10 @@ if(isset($_SESSION['login'])){
         if($_POST['tipoInsumo'] == 1){
 
             $query = mysqli_query($link, "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo)
-                VALUES (4,1,'Acondicionamiento - {$_POST['nombreInsumo']}',0)");
+                VALUES (4,1,'Acondicionamiento - {$_POST['nombreInsumo']}',2)");
 
             $queryPerformed = "INSERT INTO SubProceso(idProceso, idEstado, descripcion, tipo)
-                VALUES (4,1,Acondicionamiento - {$_POST['nombreInsumo']},0)";
+                VALUES (4,1,Acondicionamiento - {$_POST['nombreInsumo']},2)";
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','SubProceso','{$queryPerformed}')");
 
