@@ -8,13 +8,13 @@ if(isset($_SESSION['login'])){
     ?>
 
     <?php
-    $html='
+    $html .='
             <html lang="es">
                 <head>
                     <meta charset="utf-8">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                     <meta name="viewport" content="width=device-width, initial-scale=1">    
-                    <title>Confirmación de Venta</title>
+                    <title>Reporte de Producción OP</title>
                     <link href="css/bootstrap.css" rel="stylesheet">
                     <link href="css/Formatospdf.css" rel="stylesheet">
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -28,46 +28,44 @@ if(isset($_SESSION['login'])){
             $idContrato = $fila1['idContrato'];
         }
     }
-    $html='
-    <div class="row">
-        <div class="col-7">
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Orden de Producción:</b></p>
-                </div>
-                <div class="col-8">
-                    <p>'.$_POST['idOrdenProduccion'].'</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Contrato:</b></p>
-                </div>
-                <div class="col-8">
-                    <p>'.$idContrato.'</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="spacer20"></div>
-    <div class="row">
-        <div class="col-12">
-            <h6 class="text-left"><b>Avance de la Orden de Producción:</b></h6>
-        </div>
-        <div class="spacer10"></div>
-        <div class="col-12">
-            <table class="table text-center">
-                <thead>
-                <tr>
-                    <th>Lote</th>
-                    <th>Producto</th>
-                    <th>Talla</th>
-                    <th>Colores</th>
-                    <th>Cantidad</th>
-                    <th>Avance</th>
-                </tr>
-                </thead>
-                <tbody>
+    $html .='
+                    <div class="row">
+                        <div class="descladoizquierdoCV">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th class="text-left">Orden de Producción:</th>
+                                        <td class="text-left">'.$_POST['idOrdenProduccion'].'</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-left">Contrato:</th>
+                                        <td class="text-left">'.$idContrato.'</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="spacer10"></div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th class="text-left">Avance de la Orden de Producción:</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="spacer10"></div>
+                            <table class="tabla text-center">
+                                <thead id="theadborder">
+                                <tr>
+                                    <th>Lote</th>
+                                    <th>Producto</th>
+                                    <th>Talla</th>
+                                    <th>Colores</th>
+                                    <th>Cantidad</th>
+                                    <th>Avance</th>
+                                </tr>
+                                </thead>
+                                <tbody>
                 ';
                 $avanceOrden = 0;
                 $aux = 0;
@@ -113,29 +111,36 @@ if(isset($_SESSION['login'])){
                 $avanceOrden = $avanceOrden/$aux;
                 $avanceOrden = round($avanceOrden,2);
     $html .='
-                </tbody>
-            </table>
-        </div>
-        <div class="spacer10"></div>
-        <div class="col-12">
-            <h6 class="text-left"><b>% de Avance Total:</b> <?php echo $avanceOrden?>%</h6>
-        </div>
-        <div class="spacer10"></div>
-        <div class="col-12">
-            <h6 class="text-left"><b>Colaboradores Involucrados:</b></h6>
-        </div>
-        <div class="spacer10"></div>
-        <div class="col-12">
-            <table class="table text-center">
-                <thead>
-                <tr>
-                    <th>DNI</th>
-                    <th>Nombre</th>
-                    <th>% Contribución</th>
-                </tr>
-                </thead>
-                <tbody>
-                ';
+                                </tbody>
+                            </table>
+                    <div class="spacer10"></div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th class="text-right">% de Avance Total:</th>
+                                <td class="text-left">'.$avanceOrden.' %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="spacer10"></div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th class="text-left">Colaboradores Involucrados:</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="spacer10"></div>
+                        <table class="tabla text-center">
+                            <thead id="theadborderB">
+                            <tr>
+                                <th>DNI</th>
+                                <th>Nombre</th>
+                                <th>% Contribución</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+    ';
                 $result = mysqli_query($link,"SELECT COUNT(*) AS cantidad FROM EmpleadoLote WHERE idLote IN (SELECT idLote FROM Lote WHERE idOrdenProduccion = '{$_POST['idOrdenProduccion']}')");
                 while ($fila = mysqli_fetch_array($result)){
                     $cantidadProcesos = $fila['cantidad'];
@@ -155,10 +160,8 @@ if(isset($_SESSION['login'])){
                     $html .="</tr>";
                 }
     $html .="
-                </tbody>
-            </table>
-        </div>
-    </div>
+                        </tbody>
+                    </table>
     ";
     $html .='
         </body>
@@ -178,7 +181,7 @@ if(isset($_SESSION['login'])){
             </div>
         </header>
     ';
-    $htmlfooter='
+    $htmlfooter ='
           <div class="footer">
                 <span style="font-size: 10px;">Waka-s Textiles Finos SAC. </span>
                                    

@@ -294,6 +294,16 @@ table th {
     border-bottom: 1px solid;
     border-top: 1px solid;
 }
+#theadborderB th{
+    border: 1px solid;
+    border-bottom: 1px solid;
+    border-top: 1px solid;
+}
+#theadborderC th{
+    border: 1px solid;
+    border-bottom: 1px solid;
+    border-top: 1px solid;
+}
 .total {
     font-weight: bold;
     border-top: 1px solid;

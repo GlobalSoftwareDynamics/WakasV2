@@ -14,7 +14,7 @@ if(isset($_SESSION['login'])){
                     <meta charset="utf-8">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                     <meta name="viewport" content="width=device-width, initial-scale=1">    
-                    <title>Confirmación de Venta</title>
+                    <title>Reporte de Producción CV</title>
                     <link href="css/bootstrap.css" rel="stylesheet">
                     <link href="css/Formatospdf.css" rel="stylesheet">
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -32,49 +32,40 @@ if(isset($_SESSION['login'])){
                     }
     $html .="
                     <div class=\"row\">
-                        <div class=\"col-7\">
-                            <div class=\"row\">
-                                <div class=\"col-4\">
-                                    <p><b>Contrato:</b></p>
-                                </div>
-                                <div class=\"col-8\">
-                                    <p>{$_POST['idConfirmacionVenta']}</p>
-                                </div>
-                            </div>
-                            <div class=\"row\">
-                                <div class=\"col-4\">
-                                    <p><b>Cliente:</b></p>
-                                </div>
-                                <div class=\"col-8\">
-                                    <p>{$cliente}</p>
-                                </div>
-                            </div>
-                            <div class=\"row\">
-                                <div class=\"col-4\">
-                                    <p><b>Fecha de Creación:</b></p>
-                                </div>
-                                <div class=\"col-8\">
-                                    <p>{$fechaCreacion}</p>
-                                </div>
-                            </div>
-                            <div class=\"row\">
-                                <div class=\"col-4\">
-                                    <p><b>Fecha de Envío:</b></p>
-                                </div>
-                                <div class=\"col-8\">
-                                    <p>{$fechaEnvio}</p>
-                                </div>
-                            </div>
+                        <div class=\"descladoizquierdoCV\">
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <th class='text-left'>Contrato:</th>
+                                    <td class='text-left'>{$_POST['idConfirmacionVenta']}</td>
+                                </tr>
+                                <tr>
+                                    <th class='text-left'>Cliente:</th>
+                                    <td class='text-left'>{$cliente}</td>
+                                </tr>
+                                <tr>
+                                    <th class='text-left'>Fecha de Creación:</th>
+                                    <td class='text-left'>{$fechaCreacion}</td>
+                                </tr>
+                                <tr>
+                                    <th class='text-left'>Fecha de Envío:</th>
+                                    <td class='text-left'>{$fechaEnvio}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class=\"row\">
-                        <div class=\"col-12\">
-                            <h6 class=\"text-left\"><b>Avance de la Confirmación de Venta:</b></h6>
-                        </div>
+                    <div class='spacer10'></div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Avance de la Confirmación de Venta:</th>
+                                </tr>
+                            </thead>
+                        </table>
                         <div class=\"spacer10\"></div>
-                        <div class=\"col-12\">
-                            <table class=\"table text-center\">
-                                <thead>
+                            <table class=\"tabla text-center\">
+                                <thead id=\"theadborder\">
                                 <tr>
                                     <th>Orden de Producción</th>
                                     <th>Fecha de Despacho</th>
@@ -123,8 +114,6 @@ if(isset($_SESSION['login'])){
     $html .="
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
     ";
     $html .='
         </body>

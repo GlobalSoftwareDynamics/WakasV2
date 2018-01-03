@@ -40,8 +40,6 @@ if(isset($_SESSION['login'])){
                                         echo "<input type='hidden' name='idLote' value='{$_POST['idLote']}'>";
                                         $destino = "reporteProduccionLotePDF.php";
                                     }
-                                    echo "<input type='hidden' name='fechaInicio' value='{$_POST['fechaInicio']}'>";
-                                    echo "<input type='hidden' name='fechaFin' value='{$_POST['fechaFin']}'>";
                                 }
                                 ?>
                                 <input class="dropdown-item" type="submit" name="pdf" formaction="<?php echo $destino;?>" value="Descargar PDF">

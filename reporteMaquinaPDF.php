@@ -14,7 +14,7 @@ if(isset($_SESSION['login'])){
                     <meta charset="utf-8">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                     <meta name="viewport" content="width=device-width, initial-scale=1">    
-                    <title>Confirmación de Venta</title>
+                    <title>Reporte de Máquina</title>
                     <link href="css/bootstrap.css" rel="stylesheet">
                     <link href="css/Formatospdf.css" rel="stylesheet">
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -28,44 +28,42 @@ if(isset($_SESSION['login'])){
     }
     $html .='
     <div class="row">
-        <div class="col-7">
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Máquina:</b></p>
-                </div>
-                <div class="col-8">
-                    <p>'.$maquina.'</p>
-                </div>
-            </div>
+        <div class="descladoizquierdo">
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Máquina:</th>
+                        <td class="text-left">'.$maquina.'</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="col-5">
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Fecha Inicio:</b></p>
-                </div>
-                <div class="col-8">
-                    <p>'.$_POST['fechaInicio'].'</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Fecha Fin:</b></p>
-                </div>
-                <div class="col-8">
-                    <p><'.$_POST['fechaFin'].'</p>
-                </div>
-            </div>
+        <div class="descladoderecho">
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Fecha Inicio:</th>
+                        <td class="text-left">'.$_POST['fechaInicio'].'</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left">Fecha Fin:</th>
+                        <td class="text-left">'.$_POST['fechaFin'].'</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="spacer10"></div>
-    <div class="row">
-        <div class="col-12">
-            <h6 class="text-left"><b>Registro de Operaciones:</b></h6>
-        </div>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Registro de Operaciones:</th>
+                    </tr>
+                </tbody>
+            </table>
         <div class="spacer10"></div>
-        <div class="col-12" style="height: 400px; overflow-y: auto;">
-            <table class="table text-center">
-                <thead>
+            <table class="tabla text-center">
+                <thead id="theadborder">
                 <tr>
                     <th>Fecha</th>
                     <th>Operador</th>
@@ -131,21 +129,26 @@ if(isset($_SESSION['login'])){
     $html .='
                 </tbody>
             </table>
-        </div>
-        <div class="spacer20"></div>
-        <div class="col-12">
-            <h6 class="text-left"><b>Tiempo de Operación: </b>'.$tiempoOperacionHrs.' Hrs.</h6>
-        </div>
-    </div>
-    <div class="spacer10"></div>
-    <div class="row">
-        <div class="col-12">
-            <h6 class="text-left"><b>Registro de Tiempos Muertos de Máquina:</b></h6>
-        </div>
         <div class="spacer10"></div>
-        <div class="col-12">
-            <table class="table text-center">
-                <thead>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Tiempo de Operación:</th>
+                        <td class="text-right">'.$tiempoOperacionHrs.' Hrs.</td>
+                    </tr>
+                </tbody>
+            </table>
+    <div class="spacer10"></div>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Registro de Tiempos Muertos de Máquina:</th>
+                    </tr>
+                </tbody>
+            </table>
+        <div class="spacer10"></div>
+            <table class="tabla text-center">
+                <thead id="theadborderB">
                 <tr>
                     <th>Fecha</th>
                     <th>Operador</th>
@@ -184,15 +187,18 @@ if(isset($_SESSION['login'])){
     $html .='
                 </tbody>
             </table>
-        </div>
-        <div class="spacer20"></div>
-        <div class="col-12">
-            <h6 class="text-left"><b>Tiempo Muerto de Máquina: </b>'.$HorasFinalE.' Hrs.</h6>
-        </div>
-    </div>
+        <div class="spacer10"></div>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Tiempo Muerto de Máquina:</th>
+                        <td class="text-right">'.$HorasFinalE.' Hrs.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="spacer10"></div>
     <div class="row">
-        <div class="col-12">
-            ';
+    ';
             $MinutosFinalTrabajo = explode(":",$tiempoOperacionHrs);
             $MinutosFinalTrabajo = ($MinutosFinalTrabajo[0]*60) + $MinutosFinalTrabajo[1];
 
@@ -202,9 +208,16 @@ if(isset($_SESSION['login'])){
             $productividad =(($MinutosFinalTrabajo-$MinutosFinalActividadMuerta)/$MinutosFinalTrabajo)*100;
             $productividad = round($productividad,2);
     $html .='
-            <h6 class="text-left"><b>% Referencial de Productividad de Máquina: </b>'.$productividad.' %</h6>
-        </div>
-    </div>';
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">% Referencial de Productividad de Máquina:</th>
+                        <td class="text-right">'.$productividad.' %</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+    ';
     $html .='
         </body>
     </html>

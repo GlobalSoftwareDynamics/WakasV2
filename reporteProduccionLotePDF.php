@@ -14,7 +14,7 @@ if(isset($_SESSION['login'])){
                     <meta charset="utf-8">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                     <meta name="viewport" content="width=device-width, initial-scale=1">    
-                    <title>Confirmación de Venta</title>
+                    <title>Reporte de Producción Lote</title>
                     <link href="css/bootstrap.css" rel="stylesheet">
                     <link href="css/Formatospdf.css" rel="stylesheet">
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -39,69 +39,56 @@ if(isset($_SESSION['login'])){
         }
     }
     $html .='
+    
     <div class="row">
-        <div class="col-7">
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Lote:</b></p>
-                </div>
-                <div class="col-8">
-                    <p>'.$_POST['idLote'].'</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Orden de Producción:</b></p>
-                </div>
-                <div class="col-8">
-                    <p>'.$idOrdenProduccion.'</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <p><b>Contrato:</b></p>
-                </div>
-                <div class="col-8">
-                    <p>'.$idContrato.'</p>
-                </div>
-            </div>
+        <div class="descladoizquierdo">
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Lote:</th>
+                        <td class="text-left">'.$_POST['idLote'].'</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left">Orden de Producción:</th>
+                        <td class="text-left">'.$idOrdenProduccion.'</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left">Contrato</th>
+                        <td class="text-left">'.$idContrato.'</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="col-5">
-            <div class="row">
-                <div class="col-6">
-                    <p><b>Producto:</b></p>
-                </div>
-                <div class="col-6">
-                    <p>'.$idProducto.'</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <p><b>Talla:</b></p>
-                </div>
-                <div class="col-6">
-                    <p>'.$talla.'</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <p><b>Combinación de Colores:</b></p>
-                </div>
-                <div class="col-6">
-                    <p>'.$combinacionColor.'</p>
-                </div>
-            </div>
+        <div class="descladoderecho">
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-left">Producto:</th>
+                        <td class="text-left">'.$idProducto.'</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left">Talla:</th>
+                        <td class="text-left">'.$talla.'</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left">Colores:</th>
+                        <td class="text-left">'.$combinacionColor.'</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    <div class="spacer20"></div>
-    <div class="row">
-        <div class="col-12">
-            <h6 class="text-left"><b>Avance del Lote:</b></h6>
-        </div>
+    <div class="spacer10"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Avance del Lote:</th>
+                </tr>
+            </thead>
+        </table>
         <div class="spacer10"></div>
-        <div class="col-12">
-            <table class="table text-center">
-                <thead>
+            <table class="tabla text-center">
+                <thead id="theadborder">
                 <tr>
                     <th>Fecha - Hora</th>
                     <th>Colaborador</th>
@@ -147,10 +134,8 @@ if(isset($_SESSION['login'])){
     $html .='
                 </tbody>
             </table>
-        </div>
-        <div class="spacer10"></div>
-        <div class="col-12">
-            ';
+        <div class="spacer5"></div>
+    ';
             $result = mysqli_query($link,"SELECT * FROM Lote WHERE idLote = '{$_POST['idLote']}'");
             while ($fila = mysqli_fetch_array($result)){
                 $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
@@ -170,10 +155,17 @@ if(isset($_SESSION['login'])){
             }
             $porcentajeAvance = ($cantidadAvance/$cantidadTotal)*100;
             $porcentajeAvance = round($porcentajeAvance,2);
-    $html .="<p><b>Porcentaje de Avance del Lote:</b> {$porcentajeAvance}%</p>";
+    $html .="
+        <table>
+            <thead>
+                <tr>
+                    <th class='text-right'>Porcentaje de Avance del Lote:</th>
+                    <td class='text-left'>{$porcentajeAvance} %</td>
+                </tr>
+            </thead>
+        </table>
+    ";
     $html .='
-                </div>
-            </div>
         </body>
     </html>
     ';
