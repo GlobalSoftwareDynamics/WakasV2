@@ -67,9 +67,9 @@ if(isset($_SESSION['login'])){
                 }
             }
 
-            $query = mysqli_query($link,"UPDATE ConfirmacionVentaProducto SET estado = 6 WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
+            $query = mysqli_query($link,"UPDATE ConfirmacionVentaProducto SET idEstado = 6, cantidadop = '{$fila['cantidad']}' WHERE idConfirmacionVentaProducto = '{$fila['idConfirmacionVentaProducto']}'");
 
-            $queryPerformed = "UPDATE ConfirmacionVentaProducto SET estado = 6 WHERE idConfirmacionVentaProducto = {$fila['idConfirmacionVentaProducto']}";
+            $queryPerformed = "UPDATE ConfirmacionVentaProducto SET idEstado = 6, cantidadop = {$fila['cantidad']} WHERE idConfirmacionVentaProducto = {$fila['idConfirmacionVentaProducto']}";
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','ConfirmacionVentaProducto','{$queryPerformed}')");
 

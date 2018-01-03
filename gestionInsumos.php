@@ -145,19 +145,16 @@ if(isset($_SESSION['login'])){
                             </thead>
                             <tbody>
                             <?php
-                            $restult = mysqli_query($link, "SELECT * FROM Insumos ORDER BY idEstado ASC");
+                            $restult = mysqli_query($link, "SELECT * FROM Insumos ORDER BY idEstado ASC, descripcion ASC");
                             while ($fila = mysqli_fetch_array($restult)){
                                 echo "<tr>";
                                 echo "<td>{$fila['descripcion']}</td>";
                                 echo "<td>{$fila['idUnidadMedida']}</td>";
                                 switch ($fila['tipoInsumo']){
-                                    case 1:
-                                        $uso = "Tejido";
-                                        break;
-                                    case 2:
+                                    case 0:
                                         $uso = "Lavado";
                                         break;
-                                    case 3:
+                                    case 1:
                                         $uso = "Acondicionamiento";
                                         break;
                                 }

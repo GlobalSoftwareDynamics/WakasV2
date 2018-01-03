@@ -137,7 +137,7 @@ if(isset($_SESSION['login'])){
                             </thead>
                             <tbody>
                             <?php
-                            $restult = mysqli_query($link, "SELECT * FROM Cliente ORDER BY idEstado ASC");
+                            $restult = mysqli_query($link, "SELECT * FROM Cliente ORDER BY idEstado ASC, nombre ASC");
                             while ($fila = mysqli_fetch_array($restult)){
                                 echo "<tr>";
                                 echo "<td>{$fila['nombre']}</td>";

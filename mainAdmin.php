@@ -58,6 +58,7 @@ if(isset($_SESSION['login'])){
                         <i class="fa fa-fw fa-cog"></i>
                     </div>
                     <?php
+                    $numRow = 0;
                     $result = mysqli_query($link,"SELECT idContrato FROM ConfirmacionVenta WHERE idEstado = 4");
                     while ($fila = mysqli_fetch_array($result)){
                         $result1 = mysqli_query($link,"SELECT * FROM OrdenProduccion WHERE idContrato = '{$fila['idContrato']}' AND idOrdenProduccion IN (SELECT idOrdenProduccion FROM Lote WHERE idEstado = 6)");

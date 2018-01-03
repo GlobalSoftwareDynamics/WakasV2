@@ -161,7 +161,7 @@ if(isset($_SESSION['login'])){
             $result2 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila1['idCombinacionesColor']}'");
             while ($fila2=mysqli_fetch_array($result2)){
                 $html .="
-                                                <td>".$fila2['descripcion']."</td>
+                                                <td>".nl2br($fila2['descripcion'])."</td>
                                             ";
             }
             $tallas1=array();
