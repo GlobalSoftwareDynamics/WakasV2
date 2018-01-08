@@ -105,6 +105,7 @@ if(isset($_SESSION['login'])){
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <form method="post">
                                 <input class="dropdown-item" type="submit" name="nuevoColaborador" formaction="nuevoColaborador.php" value="Registrar Nuevo Colaborador">
+                                <input class="dropdown-item" type="submit" name="actividadesMuertas" formaction="gestionActividadMuerta.php" value="Gestionar Actividades Muertas">
                             </form>
                         </div>
                     </div>

@@ -59,6 +59,9 @@ if(isset($_SESSION['login'])){
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <form method="post">
                                         <input class="dropdown-item" type="submit" name="nuevoMaterial" formaction="nuevaHE.php" value="Registrar Nuevo Producto">
+                                        <input class="dropdown-item" type="submit" name="tallas" formaction="gestionTallas.php" value="Gestionar Tallas">
+                                        <input class="dropdown-item" type="submit" name="medidas" formaction="gestionMedidas.php" value="Gestionar Medidas">
+                                        <input class="dropdown-item" type="submit" name="colores" formaction="gestionColores.php" value="Gestionar Colores">
                                     </form>
                                 </div>
                             </div>

@@ -46,7 +46,6 @@
                             <a class="dropdown-item" href="gestionColaboradores.php">Colaboradores</a>
                             <a class="dropdown-item" href="gestionProcedimientos.php">Procedimientos</a>
                             <a class="dropdown-item" href="marcaciones.php">Hojas de Marcación</a>
-                            <a class="dropdown-item" href="gestionTallas.php">Gestión Tallas</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

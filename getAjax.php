@@ -28,7 +28,7 @@ if (!empty($_POST['nombreCliente'])) {
                     <label class='col-2 col-form-label'>Datos:</label>
                     <div class='col-10'>
                         <label for='dni' class='sr-only'>Documento de Identidad</label>
-                        <input type='text' id='dni' name='dni' class='form-control col-4 mb-2 mr-2' placeholder='Documento de Identidad' required>
+                        <input type='number' min='0' id='dni' name='dni' class='form-control col-4 mb-2 mr-2' placeholder='Documento de Identidad' required>
                         <label for='nombres' class='sr-only'>Nombre Completo</label>
                         <input type='text' id='nombres' name='nombres' class='form-control col-7 mb-2' placeholder='Nombre Completo' required>
                         <label for='mail' class='sr-only'>Email</label>
