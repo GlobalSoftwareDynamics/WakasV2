@@ -62,6 +62,7 @@ if(isset($_SESSION['login'])){
                                         <input class="dropdown-item" type="submit" name="tallas" formaction="gestionTallas.php" value="Gestionar Tallas">
                                         <input class="dropdown-item" type="submit" name="medidas" formaction="gestionMedidas.php" value="Gestionar Medidas">
                                         <input class="dropdown-item" type="submit" name="colores" formaction="gestionColores.php" value="Gestionar Colores">
+                                        <input class="dropdown-item" type="submit" name="colores" formaction="gestionComponentesPartes.php" value="Gestionar Componentes y Partes">
                                     </form>
                                 </div>
                             </div>

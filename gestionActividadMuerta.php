@@ -149,46 +149,6 @@ if(isset($_SESSION['login'])){
         </div>
     </form>
 
-    <form method="post" id="formTalla">
-        <div class="modal fade" id="modalTalla" tabindex="-1" role="dialog" aria-labelledby="modalTalla" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Agregar Tallas</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="form-group row">
-                                <label class="col-form-label" for="codificacionTallaSelect">Seleccionar Codificación:</label>
-                                <select name="codificacionTallaSelect" id="codificacionTallaSelect" class="form-control" onchange="getTablaTallas(this.value)">
-                                    <option selected disabled>Seleccionar</option>
-                                    <?php
-                                    $search = mysqli_query($link, "SELECT * FROM codificacionTalla");
-                                    while($index = mysqli_fetch_array($search)){
-                                        echo "<option value='{$index['idcodificacionTalla']}'>{$index['descripcion']}</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-form-label" for="talla">Sigla de Talla:</label>
-                                <input type="text" name="talla" id="talla" class="form-control">
-                            </div>
-                            <div id="tablaTallas"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary" form="formTalla" value="Submit" name="addTalla">Guardar Cambios</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-
     <?php
     include('footer.php');
 }
