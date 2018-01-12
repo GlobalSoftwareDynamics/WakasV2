@@ -82,12 +82,6 @@ if(isset($_SESSION['login'])){
 
         $numrows++;
 
-        $query = mysqli_query($link,"INSERT INTO CombinacionesColor(idCombinacionesColor, descripcion) VALUES ('{$numrows}','Nombre')");
-
-        $queryPerformed = "INSERT INTO CombinacionesColor(idCombinacionesColor, descripcion) VALUES ({$numrows},Nombre)";
-
-        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Nueva CombinacionColor','{$queryPerformed}')");
-
         $nombreCombinacion = "";
         $result = mysqli_query($link,"SELECT DISTINCT codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProducto']}' AND codigoColor IS NOT NULL ORDER BY codigoColor ASC");
         while ($fila = mysqli_fetch_array($result)){
@@ -103,6 +97,19 @@ if(isset($_SESSION['login'])){
             $nombreCombinacion .= $fila['codigoColor'].": ".$_POST[$color].";<br>";
 
         }
+
+        $query = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE descripcion = '{$nombreCombinacion}'");
+        $numrow = mysqli_num_rows($query);
+
+        if($numrow == 0){
+
+            $query = mysqli_query($link,"INSERT INTO CombinacionesColor(idCombinacionesColor, descripcion) VALUES ('{$numrows}','Nombre')");
+
+            $queryPerformed = "INSERT INTO CombinacionesColor(idCombinacionesColor, descripcion) VALUES ({$numrows},Nombre)";
+
+            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Nueva CombinacionColor','{$queryPerformed}')");
+
+        }else{}
 
         $query = mysqli_query($link,"UPDATE CombinacionesColor SET descripcion = '{$nombreCombinacion}' WHERE idCombinacionesColor = '{$numrows}'");
 

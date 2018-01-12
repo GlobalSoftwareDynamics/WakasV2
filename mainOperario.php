@@ -31,6 +31,11 @@ if(isset($_SESSION['login'])){
                             <input type="submit" formaction="registrarActividadMuerta_Datos.php" class="btn btn-primary col-12" value="Registrar Actividad Muerta" name="regActMuerta">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input type="submit" formaction="reporteLoteOperario.php" class="btn btn-primary col-12" value="Revisar Avance de Lote" name="revAvLote">
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

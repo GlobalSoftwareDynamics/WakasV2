@@ -73,7 +73,7 @@ if(isset($_SESSION['login'])){
                                         <div class="form-group row">
                                             <label for="cliente" class="col-2 col-form-label">Cliente:</label>
                                             <div class="col-8">
-                                                <input type="text" name="cliente" id="cliente" class="form-control" onkeyup="getClienteCV(this.value)">
+                                                <input type="text" name="cliente" id="cliente" class="form-control" onkeyup="getClienteCV(this.value)" onchange="getClienteCV(this.value)">
                                             </div>
                                             <div class="col-2">
                                                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalCliente">Agregar Cliente</button>

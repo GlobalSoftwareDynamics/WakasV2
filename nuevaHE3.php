@@ -1123,7 +1123,7 @@ if(isset($_SESSION['login'])){
                                                     <td><select name="selectProcedimiento" class="form-control">
                                                             <option selected disabled>Seleccionar</option>
                                                             <?php
-                                                            $query = mysqli_query($link,"SELECT * FROM SubProceso WHERE tipo = 0 AND idEstado = 1");
+                                                            $query = mysqli_query($link,"SELECT * FROM SubProceso WHERE tipo = 0 AND idEstado = 1 ORDER BY descripcion ASC");
                                                             while($row = mysqli_fetch_array($query)){
 	                                                            echo "<option value='{$row['idProcedimiento']}'>{$row['descripcion']}</option>";
                                                             }
