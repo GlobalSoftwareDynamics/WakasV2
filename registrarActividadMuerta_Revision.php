@@ -15,11 +15,11 @@ if(isset($_SESSION['login'])){
                         <div class="card-header card-inverse card-info">
                             <div class="float-left mt-1">
                                 <i class="fa fa-cogs"></i>
-                                &nbsp;&nbsp;Registro de Actividad Muerta
+                                &nbsp;&nbsp;Registro de Actividad Muerta (Revisión)
                             </div>
                             <div class="float-right">
                                 <div class="dropdown">
-                                    <input name="regActiviadadMuerta" type="submit" form="formRegistro" class="btn btn-light btn-sm" formaction="registrarActividadMuerta_Revision.php" value="Guardar">
+                                    <input name="regActiviadadMuerta" type="submit" form="formRegistro" class="btn btn-light btn-sm" formaction="registrarActividadMuerta_Confirmacion.php" value="Guardar">
                                 </div>
                             </div>
                         </div>
@@ -30,8 +30,11 @@ if(isset($_SESSION['login'])){
                                     <label for="categoriaAM" class="col-12 col-form-label">Categoria de Actividad Muerta:</label>
                                     <div class="col-12">
                                         <select class="form-control" name="categoriaAM" id="categoriaAM">
-                                            <option disabled selected>Seleccionar</option>
                                             <?php
+                                            $result = mysqli_query($link,"SELECT * FROM ActividadMuerta WHERE idActividadMuerta = '{$_POST['categoriaAM']}'");
+                                            while ($fila = mysqli_fetch_array($result)){
+                                                echo "<option value='{$fila['idActividadMuerta']}' selected>{$fila['descripcion']}</option>";
+                                            }
                                             $result = mysqli_query($link,"SELECT * FROM ActividadMuerta");
                                             while ($fila = mysqli_fetch_array($result)){
                                                 echo "<option value='{$fila['idActividadMuerta']}'>{$fila['descripcion']}</option>";
@@ -43,21 +46,28 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="descripcion" class="col-12 col-form-label">Descripción:</label>
                                     <div class="col-12" id="productoLote">
-                                        <textarea class="form-control" rows="2" id="descripcion" name="descripcion"></textarea>
+                                        <textarea class="form-control" rows="2" id="descripcion" name="descripcion"><?php echo $_POST['descripcion']?></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="tiempoEmpleado" class="col-12 col-form-label">Tiempo Empleado (Min):</label>
                                     <div class="col-12">
-                                        <input type="number" min="0" name="tiempoEmpleado" id="tiempoEmpleado" class="form-control">
+                                        <input type="number" min="0" name="tiempoEmpleado" id="tiempoEmpleado" class="form-control" value="<?php echo $_POST['tiempoEmpleado']?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="maquina" class="col-12 col-form-label">Máquina (Opcional):</label>
                                     <div class="col-12">
                                         <select class="form-control" name="maquina" id="maquina">
-                                            <option disabled selected value="Seleccionar">Seleccionar</option>
                                             <?php
+                                            if($_POST['maquina'] == ""){
+                                                echo "<option selected disabled>Seleccionar</option>";
+                                            }else{
+                                                $result = mysqli_query($link,"SELECT * FROM Maquina WHERE idMaquina = '{$_POST['maquina']}'");
+                                                while ($fila = mysqli_fetch_array($result)){
+                                                    echo "<option value='{$fila['idMaquina']}' selected>{$fila['descripcion']}</option>";
+                                                }
+                                            }
                                             $result = mysqli_query($link,"SELECT * FROM Maquina");
                                             while ($fila = mysqli_fetch_array($result)){
                                                 echo "<option value='{$fila['idMaquina']}'>{$fila['descripcion']}</option>";

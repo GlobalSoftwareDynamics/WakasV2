@@ -19,7 +19,7 @@ if(isset($_SESSION['login'])){
                         </div>
                         <div class="float-right">
                             <div class="dropdown">
-                                <input name="regTareaRealizada" type="submit" form="formRegistro" class="btn btn-light btn-sm" formaction="registrarProceso_Confirmacion.php" value="Guardar">
+                                <input name="regTareaRealizada" type="submit" form="formRegistro" class="btn btn-light btn-sm" formaction="registrarProceso_Revision.php" value="Guardar">
                             </div>
                         </div>
                     </div>
