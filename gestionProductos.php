@@ -3,6 +3,18 @@ include('session.php');
 if(isset($_SESSION['login'])){
 	include('header.php');
 	include('navbarAdmin.php');
+	include('declaracionFechas.php');
+	include('funciones.php');
+
+	if (isset($_POST['eliminar'])){
+
+	    $query = mysqli_query($link,"UPDATE Producto SET idEstado = 2 WHERE idProducto = '{$_POST['idProductoCrear']}'");
+
+	    $queryPerformed = "UPDATE Producto SET idEstado = 2 WHERE idProducto = {$_POST['idProductoCrear']}";
+
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Producto-Desactivar','{$queryPerformed}')");
+
+    }
 	?>
     <script>
         function myFunction() {
@@ -101,31 +113,32 @@ if(isset($_SESSION['login'])){
 		                        $result = mysqli_query($link,"SELECT * FROM Producto WHERE idEstado = 1");
 		                        while ($fila = mysqli_fetch_array($result)){
 			                        echo "
-                                <tr>
-                                    <td class='text-center'>".$fila ['idProducto']."</td>";
-			                        $result2 = mysqli_query($link,"SELECT * FROM TipoProducto WHERE idTipoProducto = '{$fila['idTipoProducto']}'");
-			                        while ($fila2 = mysqli_fetch_array($result2)){
-				                        echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
-			                        }
-                                    $result2 = mysqli_query($link,"SELECT * FROM Genero WHERE idGenero = '{$fila['idgenero']}'");
-                                    while ($fila2 = mysqli_fetch_array($result2)){
-                                        echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
-                                    }
-			                        echo "<td class='text-center'>
-                        <form method='post' action='#'>
-                            <input type='hidden' name='idProductoCrear' value='{$fila['idProducto']}'>
-                            <div>
-                                <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                Acciones</button>
-                                <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                    <input name='addProductoSimilar' class='dropdown-item' type='submit' formaction='nuevaHESimilar.php' value='Añadir Producto Similar'>
-                                    <input name='verProducto' class='dropdown-item' type='submit' formaction='verHE.php' value='Visualizar Hoja de Especificaciones'>
-                                    <input name='editarProducto' class='dropdown-item' type='submit' formaction='nuevaHE2.php' value='Editar Hoja de Especificaciones'>
-                                    <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
-                                </div>
-                            </div>
-                        </form>
-                        </td>";
+                                        <tr>
+                                            <td class='text-center'>".$fila ['idProducto']."</td>";
+                                            $result2 = mysqli_query($link,"SELECT * FROM TipoProducto WHERE idTipoProducto = '{$fila['idTipoProducto']}'");
+                                            while ($fila2 = mysqli_fetch_array($result2)){
+                                                echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
+                                            }
+                                            $result2 = mysqli_query($link,"SELECT * FROM Genero WHERE idGenero = '{$fila['idgenero']}'");
+                                            while ($fila2 = mysqli_fetch_array($result2)){
+                                                echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
+                                            }
+                                            echo "<td class='text-center'>
+                                                    <form method='post' action='#'>
+                                                        <input type='hidden' name='idProductoCrear' value='{$fila['idProducto']}'>
+                                                        <div>
+                                                            <button class='btn btn-outline-secondary btn-sm dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                            Acciones</button>
+                                                            <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                                <input name='addProductoSimilar' class='dropdown-item' type='submit' formaction='nuevaHESimilar.php' value='Añadir Producto Similar'>
+                                                                <input name='verProducto' class='dropdown-item' type='submit' formaction='verHE.php' value='Visualizar Hoja de Especificaciones'>
+                                                                <input name='editarProducto' class='dropdown-item' type='submit' formaction='nuevaHE2.php' value='Editar Hoja de Especificaciones'>
+                                                                <input name='eliminar' class='dropdown-item' type='submit' formaction='#' value='Eliminar'>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    </td>
+                                            ";
 			                        echo "</tr>";
 		                        }
 		                        ?>
