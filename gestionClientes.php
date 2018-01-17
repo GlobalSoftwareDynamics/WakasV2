@@ -102,6 +102,7 @@ if(isset($_SESSION['login'])){
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" data-toggle="modal" data-target="#modalCliente" style="font-size: 14px;">Registrar Nuevo Cliente</a>
+                            <a class="dropdown-item" href="gestionPaises.php" style="font-size: 14px;">Gestionar Paises y Ciudades</a>
                         </div>
                     </div>
                 </div>
