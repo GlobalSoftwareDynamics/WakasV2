@@ -186,12 +186,13 @@ if(isset($_SESSION['login'])){
                             <?php
                             $ProdActual="ninguno";
                             $ColorActual="ninguno";
+                            $CodigoProductoCliente = "ninguno";
                             $inicio=0;
                             $sumafinal=0;
                             $sumafinalprod=0;
-                            $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato ='{$_POST['idConfirmacionVenta']}' ORDER BY idProducto ASC");
+                            $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato ='{$_POST['idConfirmacionVenta']}' ORDER BY idProducto ASC, idConfirmacionVentaProducto ASC");
                             while ($fila1 = mysqli_fetch_array($result1)){
-                                if(($ProdActual == $fila1['idProducto'])&&($ColorActual == $fila1['idCombinacionesColor'])) {
+                                if(($ProdActual == $fila1['idProducto'])&&($ColorActual == $fila1['idCombinacionesColor'])&&($CodigoProductoCliente == $fila1['codigoCliente'])) {
                                     echo "</tr>";
                                 }else{
                                     echo "<tr>";
@@ -242,6 +243,7 @@ if(isset($_SESSION['login'])){
                                     }
                                     $ProdActual=$fila1['idProducto'];
                                     $ColorActual=$fila1['idCombinacionesColor'];
+                                    $CodigoProductoCliente = $fila1['codigoCliente'];
                                     $numproductos=array();
                                     $indice=0;
                                     $result3 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idProducto = '{$fila1['idProducto']}' AND idContrato = '{$_POST['idConfirmacionVenta']}' AND idCombinacionesColor = '{$fila1['idCombinacionesColor']}'");

@@ -109,7 +109,15 @@ if(isset($_SESSION['login'])){
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Nueva CombinacionColor','{$queryPerformed}')");
 
-        }else{}
+        }else{
+
+            while($fila = mysqli_fetch_array($query)){
+
+                $numrows =  $fila['idCombinacionesColor'];
+
+            }
+
+        }
 
         $query = mysqli_query($link,"UPDATE CombinacionesColor SET descripcion = '{$nombreCombinacion}' WHERE idCombinacionesColor = '{$numrows}'");
 

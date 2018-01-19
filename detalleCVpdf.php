@@ -142,7 +142,7 @@ if(isset($_SESSION['login'])){
     $inicio=0;
     $sumafinal=0;
     $sumafinalprod=0;
-    $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato ='{$_POST['idConfirmacionVenta']}' ORDER BY idProducto ASC");
+    $result1 = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato ='{$_POST['idConfirmacionVenta']}' ORDER BY idProducto ASC, idConfirmacionVentaProducto ASC");
     while ($fila1 = mysqli_fetch_array($result1)){
         if(($ProdActual == $fila1['idProducto'])&&($ColorActual == $fila1['idCombinacionesColor'])) {
             $html .="</tr>";
