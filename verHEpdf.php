@@ -13,6 +13,7 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
                     <title>Hoja de Especificaciones</title>
                     <link href="css/bootstrap.css" rel="stylesheet">
                     <link href="css/HE.css" rel="stylesheet">
+                    <link href="css/Formatospdf.css" rel="stylesheet">
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
                 </head>
                 <body>
@@ -88,10 +89,10 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 													</tbody>
 												</table>
 												
-												<table class='table table-bordered'>
+												<table class='table'>
 													<thead>
-														<tr>
-															<th colspan='2'>Medida</th>";
+														<tr class='trborder'>
+															<th colspan='2' style='width: 20%'>Medida</th>";
 
 												$search = mysqli_query($link,"SELECT * FROM Producto WHERE idProducto = '{$_POST['idProductoCrear']}'");
 												while($index = mysqli_fetch_array($search)){
@@ -133,13 +134,15 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 													</tbody>
 												</table>
 												
+												<pagebreak></pagebreak>
+												
 												<h5>Procesos de Producto</h5>
 												<div class='spacer20'></div>
 												
 												<h6>Tejido</h6>
-												<table class='table table-bordered'>
+												<table class='table'>
                                                 <thead>
-                                                <tr>
+                                                <tr class='trborder'>
                                                     <th>Componente</th>
                                                     <th>Material</th>
                                                     <th>Tipo de Tejido</th>
@@ -184,10 +187,12 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
                                                 </tbody>
                                                 </table>
                                                 
+                                                <pagebreak></pagebreak>
+                                                
 											<h6>Lavado</h6>
-											<table class='table table-bordered'>
+											<table class='table'>
                                                 <thead>
-                                                <tr>
+                                                <tr class='trborder'>
                                                     <th>Componente</th>
 	                                                <th>Tipo de Lavado</th>
 	                                                <th>Programa</th>
@@ -236,10 +241,12 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
                                                 </tbody>
                                                 </table>
                                                 
+                                                <pagebreak></pagebreak>
+                                                
                                                 <h6>Secado</h6>
-											<table class='table table-bordered'>
+											<table class='table'>
                                                 <thead>
-                                                <tr>
+                                                <tr class='trborder'>
                                                     <th>Componente</th>
 	                                                <th>Tipo de Secado</th>
 	                                                <th>Programa</th>
@@ -275,10 +282,12 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
                                                 </tbody>
                                                 </table>
                                                 
+                                                <pagebreak></pagebreak>
+                                                
                                                 <h6>Confección</h6>
-											<table class='table table-bordered'>
+											<table class='table'>
                                                 <thead>
-                                                <tr>
+                                                <tr class='trborder'>
                                                     <th>Componente</th>
 	                                                <th>Procedimiento</th>
 	                                                <th>Indicaciones</th>
@@ -337,11 +346,13 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 											$html.= "
                                                 </tbody>
                                                 </table>
+                                                
+                                                <pagebreak></pagebreak>
 												
 												<h6>Acondicionamiento</h6>
-											<table class='table table-bordered'>
+											<table class='table'>
                                                 <thead>
-                                                <tr>
+                                                <tr class='trborder'>
                                                     <th>Componente</th>
 	                                                <th>Insumo</th>
 	                                                <th>Cantidad</th>
@@ -400,11 +411,13 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
 											$html.= "
                                                 </tbody>
                                                 </table>
+                                                
+                                                <pagebreak></pagebreak>
 												
 												<h6>Otros</h6>
-											<table class='table table-bordered'>
+											<table class='table'>
                                                 <thead>
-                                                <tr>
+                                                <tr class='trborder'>
                                                     <th>Componente</th>
 	                                                <th>Procedimiento</th>
 	                                                <th>Máquina</th>
@@ -466,9 +479,9 @@ require_once __DIR__ . '/lib/mpdf/mpdf.php';
                                                 <pagebreak></pagebreak>
 												
 												<h6>Secuencia de Procesos</h6>
-											<table class='table table-bordered'>
+											<table class='table'>
                                                 <thead>
-                                                <tr>
+                                                <tr class='trborder'>
                                                     <th>Subproceso</th>
 	                                                <th>Componente</th>
 	                                                <th>Observaciones</th>
