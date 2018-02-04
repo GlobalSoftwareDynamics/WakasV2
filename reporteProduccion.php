@@ -329,7 +329,7 @@ if(isset($_SESSION['login'])){
                                 while ($fila = mysqli_fetch_array($result)){
                                     $cantidadProcesos = $fila['cantidad'];
                                 }
-                                $result = mysqli_query($link,"SELECT idEmpleado, COUNT(*) AS cantidad FROM EmpleadoLote WHERE idLote IN (SELECT idLote FROM Lote WHERE idOrdenProduccion = '{$_POST['idOrdenProduccion']}')");
+                                $result = mysqli_query($link,"SELECT idEmpleado, COUNT(*) AS cantidad FROM EmpleadoLote WHERE idLote IN (SELECT idLote FROM Lote WHERE idOrdenProduccion = '{$_POST['idOrdenProduccion']}') GROUP BY idEmpleado");
                                 while ($fila = mysqli_fetch_array($result)){
                                     $result1 = mysqli_query($link,"SELECT * FROM Empleado WHERE idEmpleado = '{$fila['idEmpleado']}'");
                                     while ($fila1 = mysqli_fetch_array($result1)){
