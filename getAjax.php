@@ -107,7 +107,7 @@ if(!empty($_POST["productoCV"])) {
 if(!empty($_POST['productoCVColores'])){
     echo "
             <label for='idCombinacionColores' class='col-2 col-form-label'>Combinación de Colores:</label>
-            <div class='col-7'>
+            <div class='col-5'>
                  <select class='form-control' id='idCombinacionColores' name='idCombinacionColores'>
                      <option disabled selected>Seleccionar</option>";
     $result = mysqli_query($link,"SELECT * FROM CombinacionesColorProducto WHERE idProducto = '{$_POST['productoCVColores']}'");
@@ -120,8 +120,9 @@ if(!empty($_POST['productoCVColores'])){
     echo "
                  </select>
             </div>
-            <div class='col-2'>
+            <div class='col-4'>
                  <button type='button' class='btn btn-outline-primary' data-toggle='modal' data-target='#modalNuevaCombinacion'>Agregar Combinación</button>
+                 <button type='button' class='btn btn-outline-primary' data-toggle='modal' data-target='#modalNuevoColor'>Agregar Color</button>
             </div>
     ";
 }
@@ -162,7 +163,7 @@ if(!empty($_POST['productoCVModalColores'])){
                                             <label for='colorCombinacion{$fila['codigoColor']}' class='sr-only'>Color</label>
                                             <select id='colorCombinacion{$fila['codigoColor']}' name='colorCombinacion{$fila['codigoColor']}' class='form-control'>
                                                 <option selected disabled>Seleccionar</option>";
-                                                $result1 = mysqli_query($link,"SELECT * FROM Color");
+                                                $result1 = mysqli_query($link,"SELECT * FROM Color ORDER BY descripcion");
                                                 while ($fila1 = mysqli_fetch_array($result1)){
                                                 echo "<option value='{$fila1['idColor']}'>{$fila1['idColor']}-{$fila1['descripcion']}</option>";
                                                 }
@@ -189,6 +190,43 @@ if(!empty($_POST['productoCVModalColores'])){
     <?php
 }
 
+if(!empty($_POST['productoCVModalColoresB'])){
+    ?>
+    <form method="post" action="#" id="formColor">
+        <div class="modal fade" id="modalNuevoColor" tabindex="-1" role="dialog" aria-labelledby="modalNuevoColor" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar Color</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
+                            <input type="hidden" name="idProducto" value="<?php echo $_POST['productoCVModalColoresB']?>">
+                            <input type="hidden" name="codifTalla" value="<?php echo $_POST['codificacionTalla']?>">
+                            <div class="form-group row">
+                                <label class="col-form-label" for="codificacion">Código de Color:</label>
+                                <input type="text" name="codificacion" id="codificacion" class="form-control">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label" for="color">Nombre de Color:</label>
+                                <input type="text" name="color" id="color" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" form="formColor" value="Submit" name="addColor">Guardar Cambios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+<?php
+}
 if(!empty($_POST['idCodificacionTalla'])){
     echo "
 							<table class='table'>

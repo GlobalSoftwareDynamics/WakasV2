@@ -57,6 +57,17 @@ function getModalCombinacionColores(producto, contrato, codificacionTalla) {
     });
 }
 
+function getModalColores(producto, contrato, codificacionTalla) {
+    $.ajax({
+        type: "POST",
+        url: "getAjax.php",
+        data:{'productoCVModalColoresB':producto, 'idConfirmacionVenta': contrato, 'codificacionTalla': codificacionTalla},
+        success: function(data){
+            $("#modalColoresB").html(data);
+        }
+    });
+}
+
 function getUnidadMedida(val) {
     $.ajax({
         type: "POST",

@@ -133,6 +133,15 @@ if(isset($_SESSION['login'])){
 
     }
 
+    if(isset($_POST['addColor'])){
+
+        $query = mysqli_query($link, "INSERT INTO Color(idColor, descripcion) VALUES ('{$_POST['codificacion']}','{$_POST['color']}')");
+
+        $queryPerformed = "INSERT INTO Color(idColor, descripcion) VALUES ({$_POST['codificacion']},{$_POST['color']})";
+
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Color','{$queryPerformed}')");
+    }
+
     if(isset($_POST['addProductoCV'])){
 
         $result = mysqli_query($link,"SELECT * FROM Talla WHERE idCodificacionTalla = '{$_POST['codifTalla']}' ORDER BY indice ASC");
@@ -164,7 +173,7 @@ if(isset($_SESSION['login'])){
     include('navbarAdmin.php');
 
     if ($flag) {
-        if(isset($_POST['addCombinacion'])){
+        if(isset($_POST['addCombinacion']) || isset($_POST['addColor'])){
             ?>
 
             <section class="container">
@@ -195,18 +204,18 @@ if(isset($_SESSION['login'])){
                                         <div class="form-group row">
                                             <label for="idProducto" class="col-2 col-form-label">Código de Producto:</label>
                                             <div class="col-10">
-                                                <input class="form-control" type="text" id="idProducto" value="<?php echo $_POST['idProducto']?>" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla']?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta']?>,<?php echo $_POST['codifTalla']?>)" required>
+                                                <input class="form-control" type="text" id="idProducto" value="<?php echo $_POST['idProducto']?>" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla']?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta']?>,<?php echo $_POST['codifTalla']?>);getModalColores(this.value,<?php echo $_POST['idConfirmacionVenta'] ?>,<?php echo $_POST['codifTalla'] ?>)" required>
                                             </div>
                                         </div>
                                         <div class="form-group row" id="rowColor">
                                             <label for='idCombinacionColores' class='col-2 col-form-label'>Combinación de Colores:</label>
-                                            <div class='col-7'>
+                                            <div class='col-5'>
                                                 <select class='form-control' id='idCombinacionColores' name='idCombinacionColores'>
                                                     <option disabled selected>Seleccionar</option>
                                                     <?php
                                                     $result = mysqli_query($link,"SELECT * FROM CombinacionesColorProducto WHERE idProducto = '{$_POST['idProducto']}'");
                                                     while ($fila = mysqli_fetch_array($result)){
-                                                        $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}'");
+                                                        $result1 = mysqli_query($link,"SELECT * FROM CombinacionesColor WHERE idCombinacionesColor = '{$fila['idCombinacionesColor']}' ORDER BY descripcion");
                                                         while ($fila1 = mysqli_fetch_array($result1)){
                                                             echo "<option value='{$fila['idCombinacionesColor']}'>{$fila1['descripcion']}</option>";
                                                         }
@@ -214,8 +223,9 @@ if(isset($_SESSION['login'])){
                                                     ?>
                                                 </select>
                                             </div>
-                                            <div class='col-2'>
+                                            <div class='col-4'>
                                                 <button type='button' class='btn btn-outline-primary' data-toggle='modal' data-target='#modalNuevaCombinacion'>Agregar Combinación</button>
+                                                <button type='button' class='btn btn-outline-primary' data-toggle='modal' data-target='#modalNuevoColor'>Agregar Color</button>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -416,7 +426,7 @@ if(isset($_SESSION['login'])){
                                                         <label for='colorCombinacion{$fila['codigoColor']}' class='sr-only'>Color</label>
                                                         <select id='colorCombinacion{$fila['codigoColor']}' name='colorCombinacion{$fila['codigoColor']}' class='form-control'>
                                                             <option selected disabled>Seleccionar</option>";
-                                                    $result1 = mysqli_query($link,"SELECT * FROM Color");
+                                                    $result1 = mysqli_query($link,"SELECT * FROM Color ORDER BY descripcion");
                                                     while ($fila1 = mysqli_fetch_array($result1)){
                                                         echo "<option value='{$fila1['idColor']}'>{$fila1['idColor']}-{$fila1['descripcion']}</option>";
                                                     }
@@ -441,6 +451,40 @@ if(isset($_SESSION['login'])){
                     </div>
                 </div>
             </div>
+
+            <form method="post" action="#" id="formColor">
+                <div class="modal fade" id="modalNuevoColor" tabindex="-1" role="dialog" aria-labelledby="modalNuevoColor" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Agregar Color</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <input type="hidden" name="idConfirmacionVenta" value="<?php echo $_POST['idConfirmacionVenta']?>">
+                                    <input type="hidden" name="idProducto" value="<?php echo $_POST['idProducto']?>">
+                                    <input type="hidden" name="codifTalla" value="<?php echo $_POST['codifTalla']?>">
+                                    <div class="form-group row">
+                                        <label class="col-form-label" for="codificacion">Código de Color:</label>
+                                        <input type="text" name="codificacion" id="codificacion" class="form-control">
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label" for="color">Nombre de Color:</label>
+                                        <input type="text" name="color" id="color" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary" form="formColor" value="Submit" name="addColor">Guardar Cambios</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
             <?php
         }else {
@@ -474,7 +518,7 @@ if(isset($_SESSION['login'])){
                                         <div class="form-group row">
                                             <label for="idProducto" class="col-2 col-form-label">Código de Producto:</label>
                                             <div class="col-10">
-                                                <input class="form-control" type="text" id="idProducto" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla'] ?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta'] ?>,<?php echo $_POST['codifTalla'] ?>)" required>
+                                                <input class="form-control" type="text" id="idProducto" name="idProducto" onchange="getTallas(this.value,<?php echo $_POST['codifTalla'] ?>);getCombinacionColores(this.value);getModalCombinacionColores(this.value,<?php echo $_POST['idConfirmacionVenta'] ?>,<?php echo $_POST['codifTalla'] ?>);getModalColores(this.value,<?php echo $_POST['idConfirmacionVenta'] ?>,<?php echo $_POST['codifTalla'] ?>)" required>
                                             </div>
                                         </div>
                                         <div class="form-group row" id="rowColor">
@@ -615,6 +659,8 @@ if(isset($_SESSION['login'])){
             </section>
 
             <div id="modalColores"></div>
+
+            <div id="modalColoresB"></div>
 
             <?php
         }
