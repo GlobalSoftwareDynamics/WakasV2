@@ -126,7 +126,7 @@ if(isset($_SESSION['login'])){
                                 <h6 class="text-left"><b>Registro de Ingresos y Salidas:</b></h6>
                             </div>
                             <div class="spacer10"></div>
-                            <div class="col-12">
+                            <div class="col-12" style="height: 400px; overflow-y: auto">
                                 <table class="table text-center">
                                     <thead>
                                     <tr>
@@ -139,7 +139,7 @@ if(isset($_SESSION['login'])){
                                     <tbody>
                                     <?php
                                     $tiempoTotalIntervalo = 0;
-                                    $result = mysqli_query($link,"SELECT * FROM RegistroIngresoSalida WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}'");
+                                    $result = mysqli_query($link,"SELECT * FROM RegistroIngresoSalida WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59'");
                                     while ($fila = mysqli_fetch_array($result)){
                                         $a = new DateTime($fila['horaSalida']);
                                         $b = new DateTime($fila['horaIngreso']);
@@ -195,7 +195,7 @@ if(isset($_SESSION['login'])){
                                     <tbody>
                                     <?php
                                     $tiempoTotalTrabajado = 0;
-                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoLote WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}' ORDER BY fecha DESC");
+                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoLote WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59' ORDER BY fecha DESC");
                                     while ($fila = mysqli_fetch_array($result)){
                                         $result1 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$fila['idProcedimiento']}'");
                                         while ($fila1 = mysqli_fetch_array($result1)){
@@ -277,7 +277,7 @@ if(isset($_SESSION['login'])){
                                     <tbody>
                                     <?php
                                     $tiempoTotalActividadMuerta = 0;
-                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoActividadMuerta WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}'");
+                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoActividadMuerta WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59'");
                                     while ($fila = mysqli_fetch_array($result)){
                                         $result1 = mysqli_query($link,"SELECT * FROM ActividadMuerta WHERE idActividadMuerta = '{$fila['idActividadMuerta']}'");
                                         while ($fila1 = mysqli_fetch_array($result1)){
@@ -287,7 +287,7 @@ if(isset($_SESSION['login'])){
                                         echo "<td>{$fila['fecha']}</td>";
                                         echo "<td>{$actvidadMuerta}</td>";
                                         echo "<td>{$fila['descripcion']}</td>";
-                                        echo "<td>{$fila['tiempo']}</td>";
+                                        echo "<td>{$fila['tiempo']} Min.</td>";
                                         echo "</tr>";
 
                                         $tiempoTotalActividadMuerta = $tiempoTotalActividadMuerta + $fila['tiempo'];

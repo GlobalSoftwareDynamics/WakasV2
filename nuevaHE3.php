@@ -861,7 +861,7 @@ if(isset($_SESSION['login'])){
                                                     <td><select name="selectComponente" class="form-control" onchange="getMaterial(this.value)">
                                                             <option selected disabled>Seleccionar</option>
 		                                                    <?php
-		                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE tipo = 2");
+		                                                    $filter = mysqli_query($link,"SELECT * FROM ComponentesPrenda ORDER BY descripcion ASC");
 		                                                    while($filterIndex = mysqli_fetch_array($filter)){
 			                                                    $query = mysqli_query($link,"SELECT * FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['idProductoCrear']}' AND idComponente = '{$filterIndex['idComponente']}'");
 			                                                    while($row = mysqli_fetch_array($query)){

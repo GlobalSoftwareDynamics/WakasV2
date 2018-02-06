@@ -29,7 +29,7 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="categoriaAM" class="col-12 col-form-label">Categoria de Actividad Muerta:</label>
                                     <div class="col-12">
-                                        <select class="form-control" name="categoriaAM" id="categoriaAM">
+                                        <select class="form-control" name="categoriaAM" id="categoriaAM" required>
                                             <option disabled selected>Seleccionar</option>
                                             <?php
                                             $result = mysqli_query($link,"SELECT * FROM ActividadMuerta");
@@ -43,13 +43,13 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="descripcion" class="col-12 col-form-label">Descripción:</label>
                                     <div class="col-12" id="productoLote">
-                                        <textarea class="form-control" rows="2" id="descripcion" name="descripcion"></textarea>
+                                        <textarea class="form-control" rows="2" id="descripcion" name="descripcion" required></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="tiempoEmpleado" class="col-12 col-form-label">Tiempo Empleado (Min):</label>
                                     <div class="col-12">
-                                        <input type="number" min="0" name="tiempoEmpleado" id="tiempoEmpleado" class="form-control">
+                                        <input type="number" min="0" name="tiempoEmpleado" id="tiempoEmpleado" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">

@@ -77,7 +77,7 @@ if(isset($_SESSION['login'])){
                 <tbody>
                 ';
                 $tiempoTotalIntervalo = 0;
-                $result = mysqli_query($link,"SELECT * FROM RegistroIngresoSalida WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}'");
+                $result = mysqli_query($link,"SELECT * FROM RegistroIngresoSalida WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59'");
                 while ($fila = mysqli_fetch_array($result)){
                     $a = new DateTime($fila['horaSalida']);
                     $b = new DateTime($fila['horaIngreso']);
@@ -133,7 +133,7 @@ if(isset($_SESSION['login'])){
                 <tbody>
                 ';
                 $tiempoTotalTrabajado = 0;
-                $result = mysqli_query($link,"SELECT * FROM EmpleadoLote WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}' ORDER BY fecha DESC");
+                $result = mysqli_query($link,"SELECT * FROM EmpleadoLote WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59' ORDER BY fecha DESC");
                 while ($fila = mysqli_fetch_array($result)){
                     $result1 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$fila['idProcedimiento']}'");
                     while ($fila1 = mysqli_fetch_array($result1)){
@@ -215,7 +215,7 @@ if(isset($_SESSION['login'])){
                 <tbody>
                 ';
                 $tiempoTotalActividadMuerta = 0;
-                $result = mysqli_query($link,"SELECT * FROM EmpleadoActividadMuerta WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}'");
+                $result = mysqli_query($link,"SELECT * FROM EmpleadoActividadMuerta WHERE idEmpleado = '{$_POST['idEmpleado']}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59'");
                 while ($fila = mysqli_fetch_array($result)){
                     $result1 = mysqli_query($link,"SELECT * FROM ActividadMuerta WHERE idActividadMuerta = '{$fila['idActividadMuerta']}'");
                     while ($fila1 = mysqli_fetch_array($result1)){
@@ -225,7 +225,7 @@ if(isset($_SESSION['login'])){
                     $html .="<td>{$fila['fecha']}</td>";
                     $html .="<td>{$actvidadMuerta}</td>";
                     $html .="<td>{$fila['descripcion']}</td>";
-                    $html .="<td>{$fila['tiempo']}</td>";
+                    $html .="<td>{$fila['tiempo']} Min.</td>";
                     $html .="</tr>";
 
                     $tiempoTotalActividadMuerta = $tiempoTotalActividadMuerta + $fila['tiempo'];
