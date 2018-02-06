@@ -149,12 +149,22 @@ if(isset($_SESSION['login'])){
                             $result2 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND indice = '{$fila1['indice']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idCaracteristica = '7')");
                             while ($fila2 = mysqli_fetch_array($result2)){
                                 $tiempo = $fila2['valor'];
+                                $tiempoMostrar = $fila2['valor'];
                             }
                         }
                     }else{
-                        $result1 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idProcedimiento = '{$fila['idProcedimiento']}' AND idCaracteristica = '7')");
-                        while ($fila1 = mysqli_fetch_array($result1)){
-                            $tiempo = $fila1['valor'];
+                        if($fila['idProcedimiento'] == 1){
+                            $result1 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idProcedimiento = '{$fila['idProcedimiento']}' AND idCaracteristica = '7')");
+                            while ($fila1 = mysqli_fetch_array($result1)){
+                                $tiempo = 0;
+                                $tiempoMostrar = $fila1['valor'];
+                            }
+                        }else{
+                            $result1 = mysqli_query($link,"SELECT * FROM PCPSPC WHERE idComponenteEspecifico = '{$fila['idComponenteEspecifico']}' AND idSubProcesoCaracteristica IN (SELECT idSubProcesoCaracteristica FROM SubProcesoCaracteristica WHERE idProcedimiento = '{$fila['idProcedimiento']}' AND idCaracteristica = '7')");
+                            while ($fila1 = mysqli_fetch_array($result1)){
+                                $tiempo = $fila1['valor'];
+                                $tiempoMostrar = $fila1['valor'];
+                            }
                         }
                     }
 
@@ -164,7 +174,7 @@ if(isset($_SESSION['login'])){
                     $html .="<td>{$componente}</td>";
                     $html .="<td>{$procedimiento}</td>";
                     $html .="<td>{$fila['cantidad']}</td>";
-                    $html .="<td>{$tiempo} min</td>";
+                    $html .="<td>{$tiempoMostrar} min</td>";
                     $html .="</tr>";
 
                     $tiempoComponente = $fila['cantidad'] * $tiempo;
@@ -175,6 +185,13 @@ if(isset($_SESSION['login'])){
                 $HorasWakas5 = $tiempoTotalTrabajado-($HorasWakas4*60);
                 $HorasFinalT = $HorasWakas4.":".$HorasWakas5;
     $html .='
+                    <tr>
+                        <th colspan="2">Total Horas Trabajadas</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>'.$HorasFinalT.' Hrs.</td>
+                    </tr>
                 </tbody>
             </table>
     <div class="spacer10"></div>
@@ -229,7 +246,7 @@ if(isset($_SESSION['login'])){
     <div class="spacer10"></div>
     <div class="row">
     ';
-            /*$MinutosFinalEstancia = explode(":",$HorasFinalE);
+            $MinutosFinalEstancia = explode(":",$HorasFinalE);
             $MinutosFinalEstancia = ($MinutosFinalEstancia[0]*60) + $MinutosFinalEstancia[1];
 
             $MinutosFinalTrabajo = explode(":",$HorasFinalT);
@@ -239,8 +256,8 @@ if(isset($_SESSION['login'])){
             $MinutosFinalActividadMuerta = ($MinutosFinalActividadMuerta[0]*60) + $MinutosFinalActividadMuerta[1];
 
             $productividad =(($MinutosFinalTrabajo-$MinutosFinalActividadMuerta)/$MinutosFinalEstancia)*100;
-            $productividad = round($productividad,2);*/
-    /*$html .='
+            $productividad = round($productividad,2);
+    $html .='
             <table>
                 <tbody>
                     <tr>
@@ -248,7 +265,7 @@ if(isset($_SESSION['login'])){
                         <td class="text-right">'.$productividad.' %</td>
                     </tr>
                 </tbody>
-            </table>';*/
+            </table>';
     $html .='
     </div>
     ';
