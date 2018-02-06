@@ -206,14 +206,13 @@ if(isset($_SESSION['login'])){
 
 		$search1 = mysqli_query($link,"SELECT * FROM Insumos WHERE idInsumo = '{$_POST['selectInsumo']}'");
 		while($row1 = mysqli_fetch_array($search1)){
-			$search = mysqli_query($link, "SELECT * FROM Subproceso WHERE descripcion = 'Acondicionamiento - {$row1['descripcion']}'");
+			$search = mysqli_query($link, "SELECT * FROM Subproceso WHERE descripcion LIKE 'Acondicionamiento - {$row1['descripcion']}'");
 			while($row = mysqli_fetch_array($search)){
 				$proced = $row['idProcedimiento'];
 			}
         }
 
-		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES
-                                            ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','36','{$proced}','{$aux}')");
+		$insert = mysqli_query($link,"INSERT INTO PCPSPC (idProducto, idComponenteEspecifico, idSubProcesoCaracteristica, valor, indice) VALUES ('{$_POST['idProductoCrear']}','{$_POST['selectComponente']}','36','{$proced}','{$aux}')");
 	}
 
 	if(isset($_POST['addOtros'])){
