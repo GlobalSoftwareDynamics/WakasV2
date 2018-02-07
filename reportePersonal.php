@@ -323,7 +323,7 @@ if(isset($_SESSION['login'])){
                                 $productividad =(($MinutosFinalTrabajo-$MinutosFinalActividadMuerta)/$MinutosFinalEstancia)*100;
                                 $productividad = round($productividad,2);
                                 ?>
-                                <h6 class="text-left"><b>% Referencial de Productividad de Trabajador: </b><?php /*echo $productividad;*/?> %</h6>
+                                <h6 class="text-left"><b>% Referencial de Productividad de Trabajador: </b><?php echo $productividad;?> %</h6>
                             </div>
                         </div>
                         <?php

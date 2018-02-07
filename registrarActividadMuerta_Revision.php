@@ -29,7 +29,7 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="categoriaAM" class="col-12 col-form-label">Categoria de Actividad Muerta:</label>
                                     <div class="col-12">
-                                        <select class="form-control" name="categoriaAM" id="categoriaAM" required>
+                                        <select class="form-control" name="categoriaAM" id="categoriaAM">
                                             <?php
                                             $result = mysqli_query($link,"SELECT * FROM ActividadMuerta WHERE idActividadMuerta = '{$_POST['categoriaAM']}'");
                                             while ($fila = mysqli_fetch_array($result)){
@@ -46,7 +46,7 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="descripcion" class="col-12 col-form-label">Descripción:</label>
                                     <div class="col-12" id="productoLote">
-                                        <textarea class="form-control" rows="2" id="descripcion" name="descripcion" required><?php echo $_POST['descripcion']?></textarea>
+                                        <textarea class="form-control" rows="2" id="descripcion" name="descripcion"><?php echo $_POST['descripcion']?></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">

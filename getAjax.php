@@ -476,7 +476,7 @@ if(!empty($_POST['idProcedimientoSeleccionado'])){
 
     $cantidadSinFabricar = $cantidadLote - $cantidadRealizada;
 
-    echo "<input required type='number' name='cantidad' id='cantidad' value='{$cantidadSinFabricar}' max='{$cantidadSinFabricar}' min='0' class='form-control'>";
+    echo "<input type='number' name='cantidad' id='cantidad' value='{$cantidadSinFabricar}' max='{$cantidadSinFabricar}' min='0' class='form-control'>";
 
 }
 

@@ -130,7 +130,7 @@ if(isset($_SESSION['login'])){
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoLote WHERE idMaquina = '{$idMaquina}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}' ORDER BY fecha DESC");
+                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoLote WHERE idMaquina = '{$idMaquina}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:00' ORDER BY fecha DESC");
                                     while ($fila = mysqli_fetch_array($result)){
                                         $result1 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$fila['idProcedimiento']}'");
                                         while ($fila1 = mysqli_fetch_array($result1)){
@@ -161,7 +161,7 @@ if(isset($_SESSION['login'])){
                                     $flag = false;
                                     $aux = 0;
                                     $fechaBandera = "";
-                                    $result1 = mysqli_query($link,"SELECT DISTINCT fecha FROM EmpleadoLote WHERE idMaquina = '{$idMaquina}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}' ORDER BY fecha DESC");
+                                    $result1 = mysqli_query($link,"SELECT DISTINCT fecha FROM EmpleadoLote WHERE idMaquina = '{$idMaquina}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59' ORDER BY fecha DESC");
                                     while ($fila1 = mysqli_fetch_array($result1)){
                                         if ($flag == false){
                                             $fecha = explode(" ",$fila1['fecha']);
@@ -209,7 +209,7 @@ if(isset($_SESSION['login'])){
                                     <tbody>
                                     <?php
                                     $tiempoActividadMuerta = 0;
-                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoActividadMuerta WHERE idMaquina = '{$idMaquina}' AND fecha >= '{$_POST['fechaInicio']}' AND fecha <= '{$_POST['fechaFin']}' ORDER BY fecha DESC");
+                                    $result = mysqli_query($link,"SELECT * FROM EmpleadoActividadMuerta WHERE idMaquina = '{$idMaquina}' AND fecha >= '{$_POST['fechaInicio']} 00:00:00' AND fecha <= '{$_POST['fechaFin']} 23:59:59' ORDER BY fecha DESC");
                                     while ($fila = mysqli_fetch_array($result)){
                                         $result1 = mysqli_query($link,"SELECT * FROM Empleado WHERE idEmpleado = '{$fila['idEmpleado']}'");
                                         while ($fila1 = mysqli_fetch_array($result1)){

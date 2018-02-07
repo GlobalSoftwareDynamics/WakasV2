@@ -29,19 +29,19 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="idLote" class="col-12 col-form-label">Lote:</label>
                                     <div class="col-12">
-                                        <input required class="form-control" type="text" id="idLote" name="idLote" onkeyup="getProductoLote(this.value);getComponentesProductoLote(this.value)" onchange="getProductoLote(this.value);getComponentesProductoLote(this.value)" value="<?php echo $_POST['idLote']?>">
+                                        <input class="form-control" type="text" id="idLote" name="idLote" onkeyup="getProductoLote(this.value);getComponentesProductoLote(this.value)" onchange="getProductoLote(this.value);getComponentesProductoLote(this.value)" value="<?php echo $_POST['idLote']?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="idProducto" class="col-12 col-form-label">Producto:</label>
                                     <div class="col-12" id="productoLote">
-                                        <input required class="form-control" type="text" id="idProducto" name="idProducto" value="<?php echo $_POST['idProducto']?>">
+                                        <input class="form-control" type="text" id="idProducto" name="idProducto" value="<?php echo $_POST['idProducto']?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="componente" class="col-12 col-form-label">Componentes:</label>
                                     <div class="col-12">
-                                        <select required class="form-control" name="componente" id="componente" onchange="getProcesosComponente(this.value)">
+                                        <select class="form-control" name="componente" id="componente" onchange="getProcesosComponente(this.value)">
                                             <?php
                                             $result5 = mysqli_query($link,"SELECT * FROM ComponentesPrenda WHERE idComponente = '{$_POST['componente']}'");
                                             while ($fila5 = mysqli_fetch_array($result5)){
@@ -83,7 +83,7 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="procedimiento" class="col-12 col-form-label">Procedimientos:</label>
                                     <div class="col-12">
-                                        <select required class="form-control" name="procedimiento" id="procedimiento" onchange="getMaquinasProcedimiento(this.value);getCantidadRestanteLote(this.value)">
+                                        <select class="form-control" name="procedimiento" id="procedimiento" onchange="getMaquinasProcedimiento(this.value);getCantidadRestanteLote(this.value)">
                                             <?php
                                             $result5 = mysqli_query($link,"SELECT * FROM SubProceso WHERE idProcedimiento = '{$_POST['procedimiento']}'");
                                             while ($fila5 = mysqli_fetch_array($result5)){
@@ -96,7 +96,7 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="maquina" class="col-12 col-form-label">Máquinas:</label>
                                     <div class="col-12">
-                                        <select required class="form-control" name="maquina" id="maquina">
+                                        <select class="form-control" name="maquina" id="maquina">
                                             <?php
                                             $result5 = mysqli_query($link,"SELECT * FROM Maquina WHERE idMaquina = '{$_POST['maquina']}'");
                                             while ($fila5 = mysqli_fetch_array($result5)){
@@ -109,7 +109,7 @@ if(isset($_SESSION['login'])){
                                 <div class="form-group row">
                                     <label for="cantidad" class="col-12 col-form-label">Cantidad de Producto Terminado:</label>
                                     <div class="col-12" id="cantidadRestanteLote">
-                                        <input required class="form-control" type="number" id="cantidad" name="cantidad" min="0" value="<?php echo $_POST['cantidad']?>">
+                                        <input class="form-control" type="number" id="cantidad" name="cantidad" min="0" value="<?php echo $_POST['cantidad']?>">
                                     </div>
                                 </div>
                             </div>
