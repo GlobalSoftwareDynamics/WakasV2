@@ -320,7 +320,7 @@ if(isset($_SESSION['login'])){
                                 $MinutosFinalActividadMuerta = explode(":",$HorasFinalAM);
                                 $MinutosFinalActividadMuerta = ($MinutosFinalActividadMuerta[0]*60) + $MinutosFinalActividadMuerta[1];
 
-                                $productividad =(($MinutosFinalTrabajo-$MinutosFinalActividadMuerta)/$MinutosFinalEstancia)*100;
+                                $productividad =(($MinutosFinalTrabajo+$MinutosFinalActividadMuerta)/$MinutosFinalEstancia)*100;
                                 $productividad = round($productividad,2);
                                 ?>
                                 <h6 class="text-left"><b>% Referencial de Productividad de Trabajador: </b><?php echo $productividad;?> %</h6>

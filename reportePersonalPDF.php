@@ -255,7 +255,7 @@ if(isset($_SESSION['login'])){
             $MinutosFinalActividadMuerta = explode(":",$HorasFinalAM);
             $MinutosFinalActividadMuerta = ($MinutosFinalActividadMuerta[0]*60) + $MinutosFinalActividadMuerta[1];
 
-            $productividad =(($MinutosFinalTrabajo-$MinutosFinalActividadMuerta)/$MinutosFinalEstancia)*100;
+            $productividad =(($MinutosFinalTrabajo+$MinutosFinalActividadMuerta)/$MinutosFinalEstancia)*100;
             $productividad = round($productividad,2);
     $html .='
             <table>
