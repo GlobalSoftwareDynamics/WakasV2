@@ -160,7 +160,7 @@ function getProductosContrato(val) {
     $.ajax({
         type: "POST",
         url: "getAjax.php",
-        data:{'idConfirmacionVenta':val},
+        data:{'idConfirmacionVentaContrato':val},
         success: function(data){
             $("#formMarcacion").html(data);
         }

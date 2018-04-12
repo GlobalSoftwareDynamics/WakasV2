@@ -154,7 +154,28 @@ if(!empty($_POST['productoCVModalColores'])){
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $result = mysqli_query($link,"SELECT DISTINCT codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['productoCVModalColores']}' AND codigoColor IS NOT NULL ORDER BY codigoColor ASC");
+                                    $result = mysqli_query($link,"SELECT MAX(DISTINCT codigoColor) AS codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['productoCVModalColores']}' AND codigoColor IS NOT NULL ORDER BY codigoColor DESC");
+                                    while ($fila = mysqli_fetch_array($result)){
+                                        for($i = 1; $i <= $fila['codigoColor']; $i++){
+                                            echo "<tr>";
+                                            echo "<td>{$i}</td>";
+                                            echo "
+                                        <td>
+                                            <label for='colorCombinacion{$i}' class='sr-only'>Color</label>
+                                            <select id='colorCombinacion{$i}' name='colorCombinacion{$i}' class='form-control'>
+                                                <option selected disabled>Seleccionar</option>";
+                                            $result1 = mysqli_query($link,"SELECT * FROM Color ORDER BY descripcion");
+                                            while ($fila1 = mysqli_fetch_array($result1)){
+                                                echo "<option value='{$fila1['idColor']}'>{$fila1['idColor']}-{$fila1['descripcion']}</option>";
+                                            }
+                                            echo "
+                                            </select>
+                                        </td>
+                                        ";
+                                            echo "</tr>";
+                                        }
+                                    }
+                                    /*$result = mysqli_query($link,"SELECT DISTINCT codigoColor FROM ProductoComponentesPrenda WHERE idProducto = '{$_POST['productoCVModalColores']}' AND codigoColor IS NOT NULL ORDER BY codigoColor ASC");
                                     while ($fila = mysqli_fetch_array($result)){
                                     echo "<tr>";
                                         echo "<td>{$fila['codigoColor']}</td>";
@@ -172,7 +193,7 @@ if(!empty($_POST['productoCVModalColores'])){
                                         </td>
                                         ";
                                         echo "</tr>";
-                                    }
+                                    }*/
                                     ?>
                                     </tbody>
                                 </table>
@@ -316,7 +337,7 @@ if(!empty($_POST['idLoteReporte'])){
 
 }
 
-if(!empty($_POST['idConfirmacionVenta'])){
+if(!empty($_POST['idConfirmacionVentaContrato'])){
 
     $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}' AND cantidad <> cantidadop ORDER BY idTalla ASC");
     while ($fila = mysqli_fetch_array($result)){
