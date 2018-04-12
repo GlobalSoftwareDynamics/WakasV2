@@ -339,7 +339,7 @@ if(!empty($_POST['idLoteReporte'])){
 
 if(!empty($_POST['idConfirmacionVentaContrato'])){
 
-    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVenta']}' AND cantidad <> cantidadop ORDER BY idTalla ASC");
+    $result = mysqli_query($link,"SELECT * FROM ConfirmacionVentaProducto WHERE idContrato = '{$_POST['idConfirmacionVentaContrato']}' AND cantidad <> cantidadop ORDER BY idTalla ASC");
     while ($fila = mysqli_fetch_array($result)){
         $result1 = mysqli_query($link,"SELECT * FROM Talla WHERE idTalla = '{$fila['idTalla']}'");
         while ($fila1 = mysqli_fetch_array($result1)){
