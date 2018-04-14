@@ -43,6 +43,49 @@ if(isset($_SESSION['login'])){
 
             $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','NuevaCV-ConfirmacionVenta','{$queryPerformed}')");
 
+            /*Creacion de Direccion*/
+            $query = mysqli_query($link, "INSERT INTO Direccion(idCiudad, direccion) VALUES ('{$_POST['ciudad']}','{$_POST['direccion']}')");
+
+            $queryPerformed = "INSERT INTO Direccion(idCiudad, direccion) VALUES ({$_POST['ciudad']},{$_POST['direccion']})";
+
+            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Direccion','{$queryPerformed}')");
+
+            $direccion = mysqli_query($link, "SELECT * FROM Direccion WHERE direccion = '{$_POST['direccion']}'");
+            while ($fila = mysqli_fetch_array($direccion)) {
+                $idDireccion = $fila['idDireccion'];
+            }
+
+            /*Creacion de Contacto*/
+            $query = mysqli_query($link, "INSERT INTO Contacto(idContacto, idCliente, idDireccion, idEstado, nombreCompleto, email, tipo)
+                VALUES ('{$_POST['ruc']}','{$_POST['ruc']}','{$idDireccion}',1,'{$_POST['nombreNuevoCliente']}','{$_POST['email']}',1)");
+
+            $queryPerformed = "INSERT INTO Contacto(idContacto, idCliente, idDireccion, idEstado, nombreCompleto, email, tipo)
+                VALUES ('{$_POST['ruc']}',{$_POST['ruc']},{$idDireccion},1,{$_POST['nombreNuevoCliente']},{$_POST['email']},1)";
+
+            $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Contacto','{$queryPerformed}')");
+
+            /*Creacion de Telefono*/
+            if($_POST['telefono'] !== null || $_POST['telefono'] !== ""){
+
+                $query = mysqli_query($link,"INSERT INTO Telefono(numero) VALUES ('{$_POST['telefono']}')");
+
+                $queryPerformed = "INSERT INTO Telefono(numero) VALUES ({$_POST['telefono']})";
+
+                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Telefono','{$queryPerformed}')");
+
+                $telefono = mysqli_query($link, "SELECT * FROM Telefono WHERE numero = '{$_POST['telefono']}'");
+                while ($fila = mysqli_fetch_array($telefono)) {
+                    $idTelefono = $fila['idTelefono'];
+                }
+
+                $query = mysqli_query($link,"INSERT INTO ContactoTelefono(idContacto, idTelefono) VALUES ('{$_POST['ruc']}','{$idTelefono}')");
+
+                $queryPerformed = "INSERT INTO ContactoTelefono(idContacto, idTelefono) VALUES ({$_POST['ruc']},{$idTelefono})";
+
+                $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','ContactoTelefono','{$queryPerformed}')");
+
+            }
+
         }else{
         }
 
@@ -55,6 +98,15 @@ if(isset($_SESSION['login'])){
         $queryPerformed = "UPDATE Cliente SET nombre = {$_POST['nombre']} WHERE idCliente = {$_POST['idCliente']}";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Cliente','{$queryPerformed}')");
+
+        $query = mysqli_query($link,"UPDATE Contacto SET nombreCompleto = '{$_POST['nombre']}', email = '{$_POST['email']}' WHERE idContacto = '{$_POST['idCliente']}'");
+        $query = mysqli_query($link,"UPDATE Direccion SET direccion = '{$_POST['direccion']}', idCiudad = '{$_POST['ciudad']}' WHERE idDireccion = '{$_POST['idCliente']}'");
+
+        $queryPerformed1 = "UPDATE Contacto SET nombreCompleto = {$_POST['nombre']}, email = {$_POST['email']} WHERE idContacto = {$_POST['idCliente']}";
+        $queryPerformed2 = "UPDATE Direccion SET direccion = {$_POST['direccion']}, idCiudad = {$_POST['ciudad']} WHERE idDireccion = {$_POST['idCliente']}";
+
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Contacto','{$queryPerformed1}')");
+        $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','UPDATE','Direccion','{$queryPerformed2}')");
 
     }
 
@@ -195,6 +247,37 @@ if(isset($_SESSION['login'])){
                             <div class="form-group row">
                                 <label class="col-form-label" for="nombreNuevoCliente">Nombre de Cliente:</label>
                                 <input type="text" name="nombreNuevoCliente" id="nombreNuevoCliente" class="form-control">
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-2 col-form-label">Email:</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="text" id="email" name="email">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="direccion" class="col-2 col-form-label">Dirección:</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="text" id="direccion" name="direccion">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="ciudad" class="col-2 col-form-label">Ciudad:</label>
+                                <div class="col-6">
+                                    <select class="form-control" name="ciudad" id="ciudad">
+                                        <?php
+                                        $result = mysqli_query($link, "SELECT * FROM Ciudad ORDER BY nombre ASC");
+                                        while ($fila = mysqli_fetch_array($result)){
+                                            echo "<option value='{$fila['idCiudad']}'>{$fila['nombre']}</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="telefono" class="col-2 col-form-label">Teléfono:</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="text" id="telefono" name="telefono">
+                                </div>
                             </div>
                         </form>
                     </div>

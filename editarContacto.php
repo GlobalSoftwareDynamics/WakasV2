@@ -106,7 +106,6 @@ if(isset($_SESSION['login'])){
                                             </select>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </form>

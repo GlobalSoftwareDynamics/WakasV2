@@ -105,6 +105,7 @@ if(isset($_SESSION['login'])){
                                     <th class="text-center">ID Producto</th>
                                     <th class="text-center">Tipo de Producto</th>
                                     <th class="text-center">Género</th>
+                                    <th class="text-center">Descripción</th>
                                     <th class="text-center">Acciones</th>
                                 </tr>
                                 </thead>
@@ -123,6 +124,7 @@ if(isset($_SESSION['login'])){
                                             while ($fila2 = mysqli_fetch_array($result2)){
                                                 echo "<td class='text-center'>".$fila2 ['descripcion']."</td>";
                                             }
+                                            echo "<td>{$fila2['descripcionGeneral']}</td>";
                                             echo "<td class='text-center'>
                                                     <form method='post' action='#'>
                                                         <input type='hidden' name='idProductoCrear' value='{$fila['idProducto']}'>

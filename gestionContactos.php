@@ -44,11 +44,11 @@ if(isset($_SESSION['login'])){
         }
 
         /*Creacion de Contacto*/
-        $query = mysqli_query($link, "INSERT INTO Contacto(idContacto, idCliente, idDireccion, idEstado, nombreCompleto, email)
-                VALUES ('{$_POST['dni']}','{$_POST['idCliente']}','{$idDireccion}',1,'{$_POST['nombreContacto']}','{$_POST['email']}')");
+        $query = mysqli_query($link, "INSERT INTO Contacto(idContacto, idCliente, idDireccion, idEstado, nombreCompleto, email, tipo)
+                VALUES ('{$_POST['dni']}','{$_POST['idCliente']}','{$idDireccion}',1,'{$_POST['nombreContacto']}','{$_POST['email']}',0)");
 
-        $queryPerformed = "INSERT INTO Contacto(idContacto, idCliente, idDireccion, idEstado, nombreCompleto, email)
-                VALUES ('{$_POST['dni']}',{$_POST['idCliente']},{$idDireccion},1,{$_POST['nombreContacto']},{$_POST['email']})";
+        $queryPerformed = "INSERT INTO Contacto(idContacto, idCliente, idDireccion, idEstado, nombreCompleto, email, tipo)
+                VALUES ('{$_POST['dni']}',{$_POST['idCliente']},{$idDireccion},1,{$_POST['nombreContacto']},{$_POST['email']},0)";
 
         $databaseLog = mysqli_query($link, "INSERT INTO DatabaseLog (idEmpleado,fechaHora,evento,tipo,consulta) VALUES ('{$_SESSION['user']}','{$dateTime}','INSERT','Contacto','{$queryPerformed}')");
 
